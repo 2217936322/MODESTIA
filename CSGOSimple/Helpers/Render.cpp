@@ -3,7 +3,6 @@
 
 #include "../SDK/SDK.hpp"
 #include "../Menu/Menu.hpp"
-#include "../Fonts/Fonts.hpp"
 #include "../SDK/Math/Math.hpp"
 #include "../SDK/CSGOStructs.hpp"
 
