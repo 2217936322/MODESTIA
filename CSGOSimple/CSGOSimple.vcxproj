@@ -148,6 +148,7 @@
     <ClInclude Include="fonts\Fonts.hpp" />
     <ClInclude Include="Helpers\Configs.hpp" />
     <ClInclude Include="Helpers\ConfigSys.hpp" />
+    <ClInclude Include="Helpers\Fnv.hpp" />
     <ClInclude Include="Helpers\ItemsDefs.hpp" />
     <ClInclude Include="Helpers\KitParser.hpp" />
     <ClInclude Include="Helpers\Memory.hpp" />

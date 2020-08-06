@@ -95,6 +95,7 @@ void C_Menu::Run()
 				ImGui::BeginChild("Misc", ImVec2(279, 324), true);
 				{
 					ImGui::Checkbox("Bunny Hop", &g_Configs.misc.bunnyHop);
+					ImGui::Checkbox("Auto Accept", &g_Configs.misc.autoAccept);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
 					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "EdgeJump\0Menu Key");

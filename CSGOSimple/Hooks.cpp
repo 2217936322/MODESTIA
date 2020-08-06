@@ -1,6 +1,8 @@
 #include <intrin.h>
 
 #include "Hooks.hpp"
+
+#include "Helpers/Fnv.hpp"
 #include "Helpers/Configs.hpp"
 #include "Helpers/InputSys.hpp"
 #include "Helpers/MinHook/minhook.h"
@@ -21,7 +23,6 @@ Hooks::FrameStageNotify::Fn FrameStageNotifyOriginal = nullptr;
 Hooks::LockCursor::Fn LockCursorOriginal = nullptr;
 Hooks::EndScene::Fn EndSceneOriginal = nullptr;
 Hooks::Reset::Fn ResetOriginal = nullptr;
-Hooks::PaintTraverse::Fn PaintTraverseOriginal = nullptr;
 Hooks::CheckFileCRCsWithServer::Fn CheckFileCRCsWithServerOriginal = nullptr;
 
 unsigned int GetVirtual(void* class_, unsigned int index) { return (unsigned int)(*(int**)class_)[index]; }
@@ -35,7 +36,6 @@ bool Hooks::Initialize()
 	auto LockCursorTarget = reinterpret_cast<void*>(GetVirtual(g_VGuiSurface, 67));
 	auto EndSceneTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 42));
 	auto ResetTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 16));
-	auto PaintTraverseTarget = reinterpret_cast<void*>(GetVirtual(g_VGuiSurface, 41));
 	auto LooseFileAllowedTarget = reinterpret_cast<void*>(GetVirtual(g_FileSystem, 128));
 	auto CheckFileCRCsWithServerTarget = reinterpret_cast<void*>(Utils::PatternScan(GetModuleHandleA("engine.dll"), "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
 
@@ -86,12 +86,6 @@ bool Hooks::Initialize()
 	if (MH_CreateHook(ResetTarget, &Reset::Hook, reinterpret_cast<void**>(&ResetOriginal)) != MH_OK)
 	{
 		throw std::runtime_error("Failed to initialize Reset. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(PaintTraverseTarget, &PaintTraverse::Hook, reinterpret_cast<void**>(&PaintTraverseOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize PaintTraverse. (Outdated index?)");
 		return false;
 	}
 
@@ -152,11 +146,20 @@ bool __stdcall Hooks::CreateMove::Hook(float InputSampleFrametime, CUserCmd* Cmd
 
 void __stdcall Hooks::EmitSound::Hook(IRecipientFilter& filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, int nSeed, float flAttenuation, int iFlags, int iPitch, const Vector* pOrigin, const Vector* pDirection, void* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int unk)
 {
-	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep"))
+	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_Configs.misc.autoAccept)
 	{
-		static auto fnAccept = reinterpret_cast<bool(__stdcall*)(const char*)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
-		if (fnAccept)
-			fnAccept("");
+		static auto AcceptFn = reinterpret_cast<bool(__stdcall*)(const char*)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
+		HWND Hwnd;
+		if ((Hwnd = FindWindowA(NULL, "Counter-Strike: Global Offensive")) && GetForegroundWindow() == Hwnd)
+		{
+			RECT lprect;
+			GetClientRect(Hwnd, &lprect);
+			SendMessage(Hwnd, WM_MOUSEMOVE, 0, MAKELPARAM(lprect.right / 2, lprect.bottom / 2)); 
+			mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+		}
+
+		if (AcceptFn)
+			AcceptFn("");
 	}
 
 	EmitSoundOriginal(g_EngineSound, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, nSeed, flAttenuation, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, unk);
@@ -187,6 +190,7 @@ bool __stdcall Hooks::FireEvent::Hook(IGameEvent* pEvent) {
 			pEvent->SetString("weapon", iconOverride);
 		}
 	}
+
 	return FireEventOriginal(g_GameEvents, pEvent);
 }
 
@@ -208,7 +212,7 @@ static auto RandomSequence(const int low, const int high) -> int
 	return rand() % (high - low + 1) + low;
 }
 
-static auto FixAnimation(const char* model, const int sequence) -> int
+static int FixAnimation(const uint32_t model, const int sequence)
 {
 	enum ESequence
 	{
@@ -233,9 +237,6 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 		SEQUENCE_FALCHION_LOOKAT01 = 12,
 		SEQUENCE_FALCHION_LOOKAT02 = 13,
 
-		SEQUENCE_CSS_LOOKAT01 = 14,
-		SEQUENCE_CSS_LOOKAT02 = 15,
-
 		SEQUENCE_DAGGERS_IDLE1 = 1,
 		SEQUENCE_DAGGERS_LIGHT_MISS1 = 2,
 		SEQUENCE_DAGGERS_LIGHT_MISS5 = 6,
@@ -245,7 +246,8 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 		SEQUENCE_BOWIE_IDLE1 = 1,
 	};
 
-	if (strstr(model, "models/weapons/v_knife_butterfly.mdl"))
+	switch (model) {
+	case FNV::Hash("models/weapons/v_knife_butterfly.mdl"):
 	{
 		switch (sequence)
 		{
@@ -257,7 +259,7 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 			return sequence + 1;
 		}
 	}
-	else if (strstr(model, "models/weapons/v_knife_falchion_advanced.mdl"))
+	case FNV::Hash("models/weapons/v_knife_falchion_advanced.mdl"):
 	{
 		switch (sequence)
 		{
@@ -274,19 +276,10 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 			return sequence - 1;
 		}
 	}
-	else if (strstr(model, "models/weapons/v_knife_css.mdl"))
+	case FNV::Hash("models/weapons/v_knife_push.mdl"):
 	{
 		switch (sequence)
 		{
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_CSS_LOOKAT01, SEQUENCE_CSS_LOOKAT02);
-		default:
-			return sequence;
-		}
-	}
-	else if (strstr(model, "models/weapons/v_knife_push.mdl"))
-	{
-		switch (sequence) {
 		case SEQUENCE_DEFAULT_IDLE2:
 			return SEQUENCE_DAGGERS_IDLE1;
 		case SEQUENCE_DEFAULT_LIGHT_MISS1:
@@ -305,9 +298,10 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 			return sequence + 2;
 		}
 	}
-	else if (strstr(model, "models/weapons/v_knife_survival_bowie.mdl"))
+	case FNV::Hash("models/weapons/v_knife_survival_bowie.mdl"):
 	{
-		switch (sequence) {
+		switch (sequence)
+		{
 		case SEQUENCE_DEFAULT_DRAW:
 		case SEQUENCE_DEFAULT_IDLE1:
 			return sequence;
@@ -317,7 +311,11 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 			return sequence - 1;
 		}
 	}
-	else if (strstr(model, "models/weapons/v_knife_ursus.mdl"))
+	case FNV::Hash("models/weapons/v_knife_ursus.mdl"):
+	case FNV::Hash("models/weapons/v_knife_skeleton.mdl"):
+	case FNV::Hash("models/weapons/v_knife_outdoor.mdl"):
+	case FNV::Hash("models/weapons/v_knife_cord.mdl"):
+	case FNV::Hash("models/weapons/v_knife_canis.mdl"):
 	{
 		switch (sequence)
 		{
@@ -329,70 +327,23 @@ static auto FixAnimation(const char* model, const int sequence) -> int
 			return sequence + 1;
 		}
 	}
-	else if (strstr(model, "models/weapons/v_knife_cord.mdl"))
+	case FNV::Hash("models/weapons/v_knife_stiletto.mdl"):
 	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-			return RandomSequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
-		default:
-			return sequence + 1;
-		}
-	}
-	else if (strstr(model, "models/weapons/v_knife_canis.mdl")) {
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-			return RandomSequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
-		default:
-			return sequence + 1;
-		}
-	}
-	else if (strstr(model, "models/weapons/v_knife_outdoor.mdl")) {
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-			return RandomSequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
-		default:
-			return sequence + 1;
-		}
-	}
-	else if (strstr(model, "models/weapons/v_knife_skeleton.mdl")) {
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-			return RandomSequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
-		default:
-			return sequence + 1;
-		}
-	}
-	else if (strstr(model, "models/weapons/v_knife_stiletto.mdl")) {
 		switch (sequence)
 		{
 		case SEQUENCE_DEFAULT_LOOKAT01:
 			return RandomSequence(12, 13);
-		default:
-			return sequence;
 		}
 	}
-	else if (strstr(model, "models/weapons/v_knife_widowmaker.mdl")) {
+	case FNV::Hash("models/weapons/v_knife_widowmaker.mdl"):
+	{
 		switch (sequence)
 		{
 		case SEQUENCE_DEFAULT_LOOKAT01:
-			return 14;
-		default:
-			return sequence;
+			return RandomSequence(14, 15);
 		}
 	}
-	else {
+	default:
 		return sequence;
 	}
 }
@@ -417,9 +368,9 @@ void Hooks::RecvProxy::Hook(const CRecvProxyData* pData, void* entity, void* out
 					{
 						if (k_WeaponInfo.count(viewModelWeapon->m_Item().m_iItemDefinitionIndex()))
 						{
-							auto original_sequence = proxyData->m_Value.m_Int;
-							const auto override_model = k_WeaponInfo.at(viewModelWeapon->m_Item().m_iItemDefinitionIndex()).model;
-							proxyData->m_Value.m_Int = FixAnimation(override_model, proxyData->m_Value.m_Int);
+							auto originalSequence = proxyData->m_Value.m_Int;
+							const auto overrideModel = k_WeaponInfo.at(viewModelWeapon->m_Item().m_iItemDefinitionIndex()).model;
+							proxyData->m_Value.m_Int = FixAnimation(FNV::HashRuntime(overrideModel), proxyData->m_Value.m_Int);
 						}
 					}
 				}
@@ -487,19 +438,6 @@ long __stdcall Hooks::Reset::Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETER
 	Menu.CreateObjects(device);
 
 	return hr;
-}
-
-void __stdcall Hooks::PaintTraverse::Hook(vgui::VPANEL panel, bool forceRepaint, bool allowForce) 
-{
-	static auto panelId = vgui::VPANEL{ 0 };
-
-	PaintTraverseOriginal(g_VGuiPanel, panel, forceRepaint, allowForce);
-
-	if (strstr(g_VGuiPanel->GetName(panel), "MatSystemTopPanel")) 
-	{
-		if (g_LocalPlayer && GetAsyncKeyState(VK_TAB))
-			Utils::RankRevealAll();
-	}
 }
 
 bool __fastcall Hooks::LooseFileAllowed::Hook(void* ecx, void* edx)

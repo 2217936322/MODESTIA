@@ -176,9 +176,13 @@ void Initialize(int localHandle)
 			C_BaseAttributableItem* weapon = (C_BaseAttributableItem*)g_EntityList->GetClientEntityFromHandle(weapons[i]);
 			if (!weapon)
 				continue;
+
 			auto& definitionIndex = weapon->m_Item().m_iItemDefinitionIndex();
-			const auto activeConf = &g_Configs.skins.m_Items[IsKnife(definitionIndex) ? WEAPON_KNIFE : definitionIndex];
-			ApplyConfigOnAttributableItem(weapon, activeConf, playerInfo.xuidlow);
+
+			if (const auto activeConf = &g_Configs.skins.m_Items[IsKnife(definitionIndex) ? WEAPON_KNIFE : definitionIndex])
+				ApplyConfigOnAttributableItem(weapon, activeConf, playerInfo.xuidlow);
+			else
+				EraseOverrideIfExistsByIndex(definitionIndex);
 		}
 
 		const auto viewmodelHandle = local->m_hViewModel();
@@ -201,7 +205,9 @@ void Initialize(int localHandle)
 		{
 			const auto overrideModel = k_WeaponInfo.at(viewmodelWeapon->m_Item().m_iItemDefinitionIndex()).model;
 			auto overrideModelIndex = g_MdlInfo->GetModelIndex(overrideModel);
+
 			viewmodel->m_nModelIndex() = overrideModelIndex;
+
 			auto worldModelHandle = viewmodelWeapon->m_hWeaponWorldModel();
 			if (!worldModelHandle.IsValid())
 				return;

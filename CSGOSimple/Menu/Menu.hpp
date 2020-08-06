@@ -167,7 +167,7 @@ public:
 
 	ImFont* FontMain;
 	ImFont* FontMenu;
-	bool Opened = false;
+	bool Opened = true;
 
 private:
 	ImDrawData _drawData;

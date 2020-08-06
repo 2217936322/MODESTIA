@@ -56,12 +56,6 @@ namespace Hooks
 		long __stdcall Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pPresentationParameters);
 	};
 
-	namespace PaintTraverse
-	{
-		using Fn = void(__thiscall*)(IPanel*, vgui::VPANEL, bool, bool);
-		void __stdcall Hook(vgui::VPANEL panel, bool forceRepaint, bool allowForce);
-	};
-
 	namespace LooseFileAllowed
 	{
 		bool __fastcall Hook(void*, void*);

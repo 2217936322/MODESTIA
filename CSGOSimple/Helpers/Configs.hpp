@@ -38,6 +38,7 @@ public:
 	struct
 	{
 		bool bunnyHop = false;
+		bool autoAccept = false;
 		int keyBindSelection = 0;
 		int edgeJumpKey = 0;
 		int menuKey = 45;

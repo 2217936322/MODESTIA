@@ -32,6 +32,7 @@ void CConfig::SetupSkins()
 void CConfig::SetupMisc()
 {
 	SetupValue(g_Configs.misc.bunnyHop, false, ("Misc"), ("bunnyHop"));
+	SetupValue(g_Configs.misc.autoAccept, false, ("Misc"), ("autoAccept"));
 	SetupValue(g_Configs.misc.keyBindSelection, 0, ("Misc"), ("keyBindSelection"));
 	SetupValue(g_Configs.misc.edgeJumpKey, 0, ("Misc"), ("edgeJumpKey"));
 	SetupValue(g_Configs.misc.menuKey, 45, ("Misc"), ("menuKey"));
