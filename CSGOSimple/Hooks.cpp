@@ -127,6 +127,9 @@ bool __stdcall Hooks::CreateMove::Hook(float InputSampleFrametime, CUserCmd* Cmd
 
 	g_Movement.BunnyHop(Cmd);
 
+	if (g_LocalPlayer && GetAsyncKeyState(VK_TAB) && g_Configs.misc.rankReveal)
+		Utils::RankRevealAll();
+
 	int OldFlags = g_LocalPlayer->m_fFlags();
 	EnginePrediction::Begin(Cmd);
 	{

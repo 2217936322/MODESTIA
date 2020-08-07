@@ -96,6 +96,7 @@ void C_Menu::Run()
 				{
 					ImGui::Checkbox("Bunny Hop", &g_Configs.misc.bunnyHop);
 					ImGui::Checkbox("Auto Accept", &g_Configs.misc.autoAccept);
+					ImGui::Checkbox("Rank Reveal", &g_Configs.misc.rankReveal);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
 					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "EdgeJump\0Menu Key");
