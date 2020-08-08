@@ -26,12 +26,12 @@ public:
 		category = category_;
 		name = name_;
 		value = value_;
-		default_value = def;
+		defaultValue = def;
 	}
 
 	std::string category, name;
 	T* value;
-	T default_value;
+	T defaultValue;
 };
 
 class CConfig
@@ -46,6 +46,7 @@ private:
 	void SetupValue(bool&, bool, std::string, std::string);
 	void SetupValue(float&, float, std::string, std::string);
 	void SetupValue(char*, char*, std::string, std::string);
+
 	void SetupSkins();
 	void SetupMisc();
 public:

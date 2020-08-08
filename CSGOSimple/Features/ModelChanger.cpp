@@ -77,7 +77,7 @@ void Models::PlayerChanger(ClientFrameStage_t stage)
             if (const auto modelprecache = g_NetworkStringTableContainer->FindTable("modelprecache")) 
             {
                 modelprecache->AddString(false, model);
-                const auto viewmodelArmConfig = g_Memory.getPlayerViewmodelArmConfigForPlayerModel(model);
+                const auto viewmodelArmConfig = g_Memory.GetPlayerViewmodelArmConfigForPlayerModel(model);
                 modelprecache->AddString(false, viewmodelArmConfig[2]);
                 modelprecache->AddString(false, viewmodelArmConfig[3]);
             }

@@ -31,37 +31,34 @@ void InputSys::Initialize()
 }
 
 extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-LRESULT __stdcall InputSys::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT __stdcall InputSys::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	g_InputSys.ProcessMessage(msg, wParam, lParam);
+	Get().ProcessMessage(msg, wParam, lParam);
 
-	static bool pressed = false;
-	if (!pressed && GetAsyncKeyState(g_Configs.misc.menuKey)) {
-		pressed = true;
-	}
-	else if (pressed && !GetAsyncKeyState(g_Configs.misc.menuKey)) {
-		pressed = false;
-
+	if (Get().WasKeyPressed(g_Configs.misc.menuKey)) 
+	{
 		Menu.Opened = !Menu.Opened;
 	}
 
-	if (Menu.Opened) {
+	if (Menu.Opened) 
+	{
 		g_InputSystem->EnableInput(false);
 
 	}
-	else if (!Menu.Opened) {
+	else if (!Menu.Opened) 
+	{
 		g_InputSystem->EnableInput(true);
 	}
 
-	if (Menu.Opened && ImGui_ImplDX9_WndProcHandler(hWnd, msg, wParam, lParam))
+	if (Menu.Opened && ImGui_ImplDX9_WndProcHandler(hwnd, msg, wParam, lParam))
 		return true;
 
-	return CallWindowProcA((WNDPROC)g_InputSys.m_ulOldWndProc, hWnd, msg, wParam, lParam);
+	return CallWindowProcA((WNDPROC)Get().m_ulOldWndProc, hwnd, msg, wParam, lParam);
 }
 
-bool InputSys::ProcessMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+bool InputSys::ProcessMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg) {
+	switch (msg) {
 	case WM_MBUTTONDBLCLK:
 	case WM_RBUTTONDBLCLK:
 	case WM_LBUTTONDBLCLK:
@@ -74,40 +71,42 @@ bool InputSys::ProcessMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONUP:
 	case WM_LBUTTONUP:
 	case WM_XBUTTONUP:
-		return ProcessMouseMessage(uMsg, wParam, lParam);
+		return ProcessMouseMessage(msg, wParam, lParam);
 	case WM_KEYDOWN:
 	case WM_KEYUP:
 	case WM_SYSKEYDOWN:
 	case WM_SYSKEYUP:
-		return ProcessKeybdMessage(uMsg, wParam, lParam);
+		return ProcessKeybdMessage(msg, wParam, lParam);
 	default:
 		return false;
 	}
 }
 
-bool InputSys::ProcessMouseMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+bool InputSys::ProcessMouseMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto key = VK_LBUTTON;
 	auto state = KeyState::None;
-	switch (uMsg) {
+
+	switch (msg) 
+	{
 	case WM_MBUTTONDOWN:
 	case WM_MBUTTONUP:
-		state = uMsg == WM_MBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_MBUTTONUP ? KeyState::Up : KeyState::Down;
 		key = VK_MBUTTON;
 		break;
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
-		state = uMsg == WM_RBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_RBUTTONUP ? KeyState::Up : KeyState::Down;
 		key = VK_RBUTTON;
 		break;
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
-		state = uMsg == WM_LBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_LBUTTONUP ? KeyState::Up : KeyState::Down;
 		key = VK_LBUTTON;
 		break;
 	case WM_XBUTTONDOWN:
 	case WM_XBUTTONUP:
-		state = uMsg == WM_XBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_XBUTTONUP ? KeyState::Up : KeyState::Down;
 		key = (HIWORD(wParam) == XBUTTON1 ? VK_XBUTTON1 : VK_XBUTTON2);
 		break;
 	default:
@@ -118,15 +117,17 @@ bool InputSys::ProcessMouseMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		m_iKeyMap[key] = KeyState::Pressed;
 	else
 		m_iKeyMap[key] = state;
+
 	return true;
 }
 
-bool InputSys::ProcessKeybdMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+bool InputSys::ProcessKeybdMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto key = wParam;
 	auto state = KeyState::None;
 
-	switch (uMsg) {
+	switch (msg) 
+	{
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 		state = KeyState::Down;
@@ -139,16 +140,17 @@ bool InputSys::ProcessKeybdMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return false;
 	}
 
-	if (state == KeyState::Up && m_iKeyMap[int(key)] == KeyState::Down) {
+	if (state == KeyState::Up && m_iKeyMap[int(key)] == KeyState::Down) 
+	{
 		m_iKeyMap[int(key)] = KeyState::Pressed;
 
-		auto& hotkey_callback = m_Hotkeys[key];
+		auto& hotkeyCallback = m_Hotkeys[key];
 
-		if (hotkey_callback)
-			hotkey_callback();
-
+		if (hotkeyCallback)
+			hotkeyCallback();
 	}
-	else {
+	else 
+	{
 		m_iKeyMap[int(key)] = state;
 	}
 
@@ -159,13 +161,16 @@ KeyState InputSys::GetKeyState(std::uint32_t vk)
 {
 	return m_iKeyMap[vk];
 }
+
 bool InputSys::IsKeyDown(std::uint32_t vk)
 {
 	return m_iKeyMap[vk] == KeyState::Down;
 }
+
 bool InputSys::WasKeyPressed(std::uint32_t vk)
 {
-	if (m_iKeyMap[vk] == KeyState::Pressed) {
+	if (m_iKeyMap[vk] == KeyState::Pressed) 
+	{
 		m_iKeyMap[vk] = KeyState::Up;
 		return true;
 	}
@@ -176,9 +181,8 @@ void InputSys::RegisterHotkey(std::uint32_t vk, std::function<void(void)> f)
 {
 	m_Hotkeys[vk] = f;
 }
+
 void InputSys::RemoveHotkey(std::uint32_t vk)
 {
 	m_Hotkeys[vk] = nullptr;
 }
-
-InputSys g_InputSys;

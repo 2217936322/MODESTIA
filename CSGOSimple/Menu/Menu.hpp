@@ -10,14 +10,14 @@
 
 extern IDirect3DStateBlock9* stateBlock;
 
-class C_Menu
+class CMenu
 {
 public:
 	void Run();
 
 	void __stdcall CreateObjects(IDirect3DDevice9* device)
 	{
-		if (g_InputSys.m_hTargetWindow)
+		if (InputSys::Get().m_hTargetWindow)
 			ImGui_ImplDX9_CreateDeviceObjects();
 	}
 
@@ -28,7 +28,7 @@ public:
 
 	void __stdcall SetupEndScene(IDirect3DDevice9* device)
 	{
-		ImGui_ImplDX9_Init(g_InputSys.m_hTargetWindow, device);
+		ImGui_ImplDX9_Init(InputSys::Get().m_hTargetWindow, device);
 
 		ImGuiStyle& Style = ImGui::GetStyle();
 		Style.Alpha = 1.0f;
@@ -75,9 +75,9 @@ public:
 		Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 		Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 		Colors[ImGuiCol_Button] = ImVec4(33 / 255.f, 35 / 255.f, 47 / 255.f, 1.0f);
-		Colors[ImGuiCol_ButtonHovered] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f); //
-		Colors[ImGuiCol_ButtonActive] = ImVec4(135 / 255.f, 135 / 255.f, 135 / 255.f, 1.0f); //
-		Colors[ImGuiCol_Header] = ImVec4(167 / 255.f, 24 / 255.f, 71 / 255.f, 1.0f); //multicombo, combo selected item color.
+		Colors[ImGuiCol_ButtonHovered] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f);
+		Colors[ImGuiCol_ButtonActive] = ImVec4(135 / 255.f, 135 / 255.f, 135 / 255.f, 1.0f); 
+		Colors[ImGuiCol_Header] = ImVec4(167 / 255.f, 24 / 255.f, 71 / 255.f, 1.0f);
 		Colors[ImGuiCol_HeaderHovered] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f);
 		Colors[ImGuiCol_HeaderActive] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f);
 		Colors[ImGuiCol_Separator] = ImVec4(0, 0, 0, 1);
@@ -174,4 +174,4 @@ private:
 	DWORD dwOld_D3DRS_COLORWRITEENABLE;
 };
 
-extern C_Menu Menu;
+extern CMenu Menu;

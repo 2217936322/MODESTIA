@@ -1,6 +1,6 @@
 #include "ItemsDefs.hpp"
 
-const std::map<size_t, C_WeaponInfo> k_WeaponInfo =
+const std::map<size_t, CWeaponInfo> k_WeaponInfo =
 {
 		{WEAPON_KNIFE,{"models/weapons/v_knife_default_ct.mdl", "knife_default_ct"}},
 		{WEAPON_KNIFE_T,{"models/weapons/v_knife_default_t.mdl", "knife_t"}},
@@ -34,7 +34,7 @@ const std::map<size_t, C_WeaponInfo> k_WeaponInfo =
 		{GLOVE_HYDRA,{"models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound_hydra.mdl"}}
 };
 
-const std::vector<C_WeaponName> k_KnifeNames =
+const std::vector<CWeaponName> k_KnifeNames =
 {
 	{0, "Default"},
 	{WEAPON_KNIFE_BAYONET, "Bayonet"},
@@ -58,7 +58,7 @@ const std::vector<C_WeaponName> k_KnifeNames =
 	{WEAPON_KNIFE_SKELETON, "Skeleton Knife"}
 };
 
-const std::vector<C_WeaponName> k_GloveNames =
+const std::vector<CWeaponName> k_GloveNames =
 {
 	{0, "Default"},
 	{GLOVE_STUDDED_BLOODHOUND, "Bloodhound"},
@@ -72,7 +72,7 @@ const std::vector<C_WeaponName> k_GloveNames =
 	{GLOVE_HYDRA, "Hydra"}
 };
 
-const std::vector<C_WeaponName> k_WeaponNames =
+const std::vector<CWeaponName> k_WeaponNames =
 {
 	{WEAPON_KNIFE, "Knife"},
 	{GLOVE_T_SIDE, "Glove"},

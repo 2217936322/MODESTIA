@@ -127,13 +127,13 @@ bool __stdcall Hooks::CreateMove::Hook(float InputSampleFrametime, CUserCmd* Cmd
 
 	g_Movement.BunnyHop(Cmd);
 
-	if (g_LocalPlayer && GetAsyncKeyState(VK_TAB) && g_Configs.misc.rankReveal)
+	if (g_LocalPlayer && InputSys::Get().IsKeyDown(VK_TAB) && g_Configs.misc.rankReveal)
 		Utils::RankRevealAll();
 
 	int OldFlags = g_LocalPlayer->m_fFlags();
 	EnginePrediction::Begin(Cmd);
 	{
-		if (GetAsyncKeyState(g_Configs.misc.edgeJumpKey))
+		if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey))
 		{
 			if ((OldFlags & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
 				Cmd->buttons |= IN_JUMP;

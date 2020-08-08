@@ -15,7 +15,7 @@ static void EraseOverrideIfExistsByIndex(const int definitionIndex)
 	}
 }
 
-static void ApplyConfigOnAttributableItem(C_BaseAttributableItem* item, const C_ItemSettings* config, const unsigned xuid_low)
+static void ApplyConfigOnAttributableItem(C_BaseAttributableItem* item, const C_ItemSettings* config, const unsigned xuidLow)
 {
 	if (!config->enabled)
 	{
@@ -24,7 +24,7 @@ static void ApplyConfigOnAttributableItem(C_BaseAttributableItem* item, const C_
 
 	item->m_Item().m_iItemIDHigh() = -1;
 
-	item->m_Item().m_iAccountID() = xuid_low;
+	item->m_Item().m_iAccountID() = xuidLow;
 
 	if (config->customName[0])
 		strcpy_s(item->m_Item().m_szCustomName(), config->customName);
@@ -161,7 +161,7 @@ void Initialize(int localHandle)
 
 			if (glove)
 			{
-				g_Memory.equipWearable(glove, local);
+				g_Memory.EquipWearable(glove, local);
 				local->m_nBody() = 1;
 
 				ApplyConfigOnAttributableItem(glove, gloveConfig, playerInfo.xuidlow);
@@ -222,13 +222,14 @@ void Initialize(int localHandle)
 }
 
 static bool hudUpdateRequired = false;
-
 static constexpr void UpdateHUD()
 {
-	if (auto hudWeapons = g_Memory.findHudElement(g_Memory.hud, "CCSGO_HudWeaponSelection") - 0x28) {
+	if (auto hudWeapons = g_Memory.FindHudElement(g_Memory.Hud, "CCSGO_HudWeaponSelection") - 0x28) 
+	{
 		for (int i = 0; i < *(hudWeapons + 0x20); i++)
-			i = g_Memory.clearHudWeapon(hudWeapons, i);
+			i = g_Memory.ClearHudWeapon(hudWeapons, i);
 	}
+
 	hudUpdateRequired = false;
 }
 

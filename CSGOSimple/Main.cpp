@@ -1,4 +1,3 @@
-
 #include <Windows.h>
 #include <chrono>
 #include <thread>
@@ -12,7 +11,8 @@
 #include "Helpers/InputSys.hpp"
 #include "Helpers/ConfigSys.hpp"
 
-DWORD WINAPI Initialize(void* instance) {
+DWORD WINAPI Initialize(void* instance) 
+{
 	while (!GetModuleHandleA("serverbrowser.dll"))
 		Sleep(200);
 
@@ -20,39 +20,29 @@ DWORD WINAPI Initialize(void* instance) {
 	Utils::AttachConsole();
 #endif
 
-	try {
+	try 
+	{
 		Config->Setup();
 		Interfaces::Initialize();
 #ifdef _DEBUG
-		Utils::ConsolePrint("[Interfaces] Initialized\n");
+		Interfaces::Dump();
 #endif
-		//Interfaces::Dump();
 		NetvarSys::Get().Initialize();
-#ifdef _DEBUG
-		Utils::ConsolePrint("[NetvarSys] Initialized\n");
-#endif
 		Render::Get().Initialize();
-#ifdef _DEBUG
-		Utils::ConsolePrint("[Render] Initialized\n");
-#endif
-		g_InputSys.Initialize();
-#ifdef _DEBUG
-		Utils::ConsolePrint("[InputSys] Initialized\n");
-#endif
+		InputSys::Get().Initialize();
 		Hooks::Initialize();
-#ifdef _DEBUG
-		Utils::ConsolePrint("[Hooks] Initialized\n");
-#endif
 	}
 
-	catch (const std::runtime_error & error) {
+	catch (const std::runtime_error & error) 
+	{
 		MessageBoxA(NULL, error.what(), "MODE$TIA Error!", MB_OK | MB_ICONERROR);
 		FreeLibraryAndExitThread(static_cast<HMODULE>(instance), 0);
 	}
 
 }
 
-BOOL WINAPI Release() {
+BOOL WINAPI Release()
+{
 	Hooks::Release();
 
 #ifdef _DEBUG
@@ -62,10 +52,12 @@ BOOL WINAPI Release() {
 	return TRUE;
 }
 
-BOOL APIENTRY DllMain(void* instance, uintptr_t reason, void* reserved) {
+BOOL APIENTRY DllMain(void* instance, uintptr_t reason, void* reserved) 
+{
 	DisableThreadLibraryCalls(static_cast<HMODULE>(instance));
 
-	switch (reason) {
+	switch (reason) 
+	{
 	case DLL_PROCESS_ATTACH:
 		if (auto handle = CreateThread(NULL, NULL, Initialize, instance, NULL, NULL))
 			CloseHandle(handle);

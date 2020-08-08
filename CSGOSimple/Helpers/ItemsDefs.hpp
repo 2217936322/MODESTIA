@@ -5,14 +5,14 @@
 
 #include "../SDK/CSGOStructs.hpp"
 
-static auto IsKnife(const int i) -> bool
+static bool IsKnife(const int i)
 {
 	return (i >= WEAPON_KNIFE_BAYONET && i < GLOVE_STUDDED_BLOODHOUND) || i == WEAPON_KNIFE_T || i == WEAPON_KNIFE;
 }
 
-struct C_WeaponInfo
+struct CWeaponInfo
 {
-	constexpr C_WeaponInfo(const char* model, const char* icon = nullptr) :
+	constexpr CWeaponInfo(const char* model, const char* icon = nullptr) :
 		model(model),
 		icon(icon)
 	{}
@@ -21,9 +21,9 @@ struct C_WeaponInfo
 	const char* icon;
 };
 
-struct C_WeaponName
+struct CWeaponName
 {
-	constexpr C_WeaponName(const int definitionIndex, const char* name) :
+	constexpr CWeaponName(const int definitionIndex, const char* name) :
 		definitionIndex(definitionIndex),
 		name(name)
 	{}
@@ -32,7 +32,7 @@ struct C_WeaponName
 	const char* name = nullptr;
 };
 
-extern const std::map<size_t, C_WeaponInfo> k_WeaponInfo;
-extern const std::vector<C_WeaponName> k_KnifeNames;
-extern const std::vector<C_WeaponName> k_GloveNames;
-extern const std::vector<C_WeaponName> k_WeaponNames;
+extern const std::map<size_t, CWeaponInfo> k_WeaponInfo;
+extern const std::vector<CWeaponName> k_KnifeNames;
+extern const std::vector<CWeaponName> k_GloveNames;
+extern const std::vector<CWeaponName> k_WeaponNames;

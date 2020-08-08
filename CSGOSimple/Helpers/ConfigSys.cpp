@@ -103,11 +103,6 @@ void CConfig::Load(const std::string& name)
 	{
 		GetPrivateProfileStringA(value->category.c_str(), value->name.c_str(), "false", value_l, 32, file.c_str()); *value->value = !strcmp(value_l, "true");
 	}
-
-	//for (auto value : chars)
-	//{
-	//	GetPrivateProfileStringA(value->category.c_str(), value->name.c_str(), "", value_l, 32, file.c_str()); *value->value = *value_l;
-	//}
 }
 
 CConfig* Config = new CConfig();

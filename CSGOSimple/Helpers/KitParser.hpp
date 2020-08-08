@@ -7,13 +7,13 @@ struct C_PaintKit
 {
 	int id;
 	std::string name;
-	auto operator < (const C_PaintKit& other) const -> bool
+	bool operator < (const C_PaintKit& other) const
 	{
 		return name < other.name;
 	}
 };
 
-extern std::vector<C_PaintKit> k_Skins;
-extern std::vector<C_PaintKit> k_Gloves;
-extern std::vector<C_PaintKit> k_Stickers;
-extern auto InitializeKits() -> void;
+extern std::vector<C_PaintKit> k_SkinKits;
+extern std::vector<C_PaintKit> k_GloveKits;
+
+void InitializeKits();

@@ -11,11 +11,11 @@
 #include "../Helpers/ItemsDefs.hpp"
 #include "../Features/SkinChanger.hpp"
 
-C_Menu Menu;
+CMenu Menu;
 
 IDirect3DStateBlock9* stateBlock;
 
-void C_Menu::Run()
+void CMenu::Run()
 {
 	static int page = 0;
 
@@ -47,7 +47,7 @@ void C_Menu::Run()
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 45);
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 222);
 
-			if (k_Skins.size() == 0)
+			if (k_SkinKits.size() == 0)
 			{
 				InitializeKits();
 			}
@@ -149,29 +149,29 @@ void C_Menu::Run()
 					if (selectedEntry.definitionIndex != GLOVE_T_SIDE)
 					{
 						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-						ImGui::Combo("Paint Kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** out_text)
+						ImGui::Combo("Paint Kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
 							{
-								*out_text = k_Skins[idx].name.c_str();
+								*outText = k_SkinKits[idx].name.c_str();
 								return true;
-							}, nullptr, k_Skins.size(), 20);
-						selectedEntry.paintKitIndex = k_Skins[selectedEntry.paintKitVectorIndex].id;
+							}, nullptr, k_SkinKits.size(), 20);
+						selectedEntry.paintKitIndex = k_SkinKits[selectedEntry.paintKitVectorIndex].id;
 					}
 					else
 					{
 						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-						ImGui::Combo("Paint Kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** out_text)
+						ImGui::Combo("Paint Kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
 							{
-								*out_text = k_Gloves[idx].name.c_str();
+								*outText = k_GloveKits[idx].name.c_str();
 								return true;
-							}, nullptr, k_Gloves.size(), 20);
-						selectedEntry.paintKitIndex = k_Gloves[selectedEntry.paintKitVectorIndex].id;
+							}, nullptr, k_GloveKits.size(), 20);
+						selectedEntry.paintKitIndex = k_GloveKits[selectedEntry.paintKitVectorIndex].id;
 					}
 					if (selectedEntry.definitionIndex == WEAPON_KNIFE)
 					{
 						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
-						ImGui::Combo("Knife", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** out_text)
+						ImGui::Combo("Knife", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText)
 							{
-								*out_text = k_KnifeNames.at(idx).name;
+								*outText = k_KnifeNames.at(idx).name;
 								return true;
 							}, nullptr, k_KnifeNames.size(), 10);
 						selectedEntry.definitionOverrideIndex = k_KnifeNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
@@ -179,8 +179,8 @@ void C_Menu::Run()
 					else if (selectedEntry.definitionIndex == GLOVE_T_SIDE)
 					{
 						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
-						ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** out_text) {
-							*out_text = k_GloveNames.at(idx).name;
+						ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText) {
+							*outText = k_GloveNames.at(idx).name;
 							return true;
 							}, nullptr, k_GloveNames.size(), 10);
 						selectedEntry.definitionOverrideIndex = k_GloveNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
