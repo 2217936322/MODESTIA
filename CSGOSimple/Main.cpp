@@ -24,9 +24,7 @@ DWORD WINAPI Initialize(void* instance)
 	{
 		Config->Setup();
 		Interfaces::Initialize();
-#ifdef _DEBUG
 		Interfaces::Dump();
-#endif
 		NetvarSys::Get().Initialize();
 		Render::Get().Initialize();
 		InputSys::Get().Initialize();

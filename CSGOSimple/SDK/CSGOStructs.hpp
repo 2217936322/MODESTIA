@@ -34,9 +34,7 @@ struct datamap_t;
 class AnimationLayer;
 class CBasePlayerAnimState;
 class CCSGOPlayerAnimState;
-class C_BaseEntity;
-
-class C_BaseEntity;
+class CBaseEntity;
 
 class CHudTexture
 {
@@ -53,7 +51,7 @@ public:
 	uint8_t pad_009C[16];    
 };
 
-class C_EconItemView
+class CEconItemView
 {
 private:
 	using str_32 = char[32];
@@ -70,107 +68,9 @@ public:
 	NETVAR(int32_t, m_nFallbackStatTrak, "DT_BaseAttributableItem", "m_nFallbackStatTrak");
 	NETVAR(float_t, m_flFallbackWear, "DT_BaseAttributableItem", "m_flFallbackWear");
 	NETVAR(str_32, m_szCustomName, "DT_BaseAttributableItem", "m_szCustomName");
-
-	std::string weapIconDef()
-	{
-		if (!this)
-			return ("");
-		int id = this->m_iItemDefinitionIndex();
-		switch (id) {
-		case WEAPON_KNIFE_T:
-			return ("[");
-		case WEAPON_DEAGLE:
-			return ("A");
-		case WEAPON_AUG:
-			return ("U");
-		case WEAPON_G3SG1:
-			return ("X");
-		case WEAPON_MAC10:
-			return ("K");
-		case WEAPON_P90:
-			return ("P");
-		case WEAPON_SSG08:
-			return ("a");
-		case WEAPON_SCAR20:
-			return ("Y");
-		case WEAPON_UMP45:
-			return ("L");
-		case WEAPON_ELITE:
-			return ("B");
-		case WEAPON_FAMAS:
-			return ("R");
-		case WEAPON_FIVESEVEN:
-			return ("C");
-		case WEAPON_GALILAR:
-			return ("Q");
-		case WEAPON_M4A1_SILENCER:
-			return ("T");
-		case WEAPON_M4A1:
-			return ("S");
-		case WEAPON_P250:
-			return ("F");
-		case WEAPON_M249:
-			return ("g");
-		case WEAPON_XM1014:
-			return ("b");
-		case WEAPON_GLOCK:
-			return ("D");
-		case WEAPON_USP_SILENCER:
-			return ("G");
-		case WEAPON_HKP2000:
-			return ("E");
-		case WEAPON_AK47:
-			return ("W");
-		case WEAPON_AWP:
-			return ("Z");
-		case WEAPON_BIZON:
-			return ("M");
-		case WEAPON_MAG7:
-			return ("d");
-		case WEAPON_NEGEV:
-			return ("f");
-		case WEAPON_SAWEDOFF:
-			return ("c");
-		case WEAPON_TEC9:
-			return ("H");
-		case WEAPON_TASER:
-			return ("h");
-		case WEAPON_NOVA:
-			return ("e");
-		case WEAPON_CZ75A:
-			return ("I");
-		case WEAPON_SG556:
-			return ("V");
-		case WEAPON_REVOLVER:
-			return ("J");
-		case WEAPON_MP7:
-			return ("N");
-		case WEAPON_MP9:
-			return ("O");
-		case WEAPON_MP5:
-			return ("N");
-		case WEAPON_C4:
-			return ("o");
-		case WEAPON_FRAG_GRENADE:
-			return ("j");
-		case WEAPON_SMOKEGRENADE:
-			return ("k");
-		case WEAPON_MOLOTOV:
-			return ("l");
-		case WEAPON_INCGRENADE:
-			return ("n");
-		case WEAPON_FLASHBANG:
-			return ("i");
-		case WEAPON_DECOY:
-			return ("m");
-		default:
-			return ("]");
-		}
-		return ("");
-	}
 };
 
-class C_BaseEntity : public IClientEntity
+class CBaseEntity : public IClientEntity
 {
 public:
 	NETVAR(int32_t, m_nModelIndex, "DT_BaseEntity", "m_nModelIndex");
@@ -179,7 +79,7 @@ public:
 	NETVAR(Vector, m_vecViewOffset, "DT_BasePlayer", "m_vecViewOffset[0]");
 	NETVAR(Vector, m_vecAngles, "DT_BaseEntity", "m_vecAngles");
 	NETVAR(bool, m_bShouldGlow, "DT_DynamicProp", "m_bShouldGlow");
-	NETVAR(CHandle<C_BasePlayer>, m_hOwnerEntity, "DT_BaseEntity", "m_hOwnerEntity");
+	NETVAR(CHandle<CBasePlayer>, m_hOwnerEntity, "DT_BaseEntity", "m_hOwnerEntity");
 	NETVAR(bool, m_bSpotted, "DT_BaseEntity", "m_bSpotted");
 	NETVAR(int32_t, m_nBombSite, "DT_PlantedC4", "m_nBombSite");
 	NETVAR(bool, m_bBombTicking, "DT_PlantedC4", "m_bBombTicking");
@@ -188,7 +88,7 @@ public:
 	NETVAR(float, m_flDefuseLength, "DT_PlantedC4", "m_flDefuseLength");
 	NETVAR(float, m_flDefuseCountDown, "DT_PlantedC4", "m_flDefuseCountDown");
 	NETVAR(float, m_flC4Blow, "DT_PlantedC4", "m_flC4Blow");
-	NETVAR(CHandle<C_BasePlayer>, m_hBombDefuser, "DT_PlantedC4", "m_hBombDefuser");
+	NETVAR(CHandle<CBasePlayer>, m_hBombDefuser, "DT_PlantedC4", "m_hBombDefuser");
 	NETVAR(int32_t, m_nSmokeEffectTickBegin, "DT_SmokeGrenadeProjectile", "m_nSmokeEffectTickBegin");
 	NETVAR(int32_t, m_nExplodeEffectTickBegin, "DT_BaseCSGrenadeProjectile", "m_nExplodeEffectTickBegin");
 
@@ -208,14 +108,14 @@ public:
 		return CallVFunction<Fn>(this, 17)(this);
 	}
 
-	static __forceinline C_BaseEntity* GetEntityByIndex(int index) 
+	static __forceinline CBaseEntity* GetEntityByIndex(int index) 
 	{
-		return static_cast<C_BaseEntity*>(g_EntityList->GetClientEntity(index));
+		return static_cast<CBaseEntity*>(g_EntityList->GetClientEntity(index));
 	}
 
-	static __forceinline C_BaseEntity* GetEntityFromHandle(CBaseHandle h) 
+	static __forceinline CBaseEntity* GetEntityFromHandle(CBaseHandle h) 
 	{
-		return static_cast<C_BaseEntity*>(g_EntityList->GetClientEntityFromHandle(h));
+		return static_cast<CBaseEntity*>(g_EntityList->GetClientEntityFromHandle(h));
 	}
 
 	void* Networkable() 
@@ -242,12 +142,12 @@ public:
 	bool IsDefuseKit();
 };
 
-class C_BaseWeaponWorldModel : public C_BaseEntity
+class CBaseWeaponWorldModel : public CBaseEntity
 {
 public:
 };
 
-class C_BaseAttributableItem : public C_BaseEntity
+class CBaseAttributableItem : public CBaseEntity
 {
 public:
 	NETVAR(uint64_t, m_OriginalOwnerXuid, "DT_BaseAttributableItem", "m_OriginalOwnerXuidLow");
@@ -262,22 +162,22 @@ public:
 	NETVAR(int32_t, m_iItemIDLow, "DT_BaseAttributableItem", "m_iItemIDLow");
 	NETVAR(int32_t, m_iItemIDHigh, "DT_BaseAttributableItem", "m_iItemIDHigh");
 	NETVAR(int32_t, m_nModelIndex, "DT_BaseWeaponWorldModel", "m_nModelIndex");
-	NETVAR(CHandle<C_BaseWeaponWorldModel>, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
+	NETVAR(CHandle<CBaseWeaponWorldModel>, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
 	NETVAR(int32_t, m_iAccountID, "DT_BaseAttributableItem", "m_iAccountID");
 	NETVAR(int32_t, m_iItemDefinitionIndex, "DT_BaseAttributableItem", "m_iItemDefinitionIndex");
 	NETVAR(int32_t, m_iWorldModelIndex, "DT_BaseCombatWeapon", "m_iWorldModelIndex");
-	NETVAR(C_EconItemView, m_Item2, "DT_BaseAttributableItem", "m_Item");
+	NETVAR(CEconItemView, m_Item2, "DT_BaseAttributableItem", "m_Item");
 	NETVAR(int32_t, m_bInitialized, "DT_BaseAttributableItem", "m_bInitialized");
 
-	C_EconItemView& m_Item() 
+	CEconItemView& m_Item() 
 	{
-		return *(C_EconItemView*)this;
+		return *(CEconItemView*)this;
 	}
 
 	void SetModelIndex(int modelIndex);
 };
 
-class C_BaseCombatWeapon : public C_BaseAttributableItem
+class CBaseCombatWeapon : public CBaseAttributableItem
 {
 public:
 	NETVAR(float_t, m_flNextPrimaryAttack, "DT_BaseCombatWeapon", "m_flNextPrimaryAttack");
@@ -291,7 +191,7 @@ public:
 	NETVAR(bool, m_bPinPulled, "DT_BaseCSGrenade", "m_bPinPulled");
 	NETVAR(float_t, m_fThrowTime, "DT_BaseCSGrenade", "m_fThrowTime");
 	NETVAR(float_t, m_flPostponeFireReadyTime, "DT_BaseCombatWeapon", "m_flPostponeFireReadyTime");
-	NETVAR(CHandle<C_BaseWeaponWorldModel>, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
+	NETVAR(CHandle<CBaseWeaponWorldModel>, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
 	NETVAR(int16_t, m_iItemDefinitionIndex, "DT_BaseAttributableItem", "m_iItemDefinitionIndex");
 	NETVAR(int32_t, m_weaponMode, "DT_WeaponCSBase", "m_weaponMode");
 	NETVAR(int32_t, m_zoomLevel, "DT_WeaponCSBaseGun", "m_zoomLevel");
@@ -313,106 +213,9 @@ public:
 	void UpdateAccuracyPenalty();
 	CUtlVector<IRefCounted*>& m_CustomMaterials();
 	bool* m_bCustomMaterialInitialized();
-
-	std::string weaponIconDef() {
-		if (!this)
-			return ("");
-		int id = this->m_iItemDefinitionIndex();
-		switch (id) {
-		case WEAPON_KNIFE_T:
-			return ("[");
-		case WEAPON_DEAGLE:
-			return ("A");
-		case WEAPON_AUG:
-			return ("U");
-		case WEAPON_G3SG1:
-			return ("X");
-		case WEAPON_MAC10:
-			return ("K");
-		case WEAPON_P90:
-			return ("P");
-		case WEAPON_SSG08:
-			return ("a");
-		case WEAPON_SCAR20:
-			return ("Y");
-		case WEAPON_UMP45:
-			return ("L");
-		case WEAPON_ELITE:
-			return ("B");
-		case WEAPON_FAMAS:
-			return ("R");
-		case WEAPON_FIVESEVEN:
-			return ("C");
-		case WEAPON_GALILAR:
-			return ("Q");
-		case WEAPON_M4A1_SILENCER:
-			return ("T");
-		case WEAPON_M4A1:
-			return ("S");
-		case WEAPON_P250:
-			return ("F");
-		case WEAPON_M249:
-			return ("g");
-		case WEAPON_XM1014:
-			return ("b");
-		case WEAPON_GLOCK:
-			return ("D");
-		case WEAPON_USP_SILENCER:
-			return ("G");
-		case WEAPON_HKP2000:
-			return ("E");
-		case WEAPON_AK47:
-			return ("W");
-		case WEAPON_AWP:
-			return ("Z");
-		case WEAPON_BIZON:
-			return ("M");
-		case WEAPON_MAG7:
-			return ("d");
-		case WEAPON_NEGEV:
-			return ("f");
-		case WEAPON_SAWEDOFF:
-			return ("c");
-		case WEAPON_TEC9:
-			return ("H");
-		case WEAPON_TASER:
-			return ("h");
-		case WEAPON_NOVA:
-			return ("e");
-		case WEAPON_CZ75A:
-			return ("I");
-		case WEAPON_SG556:
-			return ("V");
-		case WEAPON_REVOLVER:
-			return ("J");
-		case WEAPON_MP7:
-			return ("N");
-		case WEAPON_MP9:
-			return ("O");
-		case WEAPON_MP5:
-			return ("L");
-		case WEAPON_C4:
-			return ("o");
-		case WEAPON_FRAG_GRENADE:
-			return ("j");
-		case WEAPON_SMOKEGRENADE:
-			return ("k");
-		case WEAPON_MOLOTOV:
-			return ("l");
-		case WEAPON_INCGRENADE:
-			return ("n");
-		case WEAPON_FLASHBANG:
-			return ("i");
-		case WEAPON_DECOY:
-			return ("m");
-		case WEAPON_KNIFE:
-			return ("]");
-		}
-		return ("");
-	}
 };
 
-class C_BasePlayer : public C_BaseEntity
+class CBasePlayer : public CBaseEntity
 {
 public:
 	NETVAR(bool, m_bHasDefuser, "DT_CSPlayer", "m_bHasDefuser");
@@ -432,15 +235,15 @@ public:
 	NETVAR(Vector3D, m_vecViewOffset3D, "DT_BasePlayer", "m_vecViewOffset[0]");
 	NETVAR(QAngle, m_viewPunchAngle, "DT_BasePlayer", "m_viewPunchAngle");
 	NETVAR(QAngle, m_aimPunchAngle, "DT_BasePlayer", "m_aimPunchAngle");
-	NETVAR(CHandle<C_BaseViewModel>, m_hViewModel, "DT_BasePlayer", "m_hViewModel[0]");
+	NETVAR(CHandle<CBaseViewModel>, m_hViewModel, "DT_BasePlayer", "m_hViewModel[0]");
 	NETVAR(Vector, m_vecVelocity, "DT_BasePlayer", "m_vecVelocity[0]");
 	NETVAR(float, m_flMaxspeed, "DT_BasePlayer", "m_flMaxspeed");
-	NETVAR(CHandle<C_BasePlayer>, m_hObserverTarget, "DT_BasePlayer", "m_hObserverTarget");
+	NETVAR(CHandle<CBasePlayer>, m_hObserverTarget, "DT_BasePlayer", "m_hObserverTarget");
 	NETVAR(int, m_iObserverMode, "DT_BasePlayer", "m_iObserverMode");
 	NETVAR(float, m_flFlashMaxAlpha, "DT_CSPlayer", "m_flFlashMaxAlpha");
 	NETVAR(int32_t, m_nHitboxSet, "DT_BaseAnimating", "m_nHitboxSet");
-	NETVAR(CHandle<C_BaseCombatWeapon>, m_hActiveWeapon, "DT_BaseCombatCharacter", "m_hActiveWeapon");
-	NETVAR(CHandle<C_BaseCombatWeapon>, m_hWeapon, "DT_BaseViewModel", "m_hWeapon");
+	NETVAR(CHandle<CBaseCombatWeapon>, m_hActiveWeapon, "DT_BaseCombatCharacter", "m_hActiveWeapon");
+	NETVAR(CHandle<CBaseCombatWeapon>, m_hWeapon, "DT_BaseViewModel", "m_hWeapon");
 	NETVAR(int32_t, m_iAccount, "DT_CSPlayer", "m_iAccount");
 	NETVAR(float, m_flFlashDuration, "DT_CSPlayer", "m_flFlashDuration");
 	NETVAR(float, m_flSimulationTime, "DT_BaseEntity", "m_flSimulationTime");
@@ -456,24 +259,24 @@ public:
 	NETVAR(float, m_flDuckSpeed, "DT_BaseEntity", "m_flDuckSpeed");
 	NETVAR(float, m_flDuckAmount, "DT_BasePlayer", "m_flDuckAmount");
 	PNETVAR(char, m_szLastPlaceName, "DT_BasePlayer", "m_szLastPlaceName");
-	PNETVAR(CHandle<C_BaseCombatWeapon>, m_hMyWeapons, "DT_BaseCombatCharacter", "m_hMyWeapons");
-	PNETVAR(CHandle<C_BaseAttributableItem>, m_hMyWearables, "DT_BaseCombatCharacter", "m_hMyWearables");
+	PNETVAR(CHandle<CBaseCombatWeapon>, m_hMyWeapons, "DT_BaseCombatCharacter", "m_hMyWeapons");
+	PNETVAR(CHandle<CBaseAttributableItem>, m_hMyWearables, "DT_BaseCombatCharacter", "m_hMyWearables");
 	NETPROP(m_flLowerBodyYawTargetProp, "DT_CSPlayer", "m_flLowerBodyYawTarget");
 
-	int C_BasePlayer::GetFOV()
+	int CBasePlayer::GetFOV()
 	{
 		if (m_iFOV() != 0)
 			return m_iFOV();
 		return m_iDefaultFOV();
 	}
 
-	static __forceinline C_BasePlayer* GetPlayerByUserId(int id)
+	static __forceinline CBasePlayer* GetPlayerByUserId(int id)
 	{
-		return static_cast<C_BasePlayer*>(GetEntityByIndex(g_EngineClient->GetPlayerForUserID(id)));
+		return static_cast<CBasePlayer*>(GetEntityByIndex(g_EngineClient->GetPlayerForUserID(id)));
 	}
-	static __forceinline C_BasePlayer* GetPlayerByIndex(int i)
+	static __forceinline CBasePlayer* GetPlayerByIndex(int i)
 	{
-		return static_cast<C_BasePlayer*>(GetEntityByIndex(i));
+		return static_cast<CBasePlayer*>(GetEntityByIndex(i));
 	}
 
 	bool InDangerzone()
@@ -494,7 +297,7 @@ public:
 		}
 	}
 
-	void C_BasePlayer::SetAbsAngles(const QAngle& angles)
+	void CBasePlayer::SetAbsAngles(const QAngle& angles)
 	{
 		using SetAbsAnglesFn = void(__thiscall*)(void*, const QAngle& angles);
 		static SetAbsAnglesFn SetAbsAngles = (SetAbsAnglesFn)Utils::PatternScan(GetModuleHandleW(L"client.dll"), "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1 E8");
@@ -554,7 +357,7 @@ public:
 	int GetSequenceActivity(int sequence);
 	CCSGOPlayerAnimState* GetPlayerAnimState();
 	mstudiobbox_t* GetHitbox(int hitbox_id);
-	bool          GetHitboxPos(int hitbox, Vector& output);
+	bool GetHitboxPos(int hitbox, Vector& output);
 	void UpdateClientSideAnimation();
 	int Handle();
 	int m_nMoveType();
@@ -564,22 +367,22 @@ public:
 	void SetModelIndex(int index);
 };
 
-class C_BaseViewModel : public C_BaseEntity
+class CBaseViewModel : public CBaseEntity
 {
 public:
 	NETVAR( int32_t, m_nIndex, "DT_BaseViewModel", "m_nModelIndex" );
 	NETVAR( int, m_nModelIndex, "DT_BaseViewModel", "m_nModelIndex" );
 	NETVAR( int32_t, m_nViewModelIndex, "DT_BaseViewModel", "m_nViewModelIndex" );
 	NETVAR(int32_t, m_hViewModel, "DT_BasePlayer", "m_hViewModel");
-	NETVAR( CHandle<C_BaseCombatWeapon>, m_hWeapon, "DT_BaseViewModel", "m_hWeapon" );
-	NETVAR( CHandle<C_BaseCombatWeapon>, m_hMyWeapons, "DT_BaseCombatCharacter", "m_hMyWeapons" );
-	NETVAR( CHandle<C_BasePlayer>, m_hOwner, "DT_BaseViewModel", "m_hOwner" );
+	NETVAR( CHandle<CBaseCombatWeapon>, m_hWeapon, "DT_BaseViewModel", "m_hWeapon" );
+	NETVAR( CHandle<CBaseCombatWeapon>, m_hMyWeapons, "DT_BaseCombatCharacter", "m_hMyWeapons" );
+	NETVAR( CHandle<CBasePlayer>, m_hOwner, "DT_BaseViewModel", "m_hOwner" );
 	NETVAR( int, m_hOwner2, "DT_BaseViewModel", "m_hOwner")
 	NETPROP( m_nSequence, "DT_BaseViewModel", "m_nSequence" );
 
 	void SetModelIndex(const int index)
 	{
-		return CallVFunction<void(__thiscall*)(C_BaseEntity*, int)>(this, 75)(this, index);
+		return CallVFunction<void(__thiscall*)(CBaseEntity*, int)>(this, 75)(this, index);
 	}
 
 	void SendViewModelMatchingSequence( int sequence );
@@ -655,20 +458,20 @@ public:
 	char pad10[528];
 }; 
 
-class DT_CSPlayerResource
+class CCSPlayerResource
 {
 public:
-	PNETVAR( int32_t, m_nActiveCoinRank, "DT_CSPlayerResource", "m_nActiveCoinRank" );
-	PNETVAR( int32_t, m_nMusicID, "DT_CSPlayerResource", "m_nMusicID" );
-	PNETVAR( int32_t, m_nPersonaDataPublicLevel, "DT_CSPlayerResource", "m_nPersonaDataPublicLevel" );
-	PNETVAR( int32_t, m_nPersonaDataPublicCommendsLeader, "DT_CSPlayerResource", "m_nPersonaDataPublicCommendsLeader" );
-	PNETVAR( int32_t, m_nPersonaDataPublicCommendsTeacher, "DT_CSPlayerResource", "m_nPersonaDataPublicCommendsTeacher" );
-	PNETVAR( int32_t, m_nPersonaDataPublicCommendsFriendly, "DT_CSPlayerResource", "m_nPersonaDataPublicCommendsFriendly" );
-	PNETVAR( int32_t, m_iCompetitiveRanking, "DT_CSPlayerResource", "m_iCompetitiveRanking" );
-	PNETVAR( int32_t, m_iCompetitiveWins, "DT_CSPlayerResource", "m_iCompetitiveWins" );
-	PNETVAR( int32_t, m_iPlayerVIP, "DT_CSPlayerResource", "m_iPlayerVIP" );
-	PNETVAR( int32_t, m_iMVPs, "DT_CSPlayerResource", "m_iMVPs" );
-	PNETVAR( int32_t, m_iScore, "DT_CSPlayerResource", "m_iScore" );
+	PNETVAR( int32_t, m_nActiveCoinRank, "CCSPlayerResource", "m_nActiveCoinRank" );
+	PNETVAR( int32_t, m_nMusicID, "CCSPlayerResource", "m_nMusicID" );
+	PNETVAR( int32_t, m_nPersonaDataPublicLevel, "CCSPlayerResource", "m_nPersonaDataPublicLevel" );
+	PNETVAR( int32_t, m_nPersonaDataPublicCommendsLeader, "CCSPlayerResource", "m_nPersonaDataPublicCommendsLeader" );
+	PNETVAR( int32_t, m_nPersonaDataPublicCommendsTeacher, "CCSPlayerResource", "m_nPersonaDataPublicCommendsTeacher" );
+	PNETVAR( int32_t, m_nPersonaDataPublicCommendsFriendly, "CCSPlayerResource", "m_nPersonaDataPublicCommendsFriendly" );
+	PNETVAR( int32_t, m_iCompetitiveRanking, "CCSPlayerResource", "m_iCompetitiveRanking" );
+	PNETVAR( int32_t, m_iCompetitiveWins, "CCSPlayerResource", "m_iCompetitiveWins" );
+	PNETVAR( int32_t, m_iPlayerVIP, "CCSPlayerResource", "m_iPlayerVIP" );
+	PNETVAR( int32_t, m_iMVPs, "CCSPlayerResource", "m_iMVPs" );
+	PNETVAR( int32_t, m_iScore, "CCSPlayerResource", "m_iScore" );
 };
 
 class CGameRules {

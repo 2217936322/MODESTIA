@@ -2,7 +2,7 @@
 
 #include "Recv.hpp"
 
-class C_BaseEntity;
+class CBaseEntity;
 class ClientClass;
 class IClientNetworkable;
 
@@ -13,7 +13,7 @@ class ClientClass
 {
 public:
     //CreateClientClassFn      m_pCreateFn;
-    std::add_pointer_t<C_BaseEntity* __cdecl(int, int)> createFunction;
+    std::add_pointer_t<CBaseEntity* __cdecl(int, int)> createFunction;
     CreateEventFn            m_pCreateEventFn;
     char*                    m_pNetworkName;
     RecvTable*               m_pRecvTable;

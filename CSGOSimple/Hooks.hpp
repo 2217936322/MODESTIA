@@ -12,19 +12,19 @@ namespace Hooks
 	namespace CreateMove
 	{
 		using Fn = bool(__stdcall*)(float, CUserCmd*);
-		bool __stdcall Hook(float InputSampleFrametime, CUserCmd* Cmd);
+		bool __stdcall Hook(float inputSampleFrametime, CUserCmd* cmd);
 	};
 
 	namespace EmitSound
 	{
 		using Fn = void(__thiscall*)(void*, IRecipientFilter&, int, int, const char*, unsigned int, const char*, float, int, float, int, int, const Vector*, const Vector*, void*, bool, float, int, int);
-		void __stdcall Hook(IRecipientFilter& filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, int nSeed, float flAttenuation, int iFlags, int iPitch, const Vector* pOrigin, const Vector* pDirection, void* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int unk);
+		void __stdcall Hook(IRecipientFilter& filter, int entIndex, int channel, const char* soundEntry, unsigned int soundEntryHash, const char* sample, float volume, int seed, float attenuation, int flags, int pitch, const Vector* origin, const Vector* direction, void* utlVecOrigins, bool updatePositions, float soundTime, int speakerEntity, int unk);
 	};
 
 	namespace FireEvent
 	{
-		using Fn = bool(__thiscall*)(IGameEventManager2*, IGameEvent* pEvent);
-		bool __stdcall Hook(IGameEvent* pEvent);
+		using Fn = bool(__thiscall*)(IGameEventManager2*, IGameEvent*);
+		bool __stdcall Hook(IGameEvent* event);
 	};
 
 	namespace FrameStageNotify
@@ -35,7 +35,7 @@ namespace Hooks
 
 	namespace RecvProxy
 	{
-		void Hook(const CRecvProxyData* pData, void* entity, void* output);
+		void Hook(const CRecvProxyData* data, void* entity, void* output);
 	};
 
 	namespace LockCursor
@@ -53,7 +53,7 @@ namespace Hooks
 	namespace Reset
 	{
 		using Fn = long(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
-		long __stdcall Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pPresentationParameters);
+		long __stdcall Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentationParameters);
 	};
 
 	namespace LooseFileAllowed

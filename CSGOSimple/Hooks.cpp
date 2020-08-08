@@ -6,7 +6,6 @@
 #include "Helpers/Configs.hpp"
 #include "Helpers/InputSys.hpp"
 #include "Helpers/MinHook/minhook.h"
-#include "SDK/Misc/SpoofedConvar.hpp"
 
 #include "Features/Movement.hpp"
 #include "Features/SkinChanger.hpp"
@@ -69,7 +68,7 @@ bool Hooks::Initialize()
 		return false;
 	}
 
-	SequenceHook = new RecvPropHook(C_BaseViewModel::m_nSequence(), Hooks::RecvProxy::Hook);
+	SequenceHook = new RecvPropHook(CBaseViewModel::m_nSequence(), Hooks::RecvProxy::Hook);
 
 	if (MH_CreateHook(LockCursorTarget, &LockCursor::Hook, reinterpret_cast<void**>(&LockCursorOriginal)) != MH_OK)
 	{
@@ -118,38 +117,40 @@ void Hooks::Release()
 	SequenceHook->~RecvPropHook();
 }
 
-bool __stdcall Hooks::CreateMove::Hook(float InputSampleFrametime, CUserCmd* Cmd)
+bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd)
 {
-	CreateMoveOriginal(InputSampleFrametime, Cmd);
+	CreateMoveOriginal(inputSampleFrametime, cmd);
 
-	if (!Cmd || !Cmd->command_number)
-		return CreateMoveOriginal(InputSampleFrametime, Cmd);
+	if (!cmd || !cmd->command_number)
+		return CreateMoveOriginal(inputSampleFrametime, cmd);
 
-	g_Movement.BunnyHop(Cmd);
+	g_Movement.BunnyHop(cmd);
 
 	if (g_LocalPlayer && InputSys::Get().IsKeyDown(VK_TAB) && g_Configs.misc.rankReveal)
 		Utils::RankRevealAll();
 
 	int OldFlags = g_LocalPlayer->m_fFlags();
-	EnginePrediction::Begin(Cmd);
+	EnginePrediction::Begin(cmd);
 	{
+
 		if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey))
 		{
 			if ((OldFlags & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
-				Cmd->buttons |= IN_JUMP;
+				cmd->buttons |= IN_JUMP;
 
 			if (!(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
-				Cmd->buttons |= IN_DUCK;
+				cmd->buttons |= IN_DUCK;
 		}
+
 	}
 	EnginePrediction::End();
 
 	return false;
 }
 
-void __stdcall Hooks::EmitSound::Hook(IRecipientFilter& filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, int nSeed, float flAttenuation, int iFlags, int iPitch, const Vector* pOrigin, const Vector* pDirection, void* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int unk)
+void __stdcall Hooks::EmitSound::Hook(IRecipientFilter& filter, int entIndex, int channel, const char* soundEntry, unsigned int soundEntryHash, const char* sample, float volume, int seed, float attenuation, int flags, int pitch, const Vector* origin, const Vector* direction, void* utlVecOrigins, bool updatePositions, float soundTime, int speakerEntity, int unk)
 {
-	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_Configs.misc.autoAccept)
+	if (!strcmp(soundEntry, "UIPanorama.popup_accept_match_beep") && g_Configs.misc.autoAccept)
 	{
 		static auto AcceptFn = reinterpret_cast<bool(__stdcall*)(const char*)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
 		HWND Hwnd;
@@ -165,11 +166,11 @@ void __stdcall Hooks::EmitSound::Hook(IRecipientFilter& filter, int iEntIndex, i
 			AcceptFn("");
 	}
 
-	EmitSoundOriginal(g_EngineSound, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, nSeed, flAttenuation, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, unk);
+	EmitSoundOriginal(g_EngineSound, filter, entIndex, channel, soundEntry, soundEntryHash, sample, volume, seed, attenuation, flags, pitch, origin, direction, utlVecOrigins, updatePositions, soundTime, speakerEntity, unk);
 }
 
-bool __stdcall Hooks::FireEvent::Hook(IGameEvent* pEvent) {
-	if (!strcmp(pEvent->GetName(), "player_death") && g_EngineClient->GetPlayerForUserID(pEvent->GetInt("attacker")) == g_EngineClient->GetLocalPlayer())
+bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event) {
+	if (!strcmp(event->GetName(), "player_death") && g_EngineClient->GetPlayerForUserID(event->GetInt("attacker")) == g_EngineClient->GetLocalPlayer())
 	{
 		auto& weapon = g_LocalPlayer->m_hActiveWeapon();
 		if (!weapon)
@@ -187,14 +188,14 @@ bool __stdcall Hooks::FireEvent::Hook(IGameEvent* pEvent) {
 			}
 		}
 
-		const auto iconOverride = g_Configs.skins.GetIconOverride(pEvent->GetString("weapon"));
+		const auto iconOverride = g_Configs.skins.GetIconOverride(event->GetString("weapon"));
 		if (iconOverride)
 		{
-			pEvent->SetString("weapon", iconOverride);
+			event->SetString("weapon", iconOverride);
 		}
 	}
 
-	return FireEventOriginal(g_GameEvents, pEvent);
+	return FireEventOriginal(g_GameEvents, event);
 }
 
 void __stdcall Hooks::FrameStageNotify::Hook(ClientFrameStage_t stage)
@@ -210,7 +211,7 @@ void __stdcall Hooks::FrameStageNotify::Hook(ClientFrameStage_t stage)
 	FrameStageNotifyOriginal(g_CHLClient, stage);
 }
 
-static auto RandomSequence(const int low, const int high) -> int
+static int RandomSequence(const int low, const int high)
 {
 	return rand() % (high - low + 1) + low;
 }
@@ -351,22 +352,22 @@ static int FixAnimation(const uint32_t model, const int sequence)
 	}
 }
 
-void Hooks::RecvProxy::Hook(const CRecvProxyData* pData, void* entity, void* output)
+void Hooks::RecvProxy::Hook(const CRecvProxyData* data, void* entity, void* output)
 {
 	static auto RecvProxyOriginal = SequenceHook->GetOriginal();
 	if (g_LocalPlayer && g_LocalPlayer->IsAlive())
 	{
-		const auto proxyData = const_cast<CRecvProxyData*>(pData);
-		const auto viewModel = static_cast<C_BaseViewModel*>(entity);
+		const auto proxyData = const_cast<CRecvProxyData*>(data);
+		const auto viewModel = static_cast<CBaseViewModel*>(entity);
 		if (viewModel && viewModel->m_hOwner() && viewModel->m_hOwner().IsValid())
 		{
-			const auto owner = static_cast<C_BasePlayer*>(g_EntityList->GetClientEntityFromHandle(viewModel->m_hOwner()));
+			const auto owner = static_cast<CBasePlayer*>(g_EntityList->GetClientEntityFromHandle(viewModel->m_hOwner()));
 			if (owner == g_EntityList->GetClientEntity(g_EngineClient->GetLocalPlayer()))
 			{
 				const auto viewModelWeaponHandle = viewModel->m_hWeapon();
 				if (viewModelWeaponHandle.IsValid())
 				{
-					const auto viewModelWeapon = static_cast<C_BaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(viewModelWeaponHandle));
+					const auto viewModelWeapon = static_cast<CBaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(viewModelWeaponHandle));
 					if (viewModelWeapon)
 					{
 						if (k_WeaponInfo.count(viewModelWeapon->m_Item().m_iItemDefinitionIndex()))
@@ -380,7 +381,8 @@ void Hooks::RecvProxy::Hook(const CRecvProxyData* pData, void* entity, void* out
 			}
 		}
 	}
-	RecvProxyOriginal(pData, entity, output);
+
+	RecvProxyOriginal(data, entity, output);
 }
 
 void __stdcall Hooks::LockCursor::Hook()
@@ -431,13 +433,13 @@ long __stdcall Hooks::EndScene::Hook(IDirect3DDevice9* device)
 	return EndSceneOriginal(device);
 }
 
-long __stdcall Hooks::Reset::Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pPresentationParameters)
+long __stdcall Hooks::Reset::Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentationParameters)
 {
 	if (!Initialized)
-		ResetOriginal(device, pPresentationParameters);
+		ResetOriginal(device, presentationParameters);
 
 	Menu.InvalidateObjects();
-	long hr = ResetOriginal(device, pPresentationParameters);
+	long hr = ResetOriginal(device, presentationParameters);
 	Menu.CreateObjects(device);
 
 	return hr;

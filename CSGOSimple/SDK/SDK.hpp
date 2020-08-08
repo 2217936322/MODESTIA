@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-#include "Misc/vfunc.hpp"
+#include "Misc/VFunc.hpp"
 
 #include "Misc/Enums.hpp"
 
@@ -93,10 +93,6 @@ extern IStudioRender*		 g_StudioRender;
 extern IFileSystem*			 g_FileSystem;
 extern INetworkStringTableContainer* g_NetworkStringTableContainer;
 
-extern void( __cdecl* RandomSeed )( uint32_t seed );
-extern int( __cdecl* RandomInt )( int min, int max );
-extern float( __cdecl* RandomFloat )( float min, float max );
-
 template<typename... Args>
 void ConMsg( const char* pMsg, Args... args ) {
   static auto import = ( void( *)( const char*, ... ) )GetProcAddress( GetModuleHandleW( L"tier0.dll" ), "?ConMsg@@YAXPBDZZ" );
@@ -112,17 +108,16 @@ void ConColorMsg( const Color& clr, const char* pMsg, Args... args ) {
 
 class C_LocalPlayer
 {
-  friend bool operator==( const C_LocalPlayer& lhs, void* rhs );
 public:
-  C_LocalPlayer( ) : m_local( nullptr ) { }
+  C_LocalPlayer( ) : m_Local( nullptr ) { }
 
-  operator bool( ) const { return *m_local != nullptr; }
-  operator C_BasePlayer*( ) const { return *m_local; }
+  operator bool( ) const { return *m_Local != nullptr; }
+  operator CBasePlayer*( ) const { return *m_Local; }
 
-  C_BasePlayer* operator->( ) { return *m_local; }
+  CBasePlayer* operator->( ) { return *m_Local; }
 
 private:
-  C_BasePlayer** m_local;
+  CBasePlayer** m_Local;
 };
 
 extern C_LocalPlayer g_LocalPlayer;

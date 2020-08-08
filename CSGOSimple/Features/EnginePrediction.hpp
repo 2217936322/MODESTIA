@@ -10,7 +10,7 @@ namespace EnginePrediction
 	int fixedTick;
 
 	int32_t* predictionSeed;
-	C_BasePlayer*** predictionPlayer;
+	CBasePlayer*** predictionPlayer;
 
 	void Begin(CUserCmd* cmd)
 	{
@@ -29,7 +29,7 @@ namespace EnginePrediction
 		if (!predictionSeed || !predictionPlayer)
 		{
 			predictionSeed = *(int32_t**)(Utils::PatternScan(GetModuleHandleA("client.dll"), "8B 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 83 C4 04") + 0x2);
-			predictionPlayer = (C_BasePlayer***)(Utils::PatternScan(GetModuleHandleA("client.dll"), "89 35 ? ? ? ? F3 0F 10 48 20") + 0x2);
+			predictionPlayer = (CBasePlayer***)(Utils::PatternScan(GetModuleHandleA("client.dll"), "89 35 ? ? ? ? F3 0F 10 48 20") + 0x2);
 		}
 
 		if (predictionSeed)

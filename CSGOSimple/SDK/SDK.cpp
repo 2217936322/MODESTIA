@@ -38,11 +38,6 @@ ILocalize*			  g_Localize		 = nullptr;
 IFileSystem*          g_FileSystem       = nullptr;
 INetworkStringTableContainer* g_NetworkStringTableContainer = nullptr;
 
-
-int( __cdecl* RandomInt )( int min, int max );
-void( __cdecl* RandomSeed )( uint32_t seed );
-float( __cdecl* RandomFloat )( float min, float max );
-
 namespace Interfaces
 {
     CreateInterfaceFn GetModuleFactory(HMODULE module)
@@ -64,62 +59,58 @@ namespace Interfaces
 
     void Initialize()
     {
-	    auto client            = GetModuleHandleW(L"client.dll");
-		auto engine            = GetModuleHandleW(L"engine.dll");
-		auto dx9api            = GetModuleHandleW(L"shaderapidx9.dll");
-		auto stdlib            = GetModuleHandleW(L"vstdlib.dll");
-        auto filesystemFactory = GetModuleFactory(GetModuleHandleW(L"filesystem_stdio.dll"));
-        auto engineFactory     = GetModuleFactory(GetModuleHandleW(L"engine.dll"));
-        auto clientFactory     = GetModuleFactory(GetModuleHandleW(L"client.dll"));
-        auto vguiFactory       = GetModuleFactory(GetModuleHandleW(L"vguimatsurface.dll"));
-        auto vgui2Factory      = GetModuleFactory(GetModuleHandleW(L"vgui2.dll"));
-        auto matSysFactory     = GetModuleFactory(GetModuleHandleW(L"materialsystem.dll"));
-        auto dataCacheFactory  = GetModuleFactory(GetModuleHandleW(L"datacache.dll"));
-        auto vphysicsFactory   = GetModuleFactory(GetModuleHandleW(L"vphysics.dll"));
-        auto inputSysFactory   = GetModuleFactory(GetModuleHandleW(L"inputsystem.dll"));
-		auto localizeFactory   = GetModuleFactory(GetModuleHandleW(L"localize.dll"));
-		auto studioFactory     = GetModuleFactory(GetModuleHandleW(L"studiorender.dll"));
+	    auto client            = GetModuleHandleA("client.dll");
+		auto engine            = GetModuleHandleA("engine.dll");
+		auto dx9api            = GetModuleHandleA("shaderapidx9.dll");
+		auto stdlib            = GetModuleHandleA("vstdlib.dll");
+        auto filesystemFactory = GetModuleFactory(GetModuleHandleA("filesystem_stdio.dll"));
+        auto engineFactory     = GetModuleFactory(GetModuleHandleA("engine.dll"));
+        auto clientFactory     = GetModuleFactory(GetModuleHandleA("client.dll"));
+        auto vguiFactory       = GetModuleFactory(GetModuleHandleA("vguimatsurface.dll"));
+        auto vgui2Factory      = GetModuleFactory(GetModuleHandleA("vgui2.dll"));
+        auto matSysFactory     = GetModuleFactory(GetModuleHandleA("materialsystem.dll"));
+        auto dataCacheFactory  = GetModuleFactory(GetModuleHandleA("datacache.dll"));
+        auto vphysicsFactory   = GetModuleFactory(GetModuleHandleA("vphysics.dll"));
+        auto inputSysFactory   = GetModuleFactory(GetModuleHandleA("inputsystem.dll"));
+		auto localizeFactory   = GetModuleFactory(GetModuleHandleA("localize.dll"));
+		auto studioFactory     = GetModuleFactory(GetModuleHandleA("studiorender.dll"));
         auto valveStdFactory   = GetModuleFactory(stdlib);
 
-        g_CHLClient           = GetInterface<IBaseClientDLL>      (clientFactory    , "VClient018");
-        g_EntityList          = GetInterface<IClientEntityList>   (clientFactory    , "VClientEntityList003");
-        g_ClientLeafSystem    = GetInterface<IClientLeafSystem>   (clientFactory    , "ClientLeafSystem002");
-        g_Prediction          = GetInterface<IPrediction>         (clientFactory    , "VClientPrediction001");
-        g_GameMovement        = GetInterface<CGameMovement>       (clientFactory    , "GameMovement001");
-        g_MdlCache            = GetInterface<IMDLCache>           (dataCacheFactory , "MDLCache004");
-        g_EngineClient        = GetInterface<IVEngineClient>      (engineFactory    , "VEngineClient014");
-        g_MdlInfo             = GetInterface<IVModelInfoClient>   (engineFactory    , "VModelInfoClient004");
-        g_MdlRender           = GetInterface<IVModelRender>       (engineFactory    , "VEngineModel016");
-        g_RenderView          = GetInterface<IVRenderView>        (engineFactory    , "VEngineRenderView014");
-        g_EngineTrace         = GetInterface<IEngineTrace>        (engineFactory    , "EngineTraceClient004");
-        g_DebugOverlay        = GetInterface<IVDebugOverlay>      (engineFactory    , "VDebugOverlay004");
-        g_GameEvents          = GetInterface<IGameEventManager2>  (engineFactory    , "GAMEEVENTSMANAGER002");
-        g_EngineSound         = GetInterface<IEngineSound>        (engineFactory    , "IEngineSoundClient003");
+        g_CHLClient = GetInterface<IBaseClientDLL>(clientFactory, "VClient018");
+        g_EntityList = GetInterface<IClientEntityList>(clientFactory, "VClientEntityList003");
+        g_ClientLeafSystem = GetInterface<IClientLeafSystem>(clientFactory, "ClientLeafSystem002");
+        g_Prediction = GetInterface<IPrediction>(clientFactory, "VClientPrediction001");
+        g_GameMovement = GetInterface<CGameMovement>(clientFactory, "GameMovement001");
+        g_MdlCache = GetInterface<IMDLCache>(dataCacheFactory, "MDLCache004");
+        g_EngineClient = GetInterface<IVEngineClient>(engineFactory, "VEngineClient014");
+        g_MdlInfo = GetInterface<IVModelInfoClient>(engineFactory, "VModelInfoClient004");
+        g_MdlRender = GetInterface<IVModelRender>(engineFactory, "VEngineModel016");
+        g_RenderView = GetInterface<IVRenderView>(engineFactory, "VEngineRenderView014");
+        g_EngineTrace = GetInterface<IEngineTrace>(engineFactory, "EngineTraceClient004");
+        g_DebugOverlay = GetInterface<IVDebugOverlay>(engineFactory, "VDebugOverlay004");
+        g_GameEvents = GetInterface<IGameEventManager2>(engineFactory, "GAMEEVENTSMANAGER002");
+        g_EngineSound = GetInterface<IEngineSound>(engineFactory, "IEngineSoundClient003");
         g_NetworkStringTableContainer = GetInterface<INetworkStringTableContainer>(engineFactory, "VEngineClientStringTable001");
-        g_MatSystem           = GetInterface<IMaterialSystem>     (matSysFactory    , "VMaterialSystem080");
-        g_CVar                = GetInterface<ICvar>               (valveStdFactory  , "VEngineCvar007");
-        g_VGuiPanel           = GetInterface<IPanel>              (vgui2Factory     , "VGUI_Panel009");
-        g_VGuiSurface         = GetInterface<ISurface>            (vguiFactory      , "VGUI_Surface031");
-        g_PhysSurface         = GetInterface<IPhysicsSurfaceProps>(vphysicsFactory  , "VPhysicsSurfaceProps001");
-        g_InputSystem         = GetInterface<IInputSystem>        (inputSysFactory  , "InputSystemVersion001");
-		g_SpatialPartition	  = GetInterface<uintptr_t>			  (engineFactory    , "SpatialPartition001" );
-		g_Localize			  = GetInterface<ILocalize>		      (localizeFactory  , "Localize_001");
-		g_StudioRender        = GetInterface<IStudioRender>       (studioFactory    , "VStudioRender026" );
-        g_FileSystem          = GetInterface<IFileSystem>         (filesystemFactory, "VFileSystem017");
-		g_MemAlloc            = *(IMemAlloc**)GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc");
-        g_GlobalVars          = **(CGlobalVarsBase***)(Utils::PatternScan(client, "A1 ? ? ? ? 5E 8B 40 10") + 1);
-		g_ClientMode	      = *(IClientMode**)(Utils::PatternScan(client, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 0F 85 ? ? ? ? 53") + 1);
-        g_Input               = *(CInput**)(Utils::PatternScan(client, "B9 ? ? ? ? 8B 40 38 FF D0 84 C0 0F 85") + 1);
-        g_MoveHelper          = **(IMoveHelper***)(Utils::PatternScan(client, "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 2);
-        g_ViewRender          = *(IViewRender**)(Utils::PatternScan(client, "A1 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? FF 10") + 1);
-        g_D3DDevice9          = **(IDirect3DDevice9***)(Utils::PatternScan(dx9api, "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1);
-        g_ClientState         = **(CClientState***)(Utils::PatternScan(engine, "A1 ? ? ? ? 8B 80 ? ? ? ? C3") + 1);
-		g_GameRules           = *(CGameRules**)( Utils::PatternScan(client, "8B 0D ?? ?? ?? ?? 85 C0 74 0A 8B 01 FF 50 78 83 C0 54") + 2);
-        g_LocalPlayer         = *(C_LocalPlayer*)(Utils::PatternScan(client, "8B 0D ? ? ? ? 83 FF FF 74 07") + 2);
-
-		RandomInt = reinterpret_cast<decltype(RandomInt)>(GetProcAddress(stdlib, "RandomInt"));
-		RandomSeed = reinterpret_cast<decltype(RandomSeed)>(GetProcAddress(stdlib, "RandomSeed"));
-		RandomFloat = reinterpret_cast<decltype(RandomFloat)>(GetProcAddress(stdlib, "RandomFloat"));
+        g_MatSystem = GetInterface<IMaterialSystem>(matSysFactory, "VMaterialSystem080");
+        g_CVar = GetInterface<ICvar>(valveStdFactory, "VEngineCvar007");
+        g_VGuiPanel = GetInterface<IPanel>(vgui2Factory, "VGUI_Panel009");
+        g_VGuiSurface = GetInterface<ISurface>(vguiFactory, "VGUI_Surface031");
+        g_PhysSurface = GetInterface<IPhysicsSurfaceProps>(vphysicsFactory, "VPhysicsSurfaceProps001");
+        g_InputSystem = GetInterface<IInputSystem>(inputSysFactory, "InputSystemVersion001");
+		g_SpatialPartition = GetInterface<uintptr_t>(engineFactory, "SpatialPartition001" );
+		g_Localize = GetInterface<ILocalize>(localizeFactory, "Localize_001");
+		g_StudioRender = GetInterface<IStudioRender>(studioFactory, "VStudioRender026" );
+        g_FileSystem = GetInterface<IFileSystem>(filesystemFactory, "VFileSystem017");
+		g_MemAlloc = *(IMemAlloc**)GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc");
+        g_GlobalVars = **(CGlobalVarsBase***)(Utils::PatternScan(client, "A1 ? ? ? ? 5E 8B 40 10") + 1);
+		g_ClientMode = *(IClientMode**)(Utils::PatternScan(client, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 0F 85 ? ? ? ? 53") + 1);
+        g_Input = *(CInput**)(Utils::PatternScan(client, "B9 ? ? ? ? 8B 40 38 FF D0 84 C0 0F 85") + 1);
+        g_MoveHelper = **(IMoveHelper***)(Utils::PatternScan(client, "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 2);
+        g_ViewRender = *(IViewRender**)(Utils::PatternScan(client, "A1 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? FF 10") + 1);
+        g_D3DDevice9 = **(IDirect3DDevice9***)(Utils::PatternScan(dx9api, "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1);
+        g_ClientState = **(CClientState***)(Utils::PatternScan(engine, "A1 ? ? ? ? 8B 80 ? ? ? ? C3") + 1);
+		g_GameRules = *(CGameRules**)( Utils::PatternScan(client, "8B 0D ?? ?? ?? ?? 85 C0 74 0A 8B 01 FF 50 78 83 C0 54") + 2);
+        g_LocalPlayer = *(C_LocalPlayer*)(Utils::PatternScan(client, "8B 0D ? ? ? ? 83 FF FF 74 07") + 2);
     }
 
     void Dump()

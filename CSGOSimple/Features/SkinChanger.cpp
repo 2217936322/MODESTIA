@@ -15,7 +15,7 @@ static void EraseOverrideIfExistsByIndex(const int definitionIndex)
 	}
 }
 
-static void ApplyConfigOnAttributableItem(C_BaseAttributableItem* item, const C_ItemSettings* config, const unsigned xuidLow)
+static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const C_ItemSettings* config, const unsigned xuidLow)
 {
 	if (!config->enabled)
 	{
@@ -73,14 +73,14 @@ static void ApplyConfigOnAttributableItem(C_BaseAttributableItem* item, const C_
 	}
 }
 
-static C_BaseEntity* MakeGlove(int entry, int serial)
+static CBaseEntity* MakeGlove(int entry, int serial)
 {
-	static std::add_pointer_t<C_BaseEntity* __cdecl(int, int)> createWearable = nullptr;
+	static std::add_pointer_t<CBaseEntity* __cdecl(int, int)> createWearable = nullptr;
 
 	if (!createWearable) {
 		createWearable = []() -> decltype(createWearable) {
 			for (auto clientClass = g_CHLClient->GetAllClasses(); clientClass; clientClass = clientClass->m_pNext)
-				if (clientClass->m_ClassID == CEconWearable)
+				if (clientClass->m_ClassID == C_EconWearable)
 					return clientClass->createFunction;
 			return nullptr;
 		}();
@@ -96,7 +96,7 @@ static C_BaseEntity* MakeGlove(int entry, int serial)
 void Initialize(int localHandle)
 {
 	const auto localIndex = g_EngineClient->GetLocalPlayer();
-	const auto local = static_cast<C_BasePlayer*>(g_EntityList->GetClientEntity(localIndex));
+	const auto local = static_cast<CBasePlayer*>(g_EntityList->GetClientEntity(localIndex));
 	if (!local)
 		return;
 
@@ -109,11 +109,11 @@ void Initialize(int localHandle)
 		const auto gloveConfig = &g_Configs.skins.m_Items[GLOVE_T_SIDE];
 
 		static auto gloveHandle = CBaseHandle(0);
-		auto glove = reinterpret_cast<C_BaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(wearables[0]));
+		auto glove = reinterpret_cast<CBaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(wearables[0]));
 
 		if (!glove)
 		{
-			const auto ourGlove = reinterpret_cast<C_BaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(gloveHandle));
+			const auto ourGlove = reinterpret_cast<CBaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(gloveHandle));
 			if (ourGlove)
 			{
 				wearables[0] = gloveHandle;
@@ -148,7 +148,7 @@ void Initialize(int localHandle)
 
 				const auto serial = rand() % 0x1000;
 
-				glove = reinterpret_cast<C_BaseAttributableItem*>(MakeGlove(entry, serial));
+				glove = reinterpret_cast<CBaseAttributableItem*>(MakeGlove(entry, serial));
 				if (glove)
 				{
 					glove->m_bInitialized() = true;
@@ -173,7 +173,7 @@ void Initialize(int localHandle)
 		auto weapons = local->m_hMyWeapons();
 		for (int i = 0; weapons[i].IsValid(); i++)
 		{
-			C_BaseAttributableItem* weapon = (C_BaseAttributableItem*)g_EntityList->GetClientEntityFromHandle(weapons[i]);
+			CBaseAttributableItem* weapon = (CBaseAttributableItem*)g_EntityList->GetClientEntityFromHandle(weapons[i]);
 			if (!weapon)
 				continue;
 
@@ -189,7 +189,7 @@ void Initialize(int localHandle)
 		if (!viewmodelHandle.IsValid())
 			return;
 
-		const auto viewmodel = static_cast<C_BaseViewModel*>(g_EntityList->GetClientEntityFromHandle(viewmodelHandle));
+		const auto viewmodel = static_cast<CBaseViewModel*>(g_EntityList->GetClientEntityFromHandle(viewmodelHandle));
 		if (!viewmodel)
 			return;
 
@@ -197,7 +197,7 @@ void Initialize(int localHandle)
 		if (!viewmodelWeaponHandle.IsValid())
 			return;
 
-		const auto viewmodelWeapon = static_cast<C_BaseCombatWeapon*>(g_EntityList->GetClientEntityFromHandle(viewmodelWeaponHandle));
+		const auto viewmodelWeapon = static_cast<CBaseCombatWeapon*>(g_EntityList->GetClientEntityFromHandle(viewmodelWeaponHandle));
 		if (!viewmodelWeapon)
 			return;
 
@@ -212,7 +212,7 @@ void Initialize(int localHandle)
 			if (!worldModelHandle.IsValid())
 				return;
 
-			const auto worldModel = static_cast<C_BaseWeaponWorldModel*>(g_EntityList->GetClientEntityFromHandle(worldModelHandle));
+			const auto worldModel = static_cast<CBaseWeaponWorldModel*>(g_EntityList->GetClientEntityFromHandle(worldModelHandle));
 			if (!worldModel)
 				return;
 

@@ -4,54 +4,54 @@
 
 CGameRules* g_GameRules = nullptr;
 
-bool C_BaseEntity::IsPlayer()
+bool CBaseEntity::IsPlayer()
 {
-	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 159)(this);
+	return CallVFunction<bool(__thiscall*)(CBaseEntity*)>(this, 159)(this);
 }
 
-int C_BasePlayer::Handle()
+int CBasePlayer::Handle()
 {
-	return CallVFunction<int(__thiscall*)(C_BasePlayer*)>(this, 2)(this);
+	return CallVFunction<int(__thiscall*)(CBasePlayer*)>(this, 2)(this);
 }
 
-bool C_BaseEntity::IsLoot()
+bool CBaseEntity::IsLoot()
 {
-	return (GetClientClass()->m_ClassID == CPhysPropAmmoBox ||
-		GetClientClass()->m_ClassID == CPhysPropLootCrate ||
-		GetClientClass()->m_ClassID == CPhysPropRadarJammer ||
-		GetClientClass()->m_ClassID == CPhysPropWeaponUpgrade ||
-		GetClientClass()->m_ClassID == CDrone ||
-		GetClientClass()->m_ClassID == CDronegun ||
-		GetClientClass()->m_ClassID == CItem_Healthshot ||
-		GetClientClass()->m_ClassID == CItemCash);
+	return (GetClientClass()->m_ClassID == C_PhysPropAmmoBox ||
+		GetClientClass()->m_ClassID == C_PhysPropLootCrate ||
+		GetClientClass()->m_ClassID == C_PhysPropRadarJammer ||
+		GetClientClass()->m_ClassID == C_PhysPropWeaponUpgrade ||
+		GetClientClass()->m_ClassID == C_Drone ||
+		GetClientClass()->m_ClassID == C_Dronegun ||
+		GetClientClass()->m_ClassID == C_Item_Healthshot ||
+		GetClientClass()->m_ClassID == C_ItemCash);
 }
 
-bool C_BaseEntity::IsWeapon()
+bool CBaseEntity::IsWeapon()
 {
-	return CallVFunction<bool(__thiscall*)(C_BaseEntity*)>(this, 169)(this);
+	return CallVFunction<bool(__thiscall*)(CBaseEntity*)>(this, 169)(this);
 }
 
-bool C_BaseEntity::IsPlantedC4() 
+bool CBaseEntity::IsPlantedC4() 
 {
-	return GetClientClass()->m_ClassID == CPlantedC4;
+	return GetClientClass()->m_ClassID == C_PlantedC4;
 }
 
-bool C_BaseEntity::IsDefuseKit( ) 
+bool CBaseEntity::IsDefuseKit( ) 
 {
-	return GetClientClass( )->m_ClassID == CBaseAnimating;
+	return GetClientClass( )->m_ClassID == C_BaseAnimating;
 }
 
-CCSWeaponInfo* C_BaseCombatWeapon::GetCSWeaponData() 
+CCSWeaponInfo* CBaseCombatWeapon::GetCSWeaponData() 
 {
-	return CallVFunction<CCSWeaponInfo* (__thiscall*)(C_BaseCombatWeapon*)>(this, 460)(this);
+	return CallVFunction<CCSWeaponInfo* (__thiscall*)(CBaseCombatWeapon*)>(this, 460)(this);
 }
 
-bool C_BaseCombatWeapon::HasBullets()
+bool CBaseCombatWeapon::HasBullets()
 {
 	return !IsReloading() && m_iClip1() > 0;
 }
 
-bool C_BaseCombatWeapon::CanFire()
+bool CBaseCombatWeapon::CanFire()
 {
 	static decltype(this) stored_weapon = nullptr;
 	static auto stored_tick = 0;
@@ -69,7 +69,7 @@ bool C_BaseCombatWeapon::CanFire()
 	return m_flNextPrimaryAttack() <= flServerTime;
 }
 
-bool C_BaseCombatWeapon::IsGun()
+bool CBaseCombatWeapon::IsGun()
 {
 	switch (GetCSWeaponData()->WeaponType) {
 	case WEAPONTYPE_C4:
@@ -85,32 +85,32 @@ bool C_BaseCombatWeapon::IsGun()
 	}
 }
 
-bool C_BaseCombatWeapon::IsGrenade() 
+bool CBaseCombatWeapon::IsGrenade() 
 {
 	return GetCSWeaponData()->WeaponType == WEAPONTYPE_GRENADE;
 }
 
-bool C_BaseCombatWeapon::IsKnife()
+bool CBaseCombatWeapon::IsKnife()
 {
 	if (this->m_Item().m_iItemDefinitionIndex() == WEAPON_TASER) return false;
 	return GetCSWeaponData()->WeaponType == WEAPONTYPE_KNIFE;
 }
 
-bool C_BaseCombatWeapon::IsAwp()
+bool CBaseCombatWeapon::IsAwp()
 {
 	if (this->m_Item().m_iItemDefinitionIndex() == WEAPON_AWP)
 		return true;
 	return false;
 }
 
-bool C_BaseCombatWeapon::IsZeus() 
+bool CBaseCombatWeapon::IsZeus() 
 {
 	if (this->m_Item().m_iItemDefinitionIndex() == WEAPON_TASER)
 		return true;
 	return false;
 }
 
-bool C_BaseCombatWeapon::IsRifle()
+bool CBaseCombatWeapon::IsRifle()
 {
 	switch (GetCSWeaponData()->WeaponType)
 	{
@@ -127,7 +127,7 @@ bool C_BaseCombatWeapon::IsRifle()
 	}
 }
 
-bool C_BaseCombatWeapon::IsPistol() 
+bool CBaseCombatWeapon::IsPistol() 
 {
 	switch (GetCSWeaponData()->WeaponType) 
 	{
@@ -138,7 +138,7 @@ bool C_BaseCombatWeapon::IsPistol()
 	}
 }
 
-bool C_BaseCombatWeapon::IsSniper()
+bool CBaseCombatWeapon::IsSniper()
 {
 	switch (GetCSWeaponData()->WeaponType)
 	{
@@ -149,63 +149,63 @@ bool C_BaseCombatWeapon::IsSniper()
 	}
 }
 
-bool C_BaseCombatWeapon::IsReloading()
+bool CBaseCombatWeapon::IsReloading()
 {
 	static auto inReload = *(uint32_t*)(Utils::PatternScan(GetModuleHandleW(L"client.dll"), "C6 87 ? ? ? ? ? 8B 06 8B CE FF 90") + 2);
 	return *(bool*)((uintptr_t)this + inReload);
 }
 
-float C_BaseCombatWeapon::GetInaccuracy()
+float CBaseCombatWeapon::GetInaccuracy()
 {
 	return CallVFunction<float(__thiscall*)(void*)>(this, 482)(this);
 }
 
-float C_BaseCombatWeapon::GetSpread()
+float CBaseCombatWeapon::GetSpread()
 {
 	return CallVFunction<float(__thiscall*)(void*)>(this, 452)(this);
 }
 
-void C_BaseCombatWeapon::UpdateAccuracyPenalty()
+void CBaseCombatWeapon::UpdateAccuracyPenalty()
 {
 	CallVFunction<void(__thiscall*)(void*)>(this, 483)(this);
 }
 
-CUtlVector<IRefCounted*>& C_BaseCombatWeapon::m_CustomMaterials()
+CUtlVector<IRefCounted*>& CBaseCombatWeapon::m_CustomMaterials()
 {
 	static auto inReload = *(uint32_t*)(Utils::PatternScan(GetModuleHandleW(L"client.dll"), "83 BE ? ? ? ? ? 7F 67") + 2) - 12;
 	return *(CUtlVector<IRefCounted*>*)((uintptr_t)this + inReload);
 }
 
-bool* C_BaseCombatWeapon::m_bCustomMaterialInitialized()
+bool* CBaseCombatWeapon::m_bCustomMaterialInitialized()
 {
 	static auto currentCommand = *(uint32_t*)(Utils::PatternScan(GetModuleHandleW(L"client.dll"), "C6 86 ? ? ? ? ? FF 50 04") + 2);
 	return (bool*)((uintptr_t)this + currentCommand);
 }
 
-CUserCmd*& C_BasePlayer::m_pCurrentCommand()
+CUserCmd*& CBasePlayer::m_pCurrentCommand()
 {
 	static auto currentCommand = *(uint32_t*)(Utils::PatternScan(GetModuleHandleW(L"client.dll"), "89 BE ? ? ? ? E8 ? ? ? ? 85 FF") + 2);
 	return *(CUserCmd**)((uintptr_t)this + currentCommand);
 }
 
-int C_BasePlayer::GetNumAnimOverlays()
+int CBasePlayer::GetNumAnimOverlays()
 {
 	return *(int*)((DWORD)this + 0x298C);
 }
 
-AnimationLayer* C_BasePlayer::GetAnimOverlays()
+AnimationLayer* CBasePlayer::GetAnimOverlays()
 {
 	return *(AnimationLayer**)((DWORD)this + 0x2980);
 }
 
-AnimationLayer* C_BasePlayer::GetAnimOverlay(int i) 
+AnimationLayer* CBasePlayer::GetAnimOverlay(int i) 
 {
 	if (i < 15)
 		return &GetAnimOverlays()[i];
 	return nullptr;
 }
 
-int C_BasePlayer::GetSequenceActivity(int sequence)
+int CBasePlayer::GetSequenceActivity(int sequence)
 {
 	auto hdr = g_MdlInfo->GetStudiomodel(this->GetModel());
 
@@ -217,31 +217,31 @@ int C_BasePlayer::GetSequenceActivity(int sequence)
 	return getSequenceActivity(this, hdr, sequence);
 }
 
-CCSGOPlayerAnimState* C_BasePlayer::GetPlayerAnimState()
+CCSGOPlayerAnimState* CBasePlayer::GetPlayerAnimState()
 {
 	return *(CCSGOPlayerAnimState**)((DWORD)this + 0x3900);
 }
 
 
-PlayerInfo_t C_BasePlayer::GetPlayerInfo()
+PlayerInfo_t CBasePlayer::GetPlayerInfo()
 {
 	PlayerInfo_t info;
 	g_EngineClient->GetPlayerInfo(EntIndex(), &info);
 	return info;
 }
 
-bool C_BasePlayer::IsAlive()
+bool CBasePlayer::IsAlive()
 {
 	return m_lifeState() == LIFE_ALIVE;
 }
 
-bool C_BasePlayer::IsFlashed()
+bool CBasePlayer::IsFlashed()
 {
 	static auto m_flFlashMaxAlpha = NetvarSys::Get().GetOffset("DT_CSPlayer", "m_flFlashMaxAlpha");
 	return *(float*)((uintptr_t)this + m_flFlashMaxAlpha - 0x8) > 200.0;
 }
 
-bool C_BasePlayer::HasC4()
+bool CBasePlayer::HasC4()
 {
 	static auto fnHasC4
 		= reinterpret_cast<bool(__thiscall*)(void*)>(
@@ -251,7 +251,7 @@ bool C_BasePlayer::HasC4()
 	return fnHasC4(this);
 }
 
-Vector C_BasePlayer::GetHitboxPos(int hitboxID)
+Vector CBasePlayer::GetHitboxPos(int hitboxID)
 {
 	matrix3x4_t boneMatrix[MAXSTUDIOBONES];
 
@@ -277,7 +277,7 @@ Vector C_BasePlayer::GetHitboxPos(int hitboxID)
 	return Vector{};
 }
 
-mstudiobbox_t* C_BasePlayer::GetHitbox(int hitboxID)
+mstudiobbox_t* CBasePlayer::GetHitbox(int hitboxID)
 {
 	matrix3x4_t boneMatrix[MAXSTUDIOBONES];
 
@@ -296,7 +296,7 @@ mstudiobbox_t* C_BasePlayer::GetHitbox(int hitboxID)
 	return nullptr;
 }
 
-bool C_BasePlayer::GetHitboxPos(int hitbox, Vector& output)
+bool CBasePlayer::GetHitboxPos(int hitbox, Vector& output)
 {
 	if (hitbox >= HITBOX_MAX)
 		return false;
@@ -327,7 +327,7 @@ bool C_BasePlayer::GetHitboxPos(int hitbox, Vector& output)
 	return true;
 }
 
-std::string C_BasePlayer::GetName(bool console_safe)
+std::string CBasePlayer::GetName(bool console_safe)
 {
 	PlayerInfo_t pinfo = this->GetPlayerInfo();
 
@@ -356,38 +356,38 @@ std::string C_BasePlayer::GetName(bool console_safe)
 	return std::string(buf);
 }
 
-void C_BasePlayer::UpdateClientSideAnimation()
+void CBasePlayer::UpdateClientSideAnimation()
 {
 	return CallVFunction< void(__thiscall*)(void*) >(this, 223)(this);
 }
 
-int C_BasePlayer::m_nMoveType()
+int CBasePlayer::m_nMoveType()
 {
 	return *(int*)((uintptr_t)this + 0x25c);
 }
 
-void C_BasePlayer::SetModelIndex(const int index)
+void CBasePlayer::SetModelIndex(const int index)
 {
 	return CallVFunction<void(__thiscall*)(void*, int)>(this, 75)(this, index);
 }
 
 
-void C_BaseAttributableItem::SetModelIndex(int modelIndex)
+void CBaseAttributableItem::SetModelIndex(int modelIndex)
 {
 	return CallVFunction<void(__thiscall*)(void*, int)>(this, 75)(this, modelIndex);
 }
 
-void C_BaseViewModel::SendViewModelMatchingSequence(int sequence)
+void CBaseViewModel::SendViewModelMatchingSequence(int sequence)
 {
 	return CallVFunction<void(__thiscall*)(void*, int)>(this, 246)(this, sequence);
 }
 
-float_t C_BasePlayer::m_flSpawnTime()
+float_t CBasePlayer::m_flSpawnTime()
 {
 	return *(float_t*)((uintptr_t)this + 0xA360);
 }
 
-bool C_BasePlayer::IsNotTarget()
+bool CBasePlayer::IsNotTarget()
 {
 	if (!this || this == g_LocalPlayer)
 		return true;

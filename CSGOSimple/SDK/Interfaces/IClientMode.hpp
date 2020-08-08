@@ -3,7 +3,7 @@
 #include "../Math/VMatrix.hpp"
 
 class IPanel;
-class C_BaseEntity;
+class CBaseEntity;
 
 enum class ClearFlags_t
 {
@@ -58,8 +58,8 @@ public:
     virtual void*       GetViewportAnimationController() = 0;
     virtual void        ProcessInput(bool bActive) = 0;
     virtual bool        ShouldDrawDetailObjects() = 0;
-    virtual bool        ShouldDrawEntity(C_BaseEntity *pEnt) = 0;
-    virtual bool        ShouldDrawLocalPlayer(C_BaseEntity *pPlayer) = 0;
+    virtual bool        ShouldDrawEntity(CBaseEntity *pEnt) = 0;
+    virtual bool        ShouldDrawLocalPlayer(CBaseEntity *pPlayer) = 0;
     virtual bool        ShouldDrawParticles() = 0;
     virtual bool        ShouldDrawFog(void) = 0;
     virtual void        OverrideView(CViewSetup *pSetup) = 0;

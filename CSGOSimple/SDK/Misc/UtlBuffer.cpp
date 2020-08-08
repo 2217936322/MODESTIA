@@ -1075,7 +1075,7 @@ BEGIN_CUSTOM_CHAR_CONVERSION( CUtlCStringConversion, s_StringCharConversion, "\"
 		//-----------------------------------------------------------------------------
 		// Parses the next token, given a Set of character breaks to stop at
 		//-----------------------------------------------------------------------------
-		int CUtlBuffer::ParseToken( characterset_t* pBreaks, char* pTokenBuf, int nMaxLen, bool bParseComments ) {
+		int CUtlBuffer::ParseToken( CharacterSet_t* pBreaks, char* pTokenBuf, int nMaxLen, bool bParseComments ) {
 			assert( nMaxLen > 0 );
 			pTokenBuf[0] = 0;
 

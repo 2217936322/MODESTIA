@@ -28,9 +28,9 @@ enum DrawFlags_t
 // Purpose: View setup and rendering
 //-----------------------------------------------------------------------------
 class CViewSetup;
-class C_BaseEntity;
+class CBaseEntity;
 struct vrect_t;
-class C_BaseViewModel;
+class CBaseViewModel;
 class IMaterial;
 
 class IViewRender
@@ -64,6 +64,6 @@ public:
     virtual float               GetZNear() = 0;
     virtual float               GetZFar() = 0;
     virtual void                GetScreenFadeDistances(float *min, float *max) = 0;
-    virtual C_BaseEntity*       GetCurrentlyDrawingEntity() = 0;
-    virtual void                SetCurrentlyDrawingEntity(C_BaseEntity *pEnt) = 0;
+    virtual CBaseEntity*       GetCurrentlyDrawingEntity() = 0;
+    virtual void                SetCurrentlyDrawingEntity(CBaseEntity *pEnt) = 0;
 };

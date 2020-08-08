@@ -134,9 +134,6 @@
     <ClCompile Include="Menu\ImGui\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\Misc\SpoofedConvar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Features\Movement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -458,9 +455,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Menu\ImGui\stb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\Misc\SpoofedConvar.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Features\Movement.hpp">

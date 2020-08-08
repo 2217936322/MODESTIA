@@ -112,7 +112,7 @@ void Models::KnifeChanger(ClientFrameStage_t stage)
     if (!viewmodelHandle.IsValid())
         return;
 
-    const auto viewmodel = static_cast<C_BaseViewModel*>(g_EntityList->GetClientEntityFromHandle(viewmodelHandle));
+    const auto viewmodel = static_cast<CBaseViewModel*>(g_EntityList->GetClientEntityFromHandle(viewmodelHandle));
     if (!viewmodel)
         return;
 
@@ -166,7 +166,7 @@ void Models::AWPChanger(ClientFrameStage_t stage)
     if (!viewmodelHandle.IsValid())
         return;
 
-    const auto viewmodel = static_cast<C_BaseViewModel*>(g_EntityList->GetClientEntityFromHandle(viewmodelHandle));
+    const auto viewmodel = static_cast<CBaseViewModel*>(g_EntityList->GetClientEntityFromHandle(viewmodelHandle));
     if (!viewmodel)
         return;
 

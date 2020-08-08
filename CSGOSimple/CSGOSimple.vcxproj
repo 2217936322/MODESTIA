@@ -125,7 +125,6 @@
     <ClCompile Include="Helpers\Render.cpp" />
     <ClCompile Include="sdk\CSGOStructs.cpp" />
     <ClCompile Include="SDK\Math\Vector3D.cpp" />
-    <ClCompile Include="SDK\Misc\SpoofedConvar.cpp" />
     <ClCompile Include="sdk\SDK.cpp" />
     <ClCompile Include="SDK\Math\Vector2D.cpp" />
     <ClCompile Include="SDK\Math\Vector4D.cpp" />
@@ -194,7 +193,6 @@
     <ClInclude Include="Helpers\Render.hpp" />
     <ClInclude Include="helpers\Singleton.hpp" />
     <ClInclude Include="sdk\CSGOStructs.hpp" />
-    <ClInclude Include="SDK\Misc\SpoofedConvar.hpp" />
     <ClInclude Include="sdk\SDK.hpp" />
     <ClInclude Include="SDK\Interfaces\CClientState.hpp" />
     <ClInclude Include="SDK\Interfaces\CInput.hpp" />

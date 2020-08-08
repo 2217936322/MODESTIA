@@ -2,6 +2,7 @@
 
 #include <d3d9.h>
 #include <string>
+
 #include "../SDK/SDK.hpp"
 #include "../Helpers/InputSys.hpp"
 
@@ -168,10 +169,6 @@ public:
 	ImFont* FontMain;
 	ImFont* FontMenu;
 	bool Opened = true;
-
-private:
-	ImDrawData _drawData;
-	DWORD dwOld_D3DRS_COLORWRITEENABLE;
 };
 
 extern CMenu Menu;

@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Forward declarations
 //-----------------------------------------------------------------------------
-struct characterset_t;
+struct CharacterSet_t;
 struct typedescription_t;
 struct datamap_t;
 
@@ -461,7 +461,7 @@ public:
 
     // Parses the next token, given a Set of character breaks to stop at
     // Returns the length of the token parsed in bytes (-1 if none parsed)
-    int				ParseToken(characterset_t *pBreaks, char *pTokenBuf, int nMaxLen, bool bParseComments = true);
+    int				ParseToken(CharacterSet_t *pBreaks, char *pTokenBuf, int nMaxLen, bool bParseComments = true);
 
     // Write stuff in
     // Binary mode: it'll just write the bits directly in, and strings will be

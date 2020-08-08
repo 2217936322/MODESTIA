@@ -46,11 +46,11 @@ typedef enum _fieldtypes
 } fieldtype_t;
 
 class ISaveRestoreOps;
-class C_BaseEntity;
+class CBaseEntity;
 //
 // Function prototype for all input handlers.
 //
-typedef void (C_BaseEntity::*inputfunc_t)(inputdata_t &data);
+typedef void (CBaseEntity::*inputfunc_t)(inputdata_t &data);
 
 struct datamap_t;
 struct typedescription_t;
