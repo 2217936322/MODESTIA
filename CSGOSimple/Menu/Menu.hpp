@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../SDK/SDK.hpp"
+#include "../Helpers/Configs.hpp"
 #include "../Helpers/InputSys.hpp"
 
 #include "ImGui/imgui.h"
@@ -15,6 +16,7 @@ class CMenu
 {
 public:
 	void Run();
+	void RunPopup();
 
 	void __stdcall CreateObjects(IDirect3DDevice9* device)
 	{
@@ -78,7 +80,7 @@ public:
 		Colors[ImGuiCol_Button] = ImVec4(33 / 255.f, 35 / 255.f, 47 / 255.f, 1.0f);
 		Colors[ImGuiCol_ButtonHovered] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f);
 		Colors[ImGuiCol_ButtonActive] = ImVec4(135 / 255.f, 135 / 255.f, 135 / 255.f, 1.0f); 
-		Colors[ImGuiCol_Header] = ImVec4(167 / 255.f, 24 / 255.f, 71 / 255.f, 1.0f);
+		Colors[ImGuiCol_Header] = ImVec4(0.654f, 0.094f, 0.278f, 1.f);
 		Colors[ImGuiCol_HeaderHovered] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f);
 		Colors[ImGuiCol_HeaderActive] = ImVec4(35 / 255.f, 35 / 255.f, 35 / 255.f, 1.0f);
 		Colors[ImGuiCol_Separator] = ImVec4(0, 0, 0, 1);

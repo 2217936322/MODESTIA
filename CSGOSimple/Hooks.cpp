@@ -427,6 +427,7 @@ long __stdcall Hooks::EndScene::Hook(IDirect3DDevice9* device)
 		Menu.PostRender();
 
 		Menu.Run();
+		Menu.RunPopup();
 		Menu.EndEndScene(device);
 	}
 
