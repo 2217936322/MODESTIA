@@ -124,7 +124,7 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 	if (!cmd || !cmd->command_number)
 		return CreateMoveOriginal(inputSampleFrametime, cmd);
 
-	g_Movement.BunnyHop(cmd);
+	Movement::BunnyHop(cmd);
 
 	if (g_LocalPlayer && InputSys::Get().IsKeyDown(VK_TAB) && g_Configs.misc.rankReveal)
 		Utils::RankRevealAll();

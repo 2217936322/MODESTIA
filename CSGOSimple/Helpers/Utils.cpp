@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "Utils.hpp"
 
@@ -231,7 +232,7 @@ namespace Utils
         static auto nameConvar = g_CVar->FindVar("name");
         nameConvar->m_fnChangeCallbacks.m_Size = 0;
 
-        static auto do_once = (nameConvar->SetValue("\n���"), true);
+        static auto do_once = (nameConvar->SetValue("\n\xAD\xAD\xAD"), true);
 
         nameConvar->SetValue(name);
     }

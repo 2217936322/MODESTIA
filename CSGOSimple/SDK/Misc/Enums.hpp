@@ -151,7 +151,6 @@ enum ItemDefinitionIndex {
 	WEAPON_KNIFE_WIDOWMAKER = 523,
 	WEAPON_KNIFE_TALON,
 	WEAPON_KNIFE_SKELETON = 525,
-
 	GLOVE_STUDDED_BLOODHOUND = 5027,
 	GLOVE_T_SIDE = 5028,
 	GLOVE_CT_SIDE = 5029,
@@ -555,9 +554,9 @@ enum EntityFlags
 
 enum LifeState : unsigned char
 {
-    LIFE_ALIVE = 0,// alive
-    LIFE_DYING = 1, // playing death animation or still falling off of a ledge waiting to hit ground
-    LIFE_DEAD = 2, // dead. lying still.
+    LIFE_ALIVE = 0,
+    LIFE_DYING = 1, 
+    LIFE_DEAD = 2, 
     MAX_LIFESTATE
 };
 
@@ -566,7 +565,7 @@ enum WeaponSound_t
     EMPTY,
     SINGLE,
     SINGLE_NPC,
-    WPN_DOUBLE, // Can't be "DOUBLE" because windows.h uses it.
+    WPN_DOUBLE,
     DOUBLE_NPC,
     BURST,
     RELOAD,
@@ -579,7 +578,6 @@ enum WeaponSound_t
     SPECIAL3,
     TAUNT,
     FAST_RELOAD,
-    // Add new shoot sound types here
     REVERSE_THE_NEW_SOUND,
     NUM_SHOOT_SOUND_TYPES,
     MAX_WEAPONSOUND
@@ -617,4 +615,83 @@ enum CSWeaponType
 	WEAPONTYPE_PLACEHOLDER,
 	WEAPONTYPE_GRENADE,
 	WEAPONTYPE_UNKNOWN
+};
+
+enum ClientFrameStage_t
+{
+	FRAME_UNDEFINED = -1,
+	FRAME_START,
+	FRAME_NET_UPDATE_START,
+	FRAME_NET_UPDATE_POSTDATAUPDATE_START,
+	FRAME_NET_UPDATE_POSTDATAUPDATE_END,
+	FRAME_NET_UPDATE_END,
+	FRAME_RENDER_START,
+	FRAME_RENDER_END
+};
+
+enum RenderViewInfo_t
+{
+	RENDERVIEW_UNSPECIFIED = 0,
+	RENDERVIEW_DRAWVIEWMODEL = (1 << 0),
+	RENDERVIEW_DRAWHUD = (1 << 1),
+	RENDERVIEW_SUPPRESSMONITORRENDERING = (1 << 2),
+};
+
+enum class ClearFlags_t
+{
+	VIEW_CLEAR_COLOR = 0x1,
+	VIEW_CLEAR_DEPTH = 0x2,
+	VIEW_CLEAR_FULL_TARGET = 0x4,
+	VIEW_NO_DRAW = 0x8,
+	VIEW_CLEAR_OBEY_STENCIL = 0x10,
+	VIEW_CLEAR_STENCIL = 0x20,
+};
+
+enum class MotionBlurMode_t
+{
+	MOTION_BLUR_DISABLE = 1,
+	MOTION_BLUR_GAME = 2,
+	MOTION_BLUR_SFM = 3
+};
+
+enum SoundLevel_t
+{
+	SNDLVL_NONE = 0,
+	SNDLVL_20dB = 20,		
+	SNDLVL_25dB = 25,		
+	SNDLVL_30dB = 30,		
+	SNDLVL_35dB = 35,
+	SNDLVL_40dB = 40,
+	SNDLVL_45dB = 45,		
+	SNDLVL_50dB = 50,	    
+	SNDLVL_55dB = 55,	    
+	SNDLVL_IDLE = 60,	    
+	SNDLVL_60dB = 60,	  
+	SNDLVL_65dB = 65,	    
+	SNDLVL_STATIC = 66,	   
+	SNDLVL_70dB = 70,	   
+	SNDLVL_NORM = 75,
+	SNDLVL_75dB = 75,	    
+	SNDLVL_80dB = 80,	    
+	SNDLVL_TALKING = 80,    
+	SNDLVL_85dB = 85,	   
+	SNDLVL_90dB = 90,	   
+	SNDLVL_95dB = 95,
+	SNDLVL_100dB = 100,	    
+	SNDLVL_105dB = 105,    
+	SNDLVL_110dB = 110,    
+	SNDLVL_120dB = 120,    
+	SNDLVL_130dB = 130,     
+	SNDLVL_GUNFIRE = 140,	
+	SNDLVL_140dB = 140,	    
+	SNDLVL_150dB = 150,	   
+	SNDLVL_180dB = 180,		
+};
+
+enum class TraceType
+{
+	TRACE_EVERYTHING = 0,
+	TRACE_WORLD_ONLY,
+	TRACE_ENTITIES_ONLY,
+	TRACE_EVERYTHING_FILTER_PROPS,
 };

@@ -2,34 +2,20 @@
 
 #include "../Misc/Color.hpp"
 
-//-----------------------------------------------------------------------------
-// Forward declarations
-//-----------------------------------------------------------------------------
 class IConVar;
 class CCommand;
 
-
-//-----------------------------------------------------------------------------
-// ConVar flags
-//-----------------------------------------------------------------------------
-// The default, no flags at all
 #define FCVAR_NONE                0 
-
-// Command to ConVars and ConCommands
-// ConVar Systems
 #define FCVAR_UNREGISTERED              (1<<0)  // If this is Set, don't add to linked list, etc.
 #define FCVAR_DEVELOPMENTONLY           (1<<1)  // Hidden in released products. Flag is removed automatically if ALLOW_DEVELOPMENT_CVARS is defined.
 #define FCVAR_GAMEDLL                   (1<<2)  // defined by the game DLL
 #define FCVAR_CLIENTDLL                 (1<<3)  // defined by the client DLL
-#define FCVAR_HIDDEN                    (1<<4)  // Hidden. Doesn't appear in GetOffset or auto complete. Like DEVELOPMENTONLY, but can't be compiled out.
-
-// ConVar only                                  
+#define FCVAR_HIDDEN                    (1<<4)  // Hidden. Doesn't appear in GetOffset or auto complete. Like DEVELOPMENTONLY, but can't be compiled out.                             
 #define FCVAR_PROTECTED                 (1<<5)  // It's a server cvar, but we don't send the data since it's a password, etc.  Sends 1 if it's not bland/zero, 0 otherwise as value
 #define FCVAR_SPONLY                    (1<<6)  // This cvar cannot be changed by clients connected to a multiplayer server.
 #define FCVAR_ARCHIVE                   (1<<7)  // Set to cause it to be saved to vars.rc
 #define FCVAR_NOTIFY                    (1<<8)  // notifies players when changed
 #define FCVAR_USERINFO                  (1<<9)  // changes the client's info string
-
 #define FCVAR_PRINTABLEONLY             (1<<10) // This cvar's string cannot contain unprintable characters ( e.g., used for player name etc ).
 #define FCVAR_UNLOGGED                  (1<<11) // If this is a FCVAR_SERVER, don't log changes to the log file / console if we are creating a log
 #define FCVAR_NEVER_AS_STRING           (1<<12) // never try to print that cvar
@@ -55,25 +41,17 @@ class CCommand;
 
 #define FCVAR_MATERIAL_THREAD_MASK ( FCVAR_RELOAD_MATERIALS | FCVAR_RELOAD_TEXTURES | FCVAR_MATERIAL_SYSTEM_THREAD )    
 
-//-----------------------------------------------------------------------------
-// Called when a ConVar changes value
-// NOTE: For FCVAR_NEVER_AS_STRING ConVars, pOldValue == NULL
-//-----------------------------------------------------------------------------
 typedef void(*FnChangeCallback_t)(IConVar *var, const char *pOldValue, float flOldValue);
 
-
-//-----------------------------------------------------------------------------
-// Abstract interface for ConVars
-//-----------------------------------------------------------------------------
 class IConVar
 {
 public:
-    virtual void SetValue(const char *pValue) = 0;
+    virtual void SetValue(const char* pValue) = 0;
     virtual void SetValue(float flValue) = 0;
     virtual void SetValue(int nValue) = 0;
     virtual void SetValue(Color value) = 0;
-    virtual const char *GetName(void) const = 0;
-    virtual const char *GetBaseName(void) const = 0;
+    virtual const char* GetName(void) const = 0;
+    virtual const char* GetBaseName(void) const = 0;
     virtual bool IsFlagSet(int nFlag) const = 0;
     virtual int GetSplitScreenPlayerSlot() const = 0;
 };

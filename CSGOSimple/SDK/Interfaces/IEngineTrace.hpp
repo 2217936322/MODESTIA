@@ -3,7 +3,6 @@
 #include "../math/Vector4D.hpp"
 
 #pragma region MASKS
-
 #define   DISPSURF_FLAG_SURFACE           (1<<0)
 #define   DISPSURF_FLAG_WALKABLE          (1<<1)
 #define   DISPSURF_FLAG_BUILDABLE         (1<<2)
@@ -70,9 +69,6 @@
 #define   SURF_NOCHOP                   0x4000   
 #define   SURF_HITBOX                   0x8000   
 
-// -----------------------------------------------------
-// spatial content masks - used for spatial queries (traceline,etc.)
-// -----------------------------------------------------
 #define   MASK_ALL                      (0xFFFFFFFF)
 #define   MASK_SOLID                    (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
 #define   MASK_PLAYERSOLID              (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
@@ -109,14 +105,6 @@ class CPhysCollide;
 struct cplane_t;
 struct virtualmeshlist_t;
 
-enum class TraceType
-{
-    TRACE_EVERYTHING = 0,
-    TRACE_WORLD_ONLY,
-    TRACE_ENTITIES_ONLY,
-    TRACE_EVERYTHING_FILTER_PROPS,
-};
-
 class ITraceFilter
 {
 public:
@@ -124,25 +112,19 @@ public:
     virtual TraceType GetTraceType() const = 0;
 };
 
-
-//-----------------------------------------------------------------------------
-// Classes are expected to inherit these + implement the ShouldHitEntity method
-//-----------------------------------------------------------------------------
-
-// This is the one most normal traces will inherit from
 class CTraceFilter : public ITraceFilter
 {
 public:
-    bool ShouldHitEntity(IHandleEntity* pEntityHandle, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity* entityHandle, int)
     {
-        ClientClass* pEntCC = ((IClientEntity*)pEntityHandle)->GetClientClass();
+        ClientClass* pEntCC = ((IClientEntity*)entityHandle)->GetClientClass();
         if (pEntCC && strcmp(ccIgnore, ""))
         {
             if (pEntCC->m_pNetworkName == ccIgnore)
                 return false;
         }
 
-        return !(pEntityHandle == pSkip);
+        return !(entityHandle == pSkip);
     }
 
     virtual TraceType GetTraceType() const
@@ -158,12 +140,13 @@ public:
     void* pSkip;
     char* ccIgnore = "";
 };
+
 class CTraceFilterOneEntity : public CTraceFilter
 {
 public:
-    bool ShouldHitEntity(IHandleEntity* pEntityHandle, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity* entityHandle, int)
     {
-        return (pEntityHandle == pEntity);
+        return (entityHandle == pEntity);
     }
 
     virtual TraceType GetTraceType() const
@@ -173,17 +156,18 @@ public:
 
     void* pEntity;
 };
+
 class CTraceFilterSkipEntity : public ITraceFilter
 {
 public:
-    CTraceFilterSkipEntity(IHandleEntity* pEntityHandle)
+    CTraceFilterSkipEntity(IHandleEntity* entityHandle)
     {
-        pSkip = pEntityHandle;
+        pSkip = entityHandle;
     }
 
-    bool ShouldHitEntity(IHandleEntity* pEntityHandle, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity* entityHandle, int)
     {
-        return !(pEntityHandle == pSkip);
+        return !(entityHandle == pSkip);
     }
     virtual TraceType GetTraceType() const
     {
@@ -195,7 +179,7 @@ public:
 class CTraceFilterEntitiesOnly : public ITraceFilter
 {
 public:
-    bool ShouldHitEntity(IHandleEntity* pEntityHandle, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity* entityHandle, int)
     {
         return true;
     }
@@ -205,17 +189,14 @@ public:
     }
 };
 
-
-//-----------------------------------------------------------------------------
-// Classes need not inherit from these
-//-----------------------------------------------------------------------------
 class CTraceFilterWorldOnly : public ITraceFilter
 {
 public:
-    bool ShouldHitEntity(IHandleEntity* /*pServerEntity*/, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity*, int)
     {
         return false;
     }
+
     virtual TraceType GetTraceType() const
     {
         return TraceType::TRACE_WORLD_ONLY;
@@ -225,10 +206,11 @@ public:
 class CTraceFilterWorldAndPropsOnly : public ITraceFilter
 {
 public:
-    bool ShouldHitEntity(IHandleEntity* /*pServerEntity*/, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity*, int)
     {
         return false;
     }
+
     virtual TraceType GetTraceType() const
     {
         return TraceType::TRACE_EVERYTHING;
@@ -242,9 +224,9 @@ public:
     {
         pEnt = ent;
     }
-    bool ShouldHitEntity(IHandleEntity* pEntityHandle, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity* entityHandle, int)
     {
-        return pEntityHandle != pEnt && ((IClientEntity*)pEntityHandle)->GetClientClass()->m_ClassID == C_CSPlayer;
+        return entityHandle != pEnt && ((IClientEntity*)entityHandle)->GetClientClass()->m_ClassID == C_CSPlayer;
     }
     virtual TraceType GetTraceType() const
     {
@@ -263,9 +245,9 @@ public:
         pEnt1 = ent1;
         pEnt2 = ent2;
     }
-    bool ShouldHitEntity(IHandleEntity* pEntityHandle, int /*contentsMask*/)
+    bool ShouldHitEntity(IHandleEntity* entityHandle, int)
     {
-        return !(pEntityHandle == pEnt1 || pEntityHandle == pEnt2);
+        return !(entityHandle == pEnt1 || entityHandle == pEnt2);
     }
     virtual TraceType GetTraceType() const
     {
@@ -280,7 +262,7 @@ private:
 class CTraceFilterHitAll : public CTraceFilter
 {
 public:
-    virtual bool ShouldHitEntity(IHandleEntity* /*pServerEntity*/, int /*contentsMask*/)
+    virtual bool ShouldHitEntity(IHandleEntity*, int)
     {
         return true;
     }

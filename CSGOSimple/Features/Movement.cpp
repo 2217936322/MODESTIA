@@ -22,6 +22,3 @@ void Movement::BunnyHop(CUserCmd* cmd)
 		}
 	}
 }
-
-
-Movement g_Movement;

@@ -126,7 +126,7 @@ public:
 	int Index() 
 	{
 		typedef int (__thiscall* Fn)(void*);
-		return CallVFunction<Fn>(this, 15)(this);
+		return CallVFunction<Fn>(this, 10)(this + 8);
 	}
 
 	const matrix3x4_t& m_rgflCoordinateFrame() 
