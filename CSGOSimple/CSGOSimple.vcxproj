@@ -90,8 +90,9 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DisableSpecificWarnings>4005; 4305; 4309; 4244; 4101; 5033; 6001; 26451</DisableSpecificWarnings>
-      <AdditionalOptions>/wd"4715" /wd"26812"</AdditionalOptions>
+      <DisableSpecificWarnings>4005;4305;4309;4244;4101;4715;26812;5033;6001;26451;26495</DisableSpecificWarnings>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,6 +102,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Features\EnginePrediction.cpp" />
     <ClCompile Include="Features\Misc.cpp" />
     <ClCompile Include="Features\ModelChanger.cpp" />
     <ClCompile Include="Features\Movement.cpp" />

@@ -30,11 +30,9 @@ public:
 		bool bunnyHop = false;
 		bool autoAccept = false;
 		bool rankReveal = false;
-		bool desync = false;
 
 		int keyBindSelection = 0;
 		int edgeJumpKey = 0;
-		int desyncKey = 0;
 		int menuKey = 45;
 	} misc;
 

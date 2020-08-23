@@ -1,5 +1,7 @@
 #include "Movement.hpp"
 
+#include "EnginePrediction.hpp"
+
 #include "../Helpers/Configs.hpp"
 #include "../Helpers/InputSys.hpp"
 
@@ -33,11 +35,13 @@ void Movement::EdgeJump(CUserCmd* cmd)
 	if (!g_LocalPlayer || !g_LocalPlayer->IsAlive())
 		return;
 
-	int oldFlags = g_LocalPlayer->m_fFlags();
+	int moveType = g_LocalPlayer->m_nMoveType();
+	if (moveType == MOVETYPE_LADDER || moveType == MOVETYPE_NOCLIP)
+		return;
 
 	if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey))
 	{
-		if ((oldFlags & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
+		if ((EnginePrediction::GetFlags() & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
 			cmd->buttons |= IN_JUMP;
 
 		if (!(g_LocalPlayer->m_fFlags() & FL_ONGROUND))

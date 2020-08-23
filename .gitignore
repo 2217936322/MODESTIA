@@ -127,3 +127,6 @@ Build/CSGOSimple.vcxproj.FileListAbsolute.txt
 .vs/MODESTIA/v16/Browse.VC.opendb
 .vs/MODESTIA/v16/Browse.VC.db-wal
 .vs/MODESTIA/v16/Browse.VC.db-shm
+Build/EnginePrediction.obj
+.vs/MODESTIA/v16/ipch/AutoPCH/b1efa6848cd3af80/MENU.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/3dc8c23f6d268944/ENGINEPREDICTION.ipch

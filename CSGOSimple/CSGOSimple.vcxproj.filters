@@ -149,6 +149,9 @@
     <ClCompile Include="Helpers\FixAnimations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Features\EnginePrediction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\stb_rect_pack.h">

@@ -404,10 +404,9 @@ void CMenu::Run()
 					ImGui::Checkbox("Bunny hop", &g_Configs.misc.bunnyHop);
 					ImGui::Checkbox("Auto-accept matchmaking", &g_Configs.misc.autoAccept);
 					ImGui::Checkbox("Reveal competitive ranks", &g_Configs.misc.rankReveal);
-					ImGui::Checkbox("Desync", &g_Configs.misc.desync);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu\0Desync\0");
+					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu\0");
 					if (g_Configs.misc.keyBindSelection == 0)
 					{
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
@@ -417,11 +416,6 @@ void CMenu::Run()
 					{
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
 						ImGui::Hotkey("##menuKey", &g_Configs.misc.menuKey, ImVec2(100, 20));
-					}
-					else if (g_Configs.misc.keyBindSelection == 2)
-					{
-						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
-						ImGui::Hotkey("##deyncKey", &g_Configs.misc.desyncKey, ImVec2(100, 20));
 					}
 				}
 				ImGui::EndChild(true);

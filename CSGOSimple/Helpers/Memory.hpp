@@ -13,13 +13,10 @@ public:
     Memory();
 
     uintptr_t Hud;
-
     int* (__thiscall* FindHudElement)(uintptr_t, const char*);
-
     int(__thiscall* ClearHudWeapon)(int*, int);
-
     int(__thiscall* EquipWearable)(void* wearable, void* player);
-
+    int* PredictionRandomSeed;
     std::add_pointer_t<const char** __fastcall(const char* playerModelName)> GetPlayerViewmodelArmConfigForPlayerModel;
 
 private:

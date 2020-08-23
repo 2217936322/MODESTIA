@@ -127,14 +127,11 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 		return CreateMoveOriginal(inputSampleFrametime, cmd);
 
 	Movement::Get().BunnyHop(cmd);
-
 	Misc::Get().RankReveal(cmd);
 
-	EnginePrediction::Begin(cmd);
-	{
-		Movement::Get().EdgeJump(cmd);
-	}
-	EnginePrediction::End();
+	EnginePrediction::Run(cmd);
+
+	Movement::Get().EdgeJump(cmd);
 
 	return false;
 }
