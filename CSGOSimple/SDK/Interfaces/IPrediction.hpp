@@ -68,24 +68,24 @@ public:
     bool InPrediction()
     {
         typedef bool(__thiscall* oInPrediction)(void*);
-        return CallVFunction<oInPrediction>(this, 14)(this);
+        return CallVirtualFunction<oInPrediction>(this, 14)(this);
     }
 
     void RunCommand(CBasePlayer *player, CUserCmd *ucmd, IMoveHelper *moveHelper)
     {
         typedef void(__thiscall* oRunCommand)(void*, CBasePlayer*, CUserCmd*, IMoveHelper*);
-        return CallVFunction<oRunCommand>(this, 19)(this, player, ucmd, moveHelper);
+        return CallVirtualFunction<oRunCommand>(this, 19)(this, player, ucmd, moveHelper);
     }
 
     void SetupMove(CBasePlayer *player, CUserCmd *ucmd, IMoveHelper *moveHelper, void* pMoveData)
     {
         typedef void(__thiscall* oSetupMove)(void*, CBasePlayer*, CUserCmd*, IMoveHelper*, void*);
-        return CallVFunction<oSetupMove>(this, 20)(this, player, ucmd, moveHelper, pMoveData);
+        return CallVirtualFunction<oSetupMove>(this, 20)(this, player, ucmd, moveHelper, pMoveData);
     }
 
     void FinishMove(CBasePlayer *player, CUserCmd *ucmd, void*pMoveData)
     {
         typedef void(__thiscall* oFinishMove)(void*, CBasePlayer*, CUserCmd*, void*);
-        return CallVFunction<oFinishMove>(this, 21)(this, player, ucmd, pMoveData);
+        return CallVirtualFunction<oFinishMove>(this, 21)(this, player, ucmd, pMoveData);
     }
 };

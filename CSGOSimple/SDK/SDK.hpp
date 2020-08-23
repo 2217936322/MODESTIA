@@ -55,8 +55,8 @@ struct IDirect3DDevice9;
 
 namespace Interfaces
 {
-  void Initialize( );
-  void Dump( );
+	void Initialize();
+	void Dump();
 }
 
 extern IVEngineClient*       g_EngineClient;
@@ -94,14 +94,15 @@ extern IFileSystem*			 g_FileSystem;
 extern INetworkStringTableContainer* g_NetworkStringTableContainer;
 
 template<typename... Args>
-void ConMsg( const char* pMsg, Args... args ) {
-  static auto import = ( void( *)( const char*, ... ) )GetProcAddress( GetModuleHandleW( L"tier0.dll" ), "?ConMsg@@YAXPBDZZ" );
-  return import( pMsg, args... );
+void ConMsg(const char* pMsg, Args... args) {
+	static auto import = (void(*)(const char*, ...))GetProcAddress(GetModuleHandleW(L"tier0.dll"), "?ConMsg@@YAXPBDZZ");
+	return import(pMsg, args...);
 }
+
 template<typename... Args>
-void ConColorMsg( const Color& clr, const char* pMsg, Args... args ) {
-  static auto import = ( void( *)( const Color&, const char*, ... ) )GetProcAddress( GetModuleHandleW( L"tier0.dll" ), "?ConColorMsg@@YAXABVColor@@PBDZZ" );
-  return import( clr, pMsg, args... );
+void ConColorMsg(const Color& clr, const char* pMsg, Args... args) {
+	static auto import = (void(*)(const Color&, const char*, ...))GetProcAddress(GetModuleHandleW(L"tier0.dll"), "?ConColorMsg@@YAXABVColor@@PBDZZ");
+	return import(clr, pMsg, args...);
 }
 
 #include "Misc/EHandle.hpp"
@@ -109,15 +110,15 @@ void ConColorMsg( const Color& clr, const char* pMsg, Args... args ) {
 class C_LocalPlayer
 {
 public:
-  C_LocalPlayer( ) : m_Local( nullptr ) { }
+	C_LocalPlayer() : m_Local(nullptr) { }
 
-  operator bool( ) const { return *m_Local != nullptr; }
-  operator CBasePlayer*( ) const { return *m_Local; }
+	operator bool() const { return *m_Local != nullptr; }
+	operator CBasePlayer* () const { return *m_Local; }
 
-  CBasePlayer* operator->( ) { return *m_Local; }
+	CBasePlayer* operator->() { return *m_Local; }
 
 private:
-  CBasePlayer** m_Local;
+	CBasePlayer** m_Local;
 };
 
 extern C_LocalPlayer g_LocalPlayer;

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <iomanip>
 
 #include "Utils.hpp"
 
@@ -218,47 +219,5 @@ namespace Utils
             }
         }
         return nullptr;
-    }
-
-    void SetClantag(const char* tag)
-    {
-        static auto fnClantagChanged = (int(__fastcall*)(const char*, const char*))PatternScan(GetModuleHandleA("engine.dll"), "53 56 57 8B DA 8B F9 FF 15");
-
-        fnClantagChanged(tag, tag);
-    }
-
-    void SetName(const char* name)
-    {
-        static auto nameConvar = g_CVar->FindVar("name");
-        nameConvar->m_fnChangeCallbacks.m_Size = 0;
-
-        static auto do_once = (nameConvar->SetValue("\n\xAD\xAD\xAD"), true);
-
-        nameConvar->SetValue(name);
-    }
-
-    void RankRevealAll()
-    {
-        g_CHLClient->DispatchUserMessage(50, 0, 0, nullptr);
-    }
-
-    float CSGOArmor(float damage, int armorValue)
-    {
-        float armorRatio = 0.5f;
-        float armorBonus = 0.5f;
-        if (armorValue > 0)
-        {
-            float armorNew = damage * armorRatio;
-            float armor = (damage - armorNew) * armorBonus;
-
-            if (armor > static_cast<float>(armorValue))
-            {
-                armor = static_cast<float>(armorValue) * (1.f / armorBonus);
-                armorNew = damage - armor;
-            }
-
-            damage = armorNew;
-        }
-        return damage;
     }
 }

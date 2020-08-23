@@ -25,6 +25,6 @@ public:
 	bool DispatchUserMessage(int messageType, int arg, int arg1, void* data)
 	{
 		using Fn = bool* (__thiscall*)(void*, int, int, int, void*);
-		return CallVFunction<Fn>(this, 38)(this, messageType, arg, arg1, data);
+		return CallVirtualFunction<Fn>(this, 38)(this, messageType, arg, arg1, data);
 	}
 };

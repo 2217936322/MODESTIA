@@ -100,12 +100,12 @@ public:
 	datamap_t* GetDataDescMap()
 	{
 		typedef datamap_t* (__thiscall* Fn)(void*);
-		return CallVFunction<Fn>(this, 15)(this);
+		return CallVirtualFunction<Fn>(this, 15)(this);
 	}
 
 	datamap_t* GetPredDescMap() {
 		typedef datamap_t* (__thiscall* Fn)(void*);
-		return CallVFunction<Fn>(this, 17)(this);
+		return CallVirtualFunction<Fn>(this, 17)(this);
 	}
 
 	static __forceinline CBaseEntity* GetEntityByIndex(int index) 
@@ -126,7 +126,7 @@ public:
 	int Index() 
 	{
 		typedef int (__thiscall* Fn)(void*);
-		return CallVFunction<Fn>(this, 10)(this + 8);
+		return CallVirtualFunction<Fn>(this, 10)(this + 8);
 	}
 
 	const matrix3x4_t& m_rgflCoordinateFrame() 
@@ -382,7 +382,7 @@ public:
 
 	void SetModelIndex(const int index)
 	{
-		return CallVFunction<void(__thiscall*)(CBaseEntity*, int)>(this, 75)(this, index);
+		return CallVirtualFunction<void(__thiscall*)(CBaseEntity*, int)>(this, 75)(this, index);
 	}
 
 	void SendViewModelMatchingSequence( int sequence );

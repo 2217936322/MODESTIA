@@ -108,7 +108,7 @@ public:
 
   void SetColorModulation( float const* pColor ) {
 	 typedef void( __thiscall * OrigFn )( void*, float const* );
-	 CallVFunction< OrigFn >( this, 27 )( this, pColor );
+	 CallVirtualFunction< OrigFn >( this, 27 )( this, pColor );
   }
 
   inline void ForcedMaterialOverride( IMaterial* material, OverrideType_t nOverrideType = 0 ) {

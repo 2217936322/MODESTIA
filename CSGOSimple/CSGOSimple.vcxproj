@@ -54,8 +54,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\Bin\Release</OutDir>
-    <IntDir>..\Build</IntDir>
+    <OutDir>..\Bin\Release\</OutDir>
+    <IntDir>..\Build\</IntDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)Include</IncludePath>
     <TargetName>modestia</TargetName>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
@@ -88,9 +88,10 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <SDLCheck>false</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4005; 4305; 4309; 4244; 4101; 5033; 6001; 26451</DisableSpecificWarnings>
+      <AdditionalOptions>/wd"4715" /wd"26812"</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -100,11 +101,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Features\Misc.cpp" />
     <ClCompile Include="Features\ModelChanger.cpp" />
     <ClCompile Include="Features\Movement.cpp" />
     <ClCompile Include="Features\SkinChanger.cpp" />
     <ClCompile Include="Helpers\Configs.cpp" />
     <ClCompile Include="Helpers\ConfigSys.cpp" />
+    <ClCompile Include="Helpers\FixAnimations.cpp" />
     <ClCompile Include="helpers\InputSys.cpp" />
     <ClCompile Include="Helpers\ItemsDefs.cpp" />
     <ClCompile Include="Helpers\KitParser.cpp" />
@@ -140,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="features\EnginePrediction.hpp" />
+    <ClInclude Include="Features\Misc.hpp" />
     <ClInclude Include="Features\ModelChanger.hpp" />
     <ClInclude Include="Features\Movement.hpp" />
     <ClInclude Include="Features\SkinChanger.hpp" />
@@ -147,6 +151,7 @@
     <ClInclude Include="fonts\Fonts.hpp" />
     <ClInclude Include="Helpers\Configs.hpp" />
     <ClInclude Include="Helpers\ConfigSys.hpp" />
+    <ClInclude Include="Helpers\FixAnimations.hpp" />
     <ClInclude Include="Helpers\Fnv.hpp" />
     <ClInclude Include="Helpers\ItemsDefs.hpp" />
     <ClInclude Include="Helpers\KitParser.hpp" />

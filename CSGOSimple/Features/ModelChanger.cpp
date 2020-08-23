@@ -2,7 +2,7 @@
 #include "../Helpers/Configs.hpp"
 #include "../Helpers/Memory.hpp"
 
-void Models::PlayerChanger(ClientFrameStage_t stage)
+void ModelChanger::PlayerChanger(ClientFrameStage_t stage)
 {
     if (stage != ClientFrameStage_t::FRAME_RENDER_START && stage != ClientFrameStage_t::FRAME_RENDER_END)
         return;
@@ -63,8 +63,8 @@ void Models::PlayerChanger(ClientFrameStage_t stage)
 
         switch (team) 
         {
-        case 2: return static_cast<std::size_t>(g_Configs.misc.playerModelT - 1) < models.size() ? models[g_Configs.misc.playerModelT - 1] : nullptr;
-        case 3: return static_cast<std::size_t>(g_Configs.misc.playerModelCT - 1) < models.size() ? models[g_Configs.misc.playerModelCT - 1] : nullptr;
+        case 2: return static_cast<std::size_t>(g_Configs.modelChanger.playerModelT - 1) < models.size() ? models[g_Configs.modelChanger.playerModelT - 1] : nullptr;
+        case 3: return static_cast<std::size_t>(g_Configs.modelChanger.playerModelCT - 1) < models.size() ? models[g_Configs.modelChanger.playerModelCT - 1] : nullptr;
         default: return nullptr;
         }
     };
@@ -89,12 +89,15 @@ void Models::PlayerChanger(ClientFrameStage_t stage)
     }
 }
 
-void Models::KnifeChanger(ClientFrameStage_t stage)
+void ModelChanger::KnifeChanger(ClientFrameStage_t stage)
 {
     if (stage != ClientFrameStage_t::FRAME_RENDER_START && stage != ClientFrameStage_t::FRAME_RENDER_END)
         return;
 
     if (!g_LocalPlayer)
+        return;
+
+    if (!g_LocalPlayer->IsAlive())
         return;
 
     constexpr auto getModel = []() constexpr noexcept -> const char*
@@ -105,7 +108,7 @@ void Models::KnifeChanger(ClientFrameStage_t stage)
             "models/weapons/eminem/fidget_spinner/v_fidget_spinner.mdl"
         };
 
-        return static_cast<std::size_t>(g_Configs.misc.knifeModel - 1) < models.size() ? models[g_Configs.misc.knifeModel - 1] : nullptr;
+        return static_cast<std::size_t>(g_Configs.modelChanger.knifeModel - 1) < models.size() ? models[g_Configs.modelChanger.knifeModel - 1] : nullptr;
     };
 
     const auto viewmodelHandle = g_LocalPlayer->m_hViewModel();
@@ -144,12 +147,15 @@ void Models::KnifeChanger(ClientFrameStage_t stage)
     }
 }
 
-void Models::AWPChanger(ClientFrameStage_t stage)
+void ModelChanger::AWPChanger(ClientFrameStage_t stage)
 {
     if (stage != ClientFrameStage_t::FRAME_RENDER_START && stage != ClientFrameStage_t::FRAME_RENDER_END)
         return;
 
     if (!g_LocalPlayer)
+        return;
+
+    if (!g_LocalPlayer->IsAlive())
         return;
 
     constexpr auto getModel = []() constexpr noexcept -> const char*
@@ -159,7 +165,7 @@ void Models::AWPChanger(ClientFrameStage_t stage)
             "models/weapons/eminem/dsr_50/v_dsr_50_v4.mdl"
         };
 
-        return static_cast<std::size_t>(g_Configs.misc.awpModel - 1) < models.size() ? models[g_Configs.misc.awpModel - 1] : nullptr;
+        return static_cast<std::size_t>(g_Configs.modelChanger.awpModel - 1) < models.size() ? models[g_Configs.modelChanger.awpModel - 1] : nullptr;
     };
 
     const auto viewmodelHandle = g_LocalPlayer->m_hViewModel();

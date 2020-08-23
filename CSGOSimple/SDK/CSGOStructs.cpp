@@ -6,12 +6,12 @@ CGameRules* g_GameRules = nullptr;
 
 bool CBaseEntity::IsPlayer()
 {
-	return CallVFunction<bool(__thiscall*)(CBaseEntity*)>(this, 159)(this);
+	return CallVirtualFunction<bool(__thiscall*)(CBaseEntity*)>(this, 159)(this);
 }
 
 int CBasePlayer::Handle()
 {
-	return CallVFunction<int(__thiscall*)(CBasePlayer*)>(this, 2)(this);
+	return CallVirtualFunction<int(__thiscall*)(CBasePlayer*)>(this, 2)(this);
 }
 
 bool CBaseEntity::IsLoot()
@@ -28,7 +28,7 @@ bool CBaseEntity::IsLoot()
 
 bool CBaseEntity::IsWeapon()
 {
-	return CallVFunction<bool(__thiscall*)(CBaseEntity*)>(this, 169)(this);
+	return CallVirtualFunction<bool(__thiscall*)(CBaseEntity*)>(this, 169)(this);
 }
 
 bool CBaseEntity::IsPlantedC4() 
@@ -43,7 +43,7 @@ bool CBaseEntity::IsDefuseKit( )
 
 CCSWeaponInfo* CBaseCombatWeapon::GetCSWeaponData() 
 {
-	return CallVFunction<CCSWeaponInfo* (__thiscall*)(CBaseCombatWeapon*)>(this, 460)(this);
+	return CallVirtualFunction<CCSWeaponInfo* (__thiscall*)(CBaseCombatWeapon*)>(this, 460)(this);
 }
 
 bool CBaseCombatWeapon::HasBullets()
@@ -157,17 +157,17 @@ bool CBaseCombatWeapon::IsReloading()
 
 float CBaseCombatWeapon::GetInaccuracy()
 {
-	return CallVFunction<float(__thiscall*)(void*)>(this, 482)(this);
+	return CallVirtualFunction<float(__thiscall*)(void*)>(this, 482)(this);
 }
 
 float CBaseCombatWeapon::GetSpread()
 {
-	return CallVFunction<float(__thiscall*)(void*)>(this, 452)(this);
+	return CallVirtualFunction<float(__thiscall*)(void*)>(this, 452)(this);
 }
 
 void CBaseCombatWeapon::UpdateAccuracyPenalty()
 {
-	CallVFunction<void(__thiscall*)(void*)>(this, 483)(this);
+	CallVirtualFunction<void(__thiscall*)(void*)>(this, 483)(this);
 }
 
 CUtlVector<IRefCounted*>& CBaseCombatWeapon::m_CustomMaterials()
@@ -358,7 +358,7 @@ std::string CBasePlayer::GetName(bool console_safe)
 
 void CBasePlayer::UpdateClientSideAnimation()
 {
-	return CallVFunction< void(__thiscall*)(void*) >(this, 223)(this);
+	return CallVirtualFunction< void(__thiscall*)(void*) >(this, 223)(this);
 }
 
 int CBasePlayer::m_nMoveType()
@@ -368,18 +368,18 @@ int CBasePlayer::m_nMoveType()
 
 void CBasePlayer::SetModelIndex(const int index)
 {
-	return CallVFunction<void(__thiscall*)(void*, int)>(this, 75)(this, index);
+	return CallVirtualFunction<void(__thiscall*)(void*, int)>(this, 75)(this, index);
 }
 
 
 void CBaseAttributableItem::SetModelIndex(int modelIndex)
 {
-	return CallVFunction<void(__thiscall*)(void*, int)>(this, 75)(this, modelIndex);
+	return CallVirtualFunction<void(__thiscall*)(void*, int)>(this, 75)(this, modelIndex);
 }
 
 void CBaseViewModel::SendViewModelMatchingSequence(int sequence)
 {
-	return CallVFunction<void(__thiscall*)(void*, int)>(this, 246)(this, sequence);
+	return CallVirtualFunction<void(__thiscall*)(void*, int)>(this, 246)(this, sequence);
 }
 
 float_t CBasePlayer::m_flSpawnTime()

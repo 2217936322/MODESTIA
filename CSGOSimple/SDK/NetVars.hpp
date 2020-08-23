@@ -4,8 +4,8 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "misc/Recv.hpp"
-#include "../helpers/singleton.hpp"
+#include "Misc/Recv.hpp"
+#include "../Helpers/Singleton.hpp"
 
 class NetvarSys : public Singleton<NetvarSys>
 {
@@ -34,5 +34,5 @@ private:
     static RecvProp* GetNetvarProp(const NetvarTable& table, const std::string& propName);
 
 private:
-    std::vector<NetvarTable>  database;
+    std::vector<NetvarTable> database;
 };

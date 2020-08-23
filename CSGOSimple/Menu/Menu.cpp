@@ -17,11 +17,14 @@ CMenu Menu;
 
 IDirect3DStateBlock9* stateBlock;
 
-bool reverse = false;
 int offset = 0;
+bool reverse = false;
 bool showPopup = false;
 bool saveConfig = false;
 bool loadConfig = false;
+
+static int weapIndex = 7;
+static int weapVectorIndex = 0;
 
 namespace ImGui 
 {
@@ -84,6 +87,39 @@ namespace ImGui
 
 		ImGui::End();
 	}
+
+	void CurrentWeaponButton()
+	{
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 2);
+		ImGui::SameLine();
+		if (!g_EngineClient->IsConnected() || !g_LocalPlayer || !g_LocalPlayer->IsAlive())
+		{
+			ImGui::Button("Current");
+			return;
+		}
+
+		auto weapon = g_LocalPlayer->m_hActiveWeapon();
+		if (!weapon || !weapon->IsWeapon())
+		{
+			ImGui::Button("Current");
+			return;
+		}
+
+		if (ImGui::Button("Current"))
+		{
+			int weaponIndex = weapon->m_Item().m_iItemDefinitionIndex();
+			auto weaponIt = std::find_if(k_WeaponNames.begin(), k_WeaponNames.end(), [weaponIndex](const CWeaponName& a)
+				{
+					return a.definitionIndex == weaponIndex;
+				});
+
+			if (weaponIt != k_WeaponNames.end())
+			{
+				weapIndex = weaponIndex;
+				weapVectorIndex = std::abs(std::distance(k_WeaponNames.begin(), weaponIt));
+			}
+		}
+	}
 }
 
 void CMenu::Run()
@@ -126,8 +162,7 @@ void CMenu::Run()
 				InitializeKits();
 			}
 
-			auto& entries = g_Configs.skins.m_Items;
-			static auto definitionVectorIndex = 0;
+			auto& entries = g_Configs.skinChanger.m_Items;
 
 			const auto wnd = ImGui::GetCurrentWindowRead();
 			float height = (wnd->Pos.y + wnd->Size.y) - wnd->DC.CursorPos.y - 18.0f - ImGui::GetStyle().WindowPadding.y - ImGui::GetStyle().FramePadding.y * 2.0f;
@@ -149,18 +184,20 @@ void CMenu::Run()
 					{
 						for (size_t w = 0; w < k_WeaponNames.size(); w++)
 						{
-							if (ImGui::Selectable(k_WeaponNames[w].name, definitionVectorIndex == w))
+							if (ImGui::Selectable(k_WeaponNames[w].name, weapVectorIndex == w))
 							{
-								definitionVectorIndex = w;
+								weapVectorIndex = w;
 							}
 						}
 					}
 					ImGui::ListBoxFooter();
 
+					ImGui::CurrentWeaponButton();
+
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 6);
 					if (ImGui::Button("Update"))
 					{
-						Skins::ScheduleHUDUpdate();
+						SkinChanger::Get().ScheduleHUDUpdate();
 					}
 				} 
 				ImGui::EndChild(true);
@@ -175,9 +212,9 @@ void CMenu::Run()
 
 				ImGui::BeginChild("Skin changer", ImVec2(279, 202), true);
 				{
-					auto& selectedEntry = entries[k_WeaponNames[definitionVectorIndex].definitionIndex];
-					selectedEntry.definitionIndex = k_WeaponNames[definitionVectorIndex].definitionIndex;
-					selectedEntry.definitionVectorIndex = definitionVectorIndex;
+					auto& selectedEntry = entries[k_WeaponNames[weapVectorIndex].definitionIndex];
+					selectedEntry.definitionIndex = k_WeaponNames[weapVectorIndex].definitionIndex;
+					selectedEntry.definitionVectorIndex = weapVectorIndex;
 					ImGui::Checkbox("Enabled", &selectedEntry.enabled);
 					ImGui::InputText("Name tag", selectedEntry.customName, 32);
 					ImGui::InputInt("Pattern", &selectedEntry.seed);
@@ -235,18 +272,18 @@ void CMenu::Run()
 				{
 					constexpr auto playerModels = "Default\0Special Agent Ava | FBI\0Operator | FBI SWAT\0Markus Delrow | FBI HRT\0Michael Syfers | FBI Sniper\0B Squadron Officer | SAS\0Seal Team 6 Soldier | NSWC SEAL\0Buckshot | NSWC SEAL\0Lt. Commander Ricksaw | NSWC SEAL\0Third Commando Company | KSK\0'Two Times' McCoy | USAF TACP\0Dragomir | Sabre\0Rezan The Ready | Sabre\0'The Doctor' Romanov | Sabre\0Maximus | Sabre\0Blackwolf | Sabre\0The Elite Mr. Muhlik | Elite Crew\0Ground Rebel | Elite Crew\0Osiris | Elite Crew\0Prof. Shahmat | Elite Crew\0Enforcer | Phoenix\0Slingshot | Phoenix\0Soldier | Phoenix\0Pirate\0Pirate Variant A\0Pirate Variant B\0Pirate Variant C\0Pirate Variant D\0Anarchist\0Anarchist Variant A\0Anarchist Variant B\0Anarchist Variant C\0Anarchist Variant D\0Balkan Variant A\0Balkan Variant B\0Balkan Variant C\0Balkan Variant D\0Balkan Variant E\0Jumpsuit Variant A\0Jumpsuit Variant B\0Jumpsuit Variant C\0";
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("TR Model", &g_Configs.misc.playerModelT, playerModels);
+					ImGui::Combo("TR Model", &g_Configs.modelChanger.playerModelT, playerModels);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("CT Model", &g_Configs.misc.playerModelCT, playerModels);
+					ImGui::Combo("CT Model", &g_Configs.modelChanger.playerModelCT, playerModels);
 
 					constexpr auto knifeModels = "Default\0Minecraft Pickaxe\0Fidget Spinner\0";
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("Knife Model", &g_Configs.misc.knifeModel, knifeModels);
+					ImGui::Combo("Knife Model", &g_Configs.modelChanger.knifeModel, knifeModels);
 
 					constexpr auto awpModels = "Default\0DSR-50\0";
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("AWP Model", &g_Configs.misc.awpModel, awpModels);	
+					ImGui::Combo("AWP Model", &g_Configs.modelChanger.awpModel, awpModels);
 				} 
 				ImGui::EndChild(true);
 
@@ -367,9 +404,10 @@ void CMenu::Run()
 					ImGui::Checkbox("Bunny hop", &g_Configs.misc.bunnyHop);
 					ImGui::Checkbox("Auto-accept matchmaking", &g_Configs.misc.autoAccept);
 					ImGui::Checkbox("Reveal competitive ranks", &g_Configs.misc.rankReveal);
+					ImGui::Checkbox("Desync", &g_Configs.misc.desync);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu");
+					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu\0Desync\0");
 					if (g_Configs.misc.keyBindSelection == 0)
 					{
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
@@ -379,6 +417,11 @@ void CMenu::Run()
 					{
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
 						ImGui::Hotkey("##menuKey", &g_Configs.misc.menuKey, ImVec2(100, 20));
+					}
+					else if (g_Configs.misc.keyBindSelection == 2)
+					{
+						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
+						ImGui::Hotkey("##deyncKey", &g_Configs.misc.desyncKey, ImVec2(100, 20));
 					}
 				}
 				ImGui::EndChild(true);

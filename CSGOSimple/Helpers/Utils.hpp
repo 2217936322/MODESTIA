@@ -15,8 +15,4 @@ namespace Utils
     char ConsoleReadKey();
     int WaitForModules(std::int32_t timeout, const std::initializer_list<std::wstring>& modules);
     std::uint8_t* PatternScan(void* module, const char* signature);
-    void SetClantag(const char* tag);
-    void SetName(const char* name);
-    void RankRevealAll();
-    float CSGOArmor(float damage, int armorValue);
 }

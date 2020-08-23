@@ -155,7 +155,6 @@ enum ButtonCode_t
 	KEY_LAST = KEY_SCROLLLOCKTOGGLE,
 	KEY_COUNT = KEY_LAST - KEY_FIRST + 1,
 
-	// Mouse
 	MOUSE_FIRST = KEY_LAST + 1,
 
 	MOUSE_LEFT = MOUSE_FIRST,
@@ -163,13 +162,13 @@ enum ButtonCode_t
 	MOUSE_MIDDLE,
 	MOUSE_4,
 	MOUSE_5,
-	MOUSE_WHEEL_UP,		// A fake button which is 'pressed' and 'released' when the wheel is moved up 
-	MOUSE_WHEEL_DOWN,	// A fake button which is 'pressed' and 'released' when the wheel is moved down
+	MOUSE_WHEEL_UP,		
+	MOUSE_WHEEL_DOWN,	
 
 	MOUSE_LAST = MOUSE_WHEEL_DOWN,
 	MOUSE_COUNT = MOUSE_LAST - MOUSE_FIRST + 1,
 
-	// Joystick
+
 	JOYSTICK_FIRST = MOUSE_LAST + 1,
 
 	JOYSTICK_FIRST_BUTTON = JOYSTICK_FIRST,
@@ -184,13 +183,13 @@ enum ButtonCode_t
 	BUTTON_CODE_LAST,
 	BUTTON_CODE_COUNT = BUTTON_CODE_LAST - KEY_FIRST + 1,
 
-	// Helpers for XBox 360
-	KEY_XBUTTON_UP = JOYSTICK_FIRST_POV_BUTTON,	// POV buttons
+
+	KEY_XBUTTON_UP = JOYSTICK_FIRST_POV_BUTTON,
 	KEY_XBUTTON_RIGHT,
 	KEY_XBUTTON_DOWN,
 	KEY_XBUTTON_LEFT,
 
-	KEY_XBUTTON_A = JOYSTICK_FIRST_BUTTON,		// Buttons
+	KEY_XBUTTON_A = JOYSTICK_FIRST_BUTTON,	
 	KEY_XBUTTON_B,
 	KEY_XBUTTON_X,
 	KEY_XBUTTON_Y,
@@ -202,16 +201,16 @@ enum ButtonCode_t
 	KEY_XBUTTON_STICK2,
 	KEY_XBUTTON_INACTIVE_START,
 
-	KEY_XSTICK1_RIGHT = JOYSTICK_FIRST_AXIS_BUTTON,	// XAXIS POSITIVE
-	KEY_XSTICK1_LEFT,							// XAXIS NEGATIVE
-	KEY_XSTICK1_DOWN,							// YAXIS POSITIVE
-	KEY_XSTICK1_UP,								// YAXIS NEGATIVE
-	KEY_XBUTTON_LTRIGGER,						// ZAXIS POSITIVE
-	KEY_XBUTTON_RTRIGGER,						// ZAXIS NEGATIVE
-	KEY_XSTICK2_RIGHT,							// UAXIS POSITIVE
-	KEY_XSTICK2_LEFT,							// UAXIS NEGATIVE
-	KEY_XSTICK2_DOWN,							// VAXIS POSITIVE
-	KEY_XSTICK2_UP,								// VAXIS NEGATIVE
+	KEY_XSTICK1_RIGHT = JOYSTICK_FIRST_AXIS_BUTTON,	
+	KEY_XSTICK1_LEFT,							
+	KEY_XSTICK1_DOWN,						
+	KEY_XSTICK1_UP,							
+	KEY_XBUTTON_LTRIGGER,					
+	KEY_XBUTTON_RTRIGGER,					
+	KEY_XSTICK2_RIGHT,							
+	KEY_XSTICK2_LEFT,							
+	KEY_XSTICK2_DOWN,							
+	KEY_XSTICK2_UP,								
 };
 
 class IInputSystem : IAppSystem
@@ -219,37 +218,37 @@ class IInputSystem : IAppSystem
 public:
 	void EnableInput(bool bEnable)
 	{
-		typedef void(__thiscall* OriginalFn)(void*, bool);
-		return CallVFunction< OriginalFn >(this, 11)(this, bEnable);
+		typedef void(__thiscall* Fn)(void*, bool);
+		return CallVirtualFunction< Fn >(this, 11)(this, bEnable);
 	}
 
 	void ResetInputState()
 	{
-		typedef void(__thiscall* OriginalFn)(void*);
-		return CallVFunction< OriginalFn >(this, 39)(this);
+		typedef void(__thiscall* Fn)(void*);
+		return CallVirtualFunction< Fn >(this, 39)(this);
 	}
 
 	bool IsButtonDown(ButtonCode_t code)
 	{
-		typedef bool(__thiscall* OriginalFn)(void*, ButtonCode_t);
-		return CallVFunction< OriginalFn >(this, 15)(this, code);
+		typedef bool(__thiscall* Fn)(void*, ButtonCode_t);
+		return CallVirtualFunction< Fn >(this, 15)(this, code);
 	}
 
 	void GetCursorPosition(int* m_pX, int* m_pY)
 	{
-		typedef void(__thiscall* OriginalFn)(void*, int*, int*);
-		return CallVFunction< OriginalFn >(this, 56)(this, m_pX, m_pY);
+		typedef void(__thiscall* Fn)(void*, int*, int*);
+		return CallVirtualFunction< Fn >(this, 56)(this, m_pX, m_pY);
 	}
 
 	ButtonCode_t VirtualKeyToButtonCode(int nVirtualKey)
 	{
-		typedef ButtonCode_t(__thiscall* OriginalFn)(void*, int);
-		return CallVFunction< OriginalFn >(this, 45)(this, nVirtualKey);
+		typedef ButtonCode_t(__thiscall* Fn)(void*, int);
+		return CallVirtualFunction< Fn >(this, 45)(this, nVirtualKey);
 	}
 
 	int ButtonCodeToVirtualKey(ButtonCode_t code)
 	{
-		typedef int(__thiscall* OriginalFn)(void*, ButtonCode_t);
-		return CallVFunction< OriginalFn >(this, 46)(this, code);
+		typedef int(__thiscall* Fn)(void*, ButtonCode_t);
+		return CallVirtualFunction< Fn >(this, 46)(this, code);
 	}
 };

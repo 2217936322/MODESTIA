@@ -1,10 +1,10 @@
-#include "netvars.hpp"
+#include "Netvars.hpp"
 
 #include <fstream>
 #include <utility>
 #include <map>
 
-#include "sdk.hpp"
+#include "SDK.hpp"
 
 void NetvarSys::Initialize()
 {

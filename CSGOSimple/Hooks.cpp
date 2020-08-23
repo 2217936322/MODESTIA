@@ -5,8 +5,10 @@
 #include "Helpers/Fnv.hpp"
 #include "Helpers/Configs.hpp"
 #include "Helpers/InputSys.hpp"
+#include "Helpers/FixAnimations.hpp"
 #include "Helpers/MinHook/minhook.h"
 
+#include "Features/Misc.hpp"
 #include "Features/Movement.hpp"
 #include "Features/SkinChanger.hpp"
 #include "Features/ModelChanger.hpp"
@@ -124,24 +126,13 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 	if (!cmd || !cmd->command_number)
 		return CreateMoveOriginal(inputSampleFrametime, cmd);
 
-	Movement::BunnyHop(cmd);
+	Movement::Get().BunnyHop(cmd);
 
-	if (g_LocalPlayer && InputSys::Get().IsKeyDown(VK_TAB) && g_Configs.misc.rankReveal)
-		Utils::RankRevealAll();
+	Misc::Get().RankReveal(cmd);
 
-	int OldFlags = g_LocalPlayer->m_fFlags();
 	EnginePrediction::Begin(cmd);
 	{
-
-		if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey))
-		{
-			if ((OldFlags & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
-				cmd->buttons |= IN_JUMP;
-
-			if (!(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
-				cmd->buttons |= IN_DUCK;
-		}
-
+		Movement::Get().EdgeJump(cmd);
 	}
 	EnginePrediction::End();
 
@@ -178,7 +169,7 @@ bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event) {
 
 		if (weapon && weapon->IsWeapon())
 		{
-			auto& skin_data = g_Configs.skins.m_Items[weapon->m_Item().m_iItemDefinitionIndex()];
+			auto& skin_data = g_Configs.skinChanger.m_Items[weapon->m_Item().m_iItemDefinitionIndex()];
 			if (skin_data.enabled && skin_data.stattrak)
 			{
 				skin_data.stattrak++;
@@ -188,7 +179,7 @@ bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event) {
 			}
 		}
 
-		const auto iconOverride = g_Configs.skins.GetIconOverride(event->GetString("weapon"));
+		const auto iconOverride = g_Configs.skinChanger.GetIconOverride(event->GetString("weapon"));
 		if (iconOverride)
 		{
 			event->SetString("weapon", iconOverride);
@@ -202,154 +193,13 @@ void __stdcall Hooks::FrameStageNotify::Hook(ClientFrameStage_t stage)
 {
 	if (g_EngineClient->IsInGame()) 
 	{
-		Models::PlayerChanger(stage);
-		Models::KnifeChanger(stage);
-		Models::AWPChanger(stage);
-		Skins::Run(stage);
+		ModelChanger::Get().PlayerChanger(stage);
+		ModelChanger::Get().KnifeChanger(stage);
+		ModelChanger::Get().AWPChanger(stage);
+		SkinChanger::Get().Run(stage);
 	}
 
 	FrameStageNotifyOriginal(g_CHLClient, stage);
-}
-
-static int RandomSequence(const int low, const int high)
-{
-	return rand() % (high - low + 1) + low;
-}
-
-static int FixAnimation(const uint32_t model, const int sequence)
-{
-	enum ESequence
-	{
-		SEQUENCE_DEFAULT_DRAW = 0,
-		SEQUENCE_DEFAULT_IDLE1 = 1,
-		SEQUENCE_DEFAULT_IDLE2 = 2,
-		SEQUENCE_DEFAULT_LIGHT_MISS1 = 3,
-		SEQUENCE_DEFAULT_LIGHT_MISS2 = 4,
-		SEQUENCE_DEFAULT_HEAVY_MISS1 = 9,
-		SEQUENCE_DEFAULT_HEAVY_HIT1 = 10,
-		SEQUENCE_DEFAULT_HEAVY_BACKSTAB = 11,
-		SEQUENCE_DEFAULT_LOOKAT01 = 12,
-
-		SEQUENCE_BUTTERFLY_DRAW = 0,
-		SEQUENCE_BUTTERFLY_DRAW2 = 1,
-		SEQUENCE_BUTTERFLY_LOOKAT01 = 13,
-		SEQUENCE_BUTTERFLY_LOOKAT03 = 15,
-
-		SEQUENCE_FALCHION_IDLE1 = 1,
-		SEQUENCE_FALCHION_HEAVY_MISS1 = 8,
-		SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP = 9,
-		SEQUENCE_FALCHION_LOOKAT01 = 12,
-		SEQUENCE_FALCHION_LOOKAT02 = 13,
-
-		SEQUENCE_DAGGERS_IDLE1 = 1,
-		SEQUENCE_DAGGERS_LIGHT_MISS1 = 2,
-		SEQUENCE_DAGGERS_LIGHT_MISS5 = 6,
-		SEQUENCE_DAGGERS_HEAVY_MISS2 = 11,
-		SEQUENCE_DAGGERS_HEAVY_MISS1 = 12,
-
-		SEQUENCE_BOWIE_IDLE1 = 1,
-	};
-
-	switch (model) {
-	case FNV::Hash("models/weapons/v_knife_butterfly.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-			return RandomSequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_BUTTERFLY_LOOKAT01, SEQUENCE_BUTTERFLY_LOOKAT03);
-		default:
-			return sequence + 1;
-		}
-	}
-	case FNV::Hash("models/weapons/v_knife_falchion_advanced.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_IDLE2:
-			return SEQUENCE_FALCHION_IDLE1;
-		case SEQUENCE_DEFAULT_HEAVY_MISS1:
-			return RandomSequence(SEQUENCE_FALCHION_HEAVY_MISS1, SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_FALCHION_LOOKAT01, SEQUENCE_FALCHION_LOOKAT02);
-		case SEQUENCE_DEFAULT_DRAW:
-		case SEQUENCE_DEFAULT_IDLE1:
-			return sequence;
-		default:
-			return sequence - 1;
-		}
-	}
-	case FNV::Hash("models/weapons/v_knife_push.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_IDLE2:
-			return SEQUENCE_DAGGERS_IDLE1;
-		case SEQUENCE_DEFAULT_LIGHT_MISS1:
-		case SEQUENCE_DEFAULT_LIGHT_MISS2:
-			return RandomSequence(SEQUENCE_DAGGERS_LIGHT_MISS1, SEQUENCE_DAGGERS_LIGHT_MISS5);
-		case SEQUENCE_DEFAULT_HEAVY_MISS1:
-			return RandomSequence(SEQUENCE_DAGGERS_HEAVY_MISS2, SEQUENCE_DAGGERS_HEAVY_MISS1);
-		case SEQUENCE_DEFAULT_HEAVY_HIT1:
-		case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return sequence + 3;
-		case SEQUENCE_DEFAULT_DRAW:
-		case SEQUENCE_DEFAULT_IDLE1:
-			return sequence;
-		default:
-			return sequence + 2;
-		}
-	}
-	case FNV::Hash("models/weapons/v_knife_survival_bowie.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-		case SEQUENCE_DEFAULT_IDLE1:
-			return sequence;
-		case SEQUENCE_DEFAULT_IDLE2:
-			return SEQUENCE_BOWIE_IDLE1;
-		default:
-			return sequence - 1;
-		}
-	}
-	case FNV::Hash("models/weapons/v_knife_ursus.mdl"):
-	case FNV::Hash("models/weapons/v_knife_skeleton.mdl"):
-	case FNV::Hash("models/weapons/v_knife_outdoor.mdl"):
-	case FNV::Hash("models/weapons/v_knife_cord.mdl"):
-	case FNV::Hash("models/weapons/v_knife_canis.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_DRAW:
-			return RandomSequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
-		default:
-			return sequence + 1;
-		}
-	}
-	case FNV::Hash("models/weapons/v_knife_stiletto.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(12, 13);
-		}
-	}
-	case FNV::Hash("models/weapons/v_knife_widowmaker.mdl"):
-	{
-		switch (sequence)
-		{
-		case SEQUENCE_DEFAULT_LOOKAT01:
-			return RandomSequence(14, 15);
-		}
-	}
-	default:
-		return sequence;
-	}
 }
 
 void Hooks::RecvProxy::Hook(const CRecvProxyData* data, void* entity, void* output)
@@ -374,7 +224,7 @@ void Hooks::RecvProxy::Hook(const CRecvProxyData* data, void* entity, void* outp
 						{
 							auto originalSequence = proxyData->m_Value.m_Int;
 							const auto overrideModel = k_WeaponInfo.at(viewModelWeapon->m_Item().m_iItemDefinitionIndex()).model;
-							proxyData->m_Value.m_Int = FixAnimation(FNV::HashRuntime(overrideModel), proxyData->m_Value.m_Int);
+							proxyData->m_Value.m_Int = FixAnimations(FNV::HashRuntime(overrideModel), proxyData->m_Value.m_Int);
 						}
 					}
 				}

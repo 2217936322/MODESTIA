@@ -47,8 +47,9 @@ private:
 	void SetupValue(float&, float, std::string, std::string);
 	void SetupValue(char*, char*, std::string, std::string);
 
-	void SetupSkins();
 	void SetupMisc();
+	void SetupModelChanger();
+	void SetupSkinChanger();
 public:
 	CConfig()
 	{

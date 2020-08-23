@@ -8,14 +8,14 @@ static void EraseOverrideIfExistsByIndex(const int definitionIndex)
 {
 	if (k_WeaponInfo.count(definitionIndex))
 	{
-		auto& IconOverrideMap = g_Configs.skins.m_IconOverrides;
+		auto& IconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
 		const auto& OriginalItem = k_WeaponInfo.at(definitionIndex);
 		if (OriginalItem.icon && IconOverrideMap.count(OriginalItem.icon))
 			IconOverrideMap.erase(IconOverrideMap.at(OriginalItem.icon));
 	}
 }
 
-static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const C_ItemSettings* config, const unsigned xuidLow)
+static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const CItemSettings* config, const unsigned xuidLow)
 {
 	if (!config->enabled)
 	{
@@ -49,7 +49,7 @@ static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const C_I
 
 	auto& definitionIndex = item->m_Item().m_iItemDefinitionIndex();
 
-	auto& IconOverrideMap = g_Configs.skins.m_IconOverrides;
+	auto& IconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
 	if (config->definitionOverrideIndex && config->definitionOverrideIndex != definitionIndex && k_WeaponInfo.count(config->definitionOverrideIndex))
 	{
 		const auto oldDefinitionIndex = definitionIndex;
@@ -106,7 +106,7 @@ void Initialize(int localHandle)
 
 	{
 		const auto wearables = local->m_hMyWearables();
-		const auto gloveConfig = &g_Configs.skins.m_Items[GLOVE_T_SIDE];
+		const auto gloveConfig = &g_Configs.skinChanger.m_Items[GLOVE_T_SIDE];
 
 		static auto gloveHandle = CBaseHandle(0);
 		auto glove = reinterpret_cast<CBaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(wearables[0]));
@@ -179,7 +179,7 @@ void Initialize(int localHandle)
 
 			auto& definitionIndex = weapon->m_Item().m_iItemDefinitionIndex();
 
-			if (const auto activeConf = &g_Configs.skins.m_Items[IsKnife(definitionIndex) ? WEAPON_KNIFE : definitionIndex])
+			if (const auto activeConf = &g_Configs.skinChanger.m_Items[IsKnife(definitionIndex) ? WEAPON_KNIFE : definitionIndex])
 				ApplyConfigOnAttributableItem(weapon, activeConf, playerInfo.xuidlow);
 			else
 				EraseOverrideIfExistsByIndex(definitionIndex);
@@ -233,7 +233,7 @@ static constexpr void UpdateHUD()
 	hudUpdateRequired = false;
 }
 
-void Skins::Run(ClientFrameStage_t stage)
+void SkinChanger::Run(ClientFrameStage_t stage)
 {
 	static int localPlayerHandle = -1;
 
@@ -248,7 +248,7 @@ void Skins::Run(ClientFrameStage_t stage)
 	}
 }
 
-void Skins::ScheduleHUDUpdate()
+void SkinChanger::ScheduleHUDUpdate()
 {
 	g_ClientState->ForceFullUpdate();
 	hudUpdateRequired = true;

@@ -7,7 +7,7 @@
 
 #undef min
 
-struct C_ItemSettings
+struct CItemSettings
 {
 	bool enabled = false;
 	int definitionVectorIndex = 0;
@@ -27,27 +27,34 @@ class Configs
 public:
 	struct
 	{
-		std::map<int, C_ItemSettings> m_Items;
-		std::unordered_map<std::string, std::string> m_IconOverrides;
-		auto GetIconOverride(const std::string original) const -> const char*
-		{
-			return m_IconOverrides.count(original) ? m_IconOverrides.at(original).data() : nullptr;
-		}
-	} skins;
-
-	struct
-	{
 		bool bunnyHop = false;
 		bool autoAccept = false;
 		bool rankReveal = false;
+		bool desync = false;
+
 		int keyBindSelection = 0;
 		int edgeJumpKey = 0;
+		int desyncKey = 0;
 		int menuKey = 45;
+	} misc;
+
+	struct
+	{
 		int playerModelT = 0;
 		int playerModelCT = 0;
 		int knifeModel = 0;
 		int awpModel = 0;
-	} misc;
+	} modelChanger;
+
+	struct
+	{
+		std::map<int, CItemSettings> m_Items;
+		std::unordered_map<std::string, std::string> m_IconOverrides;
+		const char* GetIconOverride(const std::string original)
+		{
+			return m_IconOverrides.count(original) ? m_IconOverrides.at(original).data() : nullptr;
+		}
+	} skinChanger;
 };
 
 extern Configs g_Configs;

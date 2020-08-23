@@ -1,5 +1,7 @@
 #include "Movement.hpp"
+
 #include "../Helpers/Configs.hpp"
+#include "../Helpers/InputSys.hpp"
 
 void Movement::BunnyHop(CUserCmd* cmd)
 {
@@ -20,5 +22,25 @@ void Movement::BunnyHop(CUserCmd* cmd)
 			if (!(moveType == MOVETYPE_NOCLIP || moveType == MOVETYPE_LADDER))
 				cmd->buttons &= ~IN_JUMP;
 		}
+	}
+}
+
+void Movement::EdgeJump(CUserCmd* cmd)
+{
+	if (!g_EngineClient->IsInGame() || !g_EngineClient->IsConnected())
+		return;
+
+	if (!g_LocalPlayer || !g_LocalPlayer->IsAlive())
+		return;
+
+	int oldFlags = g_LocalPlayer->m_fFlags();
+
+	if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey))
+	{
+		if ((oldFlags & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
+			cmd->buttons |= IN_JUMP;
+
+		if (!(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
+			cmd->buttons |= IN_DUCK;
 	}
 }

@@ -11,24 +11,6 @@ void CConfig::SetupValue(float& value, float def, std::string category, std::str
 void CConfig::SetupValue(bool& value, bool def, std::string category, std::string name) { value = def; bools.push_back(new ConfigValue< bool >(category, name, &value, def)); }
 void CConfig::SetupValue(char* value, char* def, std::string category, std::string name) { value = def; chars.push_back(new ConfigValue< char >(category, name, value, *def)); }
 
-void CConfig::SetupSkins()
-{
-	for (auto& key : k_WeaponNames)
-	{
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].enabled, false, (key.name), ("enabled"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].definitionVectorIndex, 0, (key.name), ("definitionVectorIndex"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].customName, "", (key.name), ("customName"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].definitionIndex, 1, (key.name), ("definitionIndex"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].paintKitVectorIndex, 0, (key.name), ("paintKitVectorIndex"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].paintKitIndex, 0, (key.name), ("paintKitIndex"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].definitionOverrideVectorIndex, 0, (key.name), ("definitionOverrideVectorIndex"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].definitionOverrideIndex, 0, (key.name), ("definitionOverrideIndex"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].seed, 0, (key.name), ("pattern"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].stattrak, -1, (key.name), ("stattrak"));
-		SetupValue(g_Configs.skins.m_Items[key.definitionIndex].wear, 0.0f, (key.name), ("float"));
-	}
-}
-
 void CConfig::SetupMisc()
 {
 	SetupValue(g_Configs.misc.bunnyHop, false, ("Misc"), ("bunnyHop"));
@@ -37,16 +19,39 @@ void CConfig::SetupMisc()
 	SetupValue(g_Configs.misc.keyBindSelection, 0, ("Misc"), ("keyBindSelection"));
 	SetupValue(g_Configs.misc.edgeJumpKey, 0, ("Misc"), ("edgeJumpKey"));
 	SetupValue(g_Configs.misc.menuKey, 45, ("Misc"), ("menuKey"));
-	SetupValue(g_Configs.misc.playerModelT, 0, ("Misc"), ("playerModelT"));
-	SetupValue(g_Configs.misc.playerModelCT, 0, ("Misc"), ("playerModelCT"));
-	SetupValue(g_Configs.misc.knifeModel, 0, ("Misc"), ("knifeModel"));
-	SetupValue(g_Configs.misc.awpModel, 0, ("Misc"), ("awpModel"));
+}
+
+void CConfig::SetupModelChanger()
+{
+	SetupValue(g_Configs.modelChanger.playerModelT, 0, ("ModelChanger"), ("playerModelT"));
+	SetupValue(g_Configs.modelChanger.playerModelCT, 0, ("ModelChanger"), ("playerModelCT"));
+	SetupValue(g_Configs.modelChanger.knifeModel, 0, ("ModelChanger"), ("knifeModel"));
+	SetupValue(g_Configs.modelChanger.awpModel, 0, ("ModelChanger"), ("awpModel"));
+}
+
+void CConfig::SetupSkinChanger()
+{
+	for (auto& key : k_WeaponNames)
+	{
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].enabled, false, (key.name), ("enabled"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].definitionVectorIndex, 0, (key.name), ("definitionVectorIndex"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].customName, "", (key.name), ("customName"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].definitionIndex, 1, (key.name), ("definitionIndex"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].paintKitVectorIndex, 0, (key.name), ("paintKitVectorIndex"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].paintKitIndex, 0, (key.name), ("paintKitIndex"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].definitionOverrideVectorIndex, 0, (key.name), ("definitionOverrideVectorIndex"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].definitionOverrideIndex, 0, (key.name), ("definitionOverrideIndex"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].seed, 0, (key.name), ("pattern"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].stattrak, -1, (key.name), ("stattrak"));
+		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].wear, 0.0f, (key.name), ("float"));
+	}
 }
 
 void CConfig::Setup()
 {
-	CConfig::SetupSkins();
 	CConfig::SetupMisc();
+	CConfig::SetupModelChanger();
+	CConfig::SetupSkinChanger();
 }
 
 void CConfig::Save(const std::string& name)
@@ -83,7 +88,7 @@ void CConfig::Load(const std::string& name)
 	if (name.empty())
 		return;
 
-	Skins::ScheduleHUDUpdate();
+	SkinChanger::Get().ScheduleHUDUpdate();
 
 	CreateDirectoryA(u8"C:\\MODE$TIA\\", NULL);
 	std::string file = u8"C:\\MODE$TIA\\" + name;
