@@ -16,7 +16,8 @@ namespace FNV
     {
         auto value = offsetBasis;
 
-        while (*str) {
+        while (*str)
+        {
             value ^= *str++;
             value *= prime;
         }

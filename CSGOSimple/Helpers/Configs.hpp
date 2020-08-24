@@ -30,6 +30,7 @@ public:
 		bool bunnyHop = false;
 		bool autoAccept = false;
 		bool rankReveal = false;
+		bool clantagChanger = false;
 
 		int keyBindSelection = 0;
 		int edgeJumpKey = 0;

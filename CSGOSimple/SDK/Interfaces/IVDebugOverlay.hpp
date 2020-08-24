@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Math/Vector.hpp"
-#include "../Math/Vector3D.hpp"
 #include "../Math/QAngle.hpp"
 #include "../Math/VMatrix.hpp"
 
@@ -21,7 +20,7 @@ public:
     virtual void            AddScreenTextOverlay(float flXPos, float flYPos, float flDuration, int r, int g, int b, int a, const char *text) = 0;
     virtual void            AddSweptBoxOverlay(const Vector& start, const Vector& end, const Vector& mins, const Vector& max, const QAngle & angles, int r, int g, int b, int a, float flDuration) = 0;
     virtual void            AddGridOverlay(const Vector& origin) = 0;
-    virtual void            AddCoordFrameOverlay(const matrix3x4_t& frame, float flScale, int vColorTable[3][3] = NULL) = 0;
+    virtual void            AddCoordFrameOverlay(const Matrix3x4_t& frame, float flScale, int vColorTable[3][3] = NULL) = 0;
     virtual int             ScreenPosition(const Vector& point, Vector& screen) = 0;
     virtual int             ScreenPosition(float flXPos, float flYPos, Vector& screen) = 0;
     virtual OverlayText_t*  GetFirst(void) = 0;
@@ -34,10 +33,4 @@ public:
     virtual void            AddBoxOverlay2(const Vector& origin, const Vector& mins, const Vector& max, QAngle const& orientation, const uint8_t* faceColor, const uint8_t* edgeColor, float duration) = 0;
     virtual void            PurgeTextOverlays() = 0;
     virtual void            DrawPill(const Vector& mins, const Vector& max, float& diameter, int r, int g, int b, int a, float duration) = 0;
-
-	bool WorldToScreen3D(const Vector3D& in, Vector3D& out) {
-		using original_fn = int(__thiscall*)(IVDebugOverlay*, const Vector3D&, Vector3D&);
-		int return_value = (*(original_fn * *)this)[13](this, in, out);
-		return static_cast<bool>(return_value != 1);
-	}
 };

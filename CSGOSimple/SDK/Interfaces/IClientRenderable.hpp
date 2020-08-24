@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../math/Vector.hpp"
-#include "../math/QAngle.hpp"
+#include "../Math/Vector.hpp"
+#include "../Math/QAngle.hpp"
 
+typedef unsigned char uint8_t;
 typedef unsigned short ClientShadowHandle_t;
 typedef unsigned short ClientRenderHandle_t;
 typedef unsigned short ModelInstanceHandle_t;
-typedef unsigned char uint8_t;
 
-class matrix3x4_t;
+class Matrix3x4_t;
 class IClientUnknown;
-struct model_t;
+struct Model_t;
 
 class IClientRenderable
 {
@@ -23,13 +23,13 @@ public:
 	virtual void                       Unused(void) const {}
 	virtual ClientShadowHandle_t       GetShadowHandle() const = 0;
 	virtual ClientRenderHandle_t&	   RenderHandle() = 0;
-	virtual const model_t*			   GetModel() const = 0;
+	virtual const Model_t*			   GetModel() const = 0;
 	virtual int                        DrawModel(int flags, const int& instance) = 0;
 	virtual int                        GetBody() = 0;
 	virtual void                       GetColorModulation(float* color) = 0;
 	virtual bool                       LODTest() = 0;
-	virtual bool                       SetupBones(matrix3x4_t* boneToWorldOut, int maxBones, int boneMask, float currentTime) = 0;
-	virtual void                       SetupWeights(const matrix3x4_t* boneToWorld, int flexWeightCount, float* flexWeights, float* flexDelayedWeights) = 0;
+	virtual bool                       SetupBones(Matrix3x4_t* boneToWorldOut, int maxBones, int boneMask, float currentTime) = 0;
+	virtual void                       SetupWeights(const Matrix3x4_t* boneToWorld, int flexWeightCount, float* flexWeights, float* flexDelayedWeights) = 0;
 	virtual void                       DoAnimationEvents(void) = 0;
 	virtual void*					   GetPVSNotifyInterface() = 0;
 	virtual void                       GetRenderBounds(Vector& mins, Vector& maxs) = 0;
@@ -46,10 +46,10 @@ public:
 	virtual int					       ShadowCastType() = 0;
 	virtual void                       CreateModelInstance() = 0;
 	virtual ModelInstanceHandle_t      GetModelInstance() = 0;
-	virtual const matrix3x4_t&		   RenderableToWorldTransform() = 0;
+	virtual const Matrix3x4_t&		   RenderableToWorldTransform() = 0;
 	virtual int                        LookupAttachment(const char* attachmentName) = 0;
 	virtual bool                       GetAttachment(int number, Vector& origin, QAngle& angles) = 0;
-	virtual bool                       GetAttachment(int number, matrix3x4_t& matrix) = 0;
+	virtual bool                       GetAttachment(int number, Matrix3x4_t& matrix) = 0;
 	virtual float*					   GetRenderClipPlane(void) = 0;
 	virtual int                        GetSkin() = 0;
 	virtual void                       OnThreadedDrawSetup() = 0;

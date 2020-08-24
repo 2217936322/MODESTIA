@@ -38,16 +38,10 @@ public:
 	inline CVerifiedUserCmd* GetVerifiedCmd(int sequenceNumber);
 };
 
-CUserCmd* CInput::GetUserCmd(int sequenceNumber)
-{
-	using OriginalFn = CUserCmd * (__thiscall*)(void*, int, int);
-	return CallVirtualFunction<OriginalFn>(this, 8)(this, 0, sequenceNumber);
-}
-
 CUserCmd* CInput::GetUserCmd(int slot, int sequenceNumber)
 {
-	typedef CUserCmd* (__thiscall* GetUserCmd_t)(void*, int, int);
-	return CallVirtualFunction<GetUserCmd_t>(this, 8)(this, slot, sequenceNumber);
+	using Fn = CUserCmd * (__thiscall*)(void*, int, int);
+	return CallVirtualFunction<Fn>(this, 8)(this, slot, sequenceNumber);
 }
 
 CVerifiedUserCmd* CInput::GetVerifiedCmd(int sequenceNumber)

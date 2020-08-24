@@ -404,6 +404,7 @@ void CMenu::Run()
 					ImGui::Checkbox("Bunny hop", &g_Configs.misc.bunnyHop);
 					ImGui::Checkbox("Auto-accept matchmaking", &g_Configs.misc.autoAccept);
 					ImGui::Checkbox("Reveal competitive ranks", &g_Configs.misc.rankReveal);
+					ImGui::Checkbox("MODE$TIA clantag", &g_Configs.misc.clantagChanger);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
 					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu\0");

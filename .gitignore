@@ -130,3 +130,14 @@ Build/CSGOSimple.vcxproj.FileListAbsolute.txt
 Build/EnginePrediction.obj
 .vs/MODESTIA/v16/ipch/AutoPCH/b1efa6848cd3af80/MENU.ipch
 .vs/MODESTIA/v16/ipch/AutoPCH/3dc8c23f6d268944/ENGINEPREDICTION.ipch
+Build/Visuals.obj
+.vs/MODESTIA/v16/ipch/AutoPCH/f6f92b23c9a7d23f/VISUALS.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/dfebc24ecaba2419/CSGOSTRUCTS.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/ba564e23a74f0212/VISUALS.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/ad7c17d8bc46727e/HOOKS.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/807a802134e1a029/VMATRIX.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/76d86a8d60297511/CONFIGS.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/5e29cf4c8967596c/VECTOR3D.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/533f9739a6b4fb35/UTLBUFFER.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/4a20db590bd141d7/VECTOR4D.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/184ef1316faa5f2d/VECTOR2D.ipch

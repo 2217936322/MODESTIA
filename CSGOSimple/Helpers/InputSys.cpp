@@ -85,36 +85,36 @@ bool InputSys::ProcessMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 bool InputSys::ProcessMouseMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto key = VK_LBUTTON;
-	auto state = KeyState::None;
+	auto state = KeyState::NONE;
 
 	switch (msg) 
 	{
 	case WM_MBUTTONDOWN:
 	case WM_MBUTTONUP:
-		state = msg == WM_MBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_MBUTTONUP ? KeyState::UP : KeyState::DOWN;
 		key = VK_MBUTTON;
 		break;
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONUP:
-		state = msg == WM_RBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_RBUTTONUP ? KeyState::UP : KeyState::DOWN;
 		key = VK_RBUTTON;
 		break;
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
-		state = msg == WM_LBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_LBUTTONUP ? KeyState::UP : KeyState::DOWN;
 		key = VK_LBUTTON;
 		break;
 	case WM_XBUTTONDOWN:
 	case WM_XBUTTONUP:
-		state = msg == WM_XBUTTONUP ? KeyState::Up : KeyState::Down;
+		state = msg == WM_XBUTTONUP ? KeyState::UP : KeyState::DOWN;
 		key = (HIWORD(wParam) == XBUTTON1 ? VK_XBUTTON1 : VK_XBUTTON2);
 		break;
 	default:
 		return false;
 	}
 
-	if (state == KeyState::Up && m_iKeyMap[key] == KeyState::Down)
-		m_iKeyMap[key] = KeyState::Pressed;
+	if (state == KeyState::UP && m_iKeyMap[key] == KeyState::DOWN)
+		m_iKeyMap[key] = KeyState::PRESSED;
 	else
 		m_iKeyMap[key] = state;
 
@@ -124,25 +124,25 @@ bool InputSys::ProcessMouseMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 bool InputSys::ProcessKeybdMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto key = wParam;
-	auto state = KeyState::None;
+	auto state = KeyState::NONE;
 
 	switch (msg) 
 	{
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
-		state = KeyState::Down;
+		state = KeyState::DOWN;
 		break;
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
-		state = KeyState::Up;
+		state = KeyState::UP;
 		break;
 	default:
 		return false;
 	}
 
-	if (state == KeyState::Up && m_iKeyMap[int(key)] == KeyState::Down) 
+	if (state == KeyState::UP && m_iKeyMap[int(key)] == KeyState::DOWN)
 	{
-		m_iKeyMap[int(key)] = KeyState::Pressed;
+		m_iKeyMap[int(key)] = KeyState::PRESSED;
 
 		auto& hotkeyCallback = m_Hotkeys[key];
 
@@ -164,14 +164,14 @@ KeyState InputSys::GetKeyState(std::uint32_t vk)
 
 bool InputSys::IsKeyDown(std::uint32_t vk)
 {
-	return m_iKeyMap[vk] == KeyState::Down;
+	return m_iKeyMap[vk] == KeyState::DOWN;
 }
 
 bool InputSys::WasKeyPressed(std::uint32_t vk)
 {
-	if (m_iKeyMap[vk] == KeyState::Pressed) 
+	if (m_iKeyMap[vk] == KeyState::PRESSED) 
 	{
-		m_iKeyMap[vk] = KeyState::Up;
+		m_iKeyMap[vk] = KeyState::UP;
 		return true;
 	}
 	return false;

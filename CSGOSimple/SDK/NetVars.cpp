@@ -50,46 +50,6 @@ NetvarSys::NetvarTable NetvarSys::LoadTable(RecvTable* recvTable)
     return table;
 }
 
-void NetvarSys::Dump()
-{
-    auto outfile = std::ofstream("netvar_dump.txt");
-
-    Dump(outfile);
-}
-
-void NetvarSys::Dump(std::ostream& stream)
-{
-    for (const auto& table : database)
-    {
-        if (table.childProps.empty() && table.childTables.empty())
-            continue;
-
-        stream << table.name << '\n';
-        DumpTable(stream, table, 1);
-        stream << '\n';
-    }
-
-    stream << std::endl;
-}
-
-void NetvarSys::DumpTable(std::ostream& stream, const NetvarTable& table, uint32_t indentation)
-{
-    char line_buffer[1024];
-
-    for (const auto& prop : table.childProps)
-    {
-        sprintf_s(line_buffer, "%*c%*s: 0x%08X", indentation * 4, ' ', -(50 - (int)indentation * 4), prop->m_pVarName, table.offset + prop->m_Offset);
-        stream << line_buffer << '\n';
-    }
-
-    for (const auto& child : table.childTables)
-    {
-        sprintf_s(line_buffer, "%*c%*s: 0x%08X", indentation * 4, ' ', -(50 - (int)indentation * 4), child.prop->m_pVarName, table.offset + child.offset);
-        stream << line_buffer << '\n';
-        DumpTable(stream, child, indentation + 1);
-    }
-}
-
 uint32_t NetvarSys::GetOffset(const std::string& tableName, const std::string& propName)
 {
     auto result = 0u;

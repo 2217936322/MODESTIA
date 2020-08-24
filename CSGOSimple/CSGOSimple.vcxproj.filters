@@ -44,9 +44,6 @@
     <ClCompile Include="SDK\Math\Vector2D.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\Math\Vector3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SDK\Math\Vector4D.cpp">
       <Filter>Source Files\SDK</Filter>
     </ClCompile>
@@ -393,9 +390,6 @@
     </ClInclude>
     <ClInclude Include="sdk\misc\VFunc.hpp">
       <Filter>Header Files\SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk\math\Vector3D.hpp">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Helpers\Render.hpp">
       <Filter>Header Files</Filter>

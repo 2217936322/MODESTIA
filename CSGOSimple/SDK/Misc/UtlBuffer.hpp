@@ -1,9 +1,3 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======//
-//
-// Purpose: 
-//
-// $NoKeywords: $
-//
 // Serialization/unserialization buffer
 //=============================================================================//
 #pragma once
@@ -19,7 +13,7 @@
 //-----------------------------------------------------------------------------
 // Forward declarations
 //-----------------------------------------------------------------------------
-struct CharacterSet_t;
+struct characterset_t;
 struct typedescription_t;
 struct datamap_t;
 
@@ -35,17 +29,17 @@ public:
     //-----------------------------------------------------------------------------
     // Write a single field.
     //-----------------------------------------------------------------------------
-    void SwapFieldToTargetEndian(void* pOutputBuffer, void *pData, typedescription_t *pField);
+    void SwapFieldToTargetEndian(void* pOutputBuffer, void* pData, typedescription_t* pField);
 
     //-----------------------------------------------------------------------------
     // Write a block of fields.  Works a bit like the saverestore code.  
     //-----------------------------------------------------------------------------
-    void SwapFieldsToTargetEndian(void *pOutputBuffer, void *pBaseData, datamap_t *pDataMap);
+    void SwapFieldsToTargetEndian(void* pOutputBuffer, void* pBaseData, datamap_t* pDataMap);
 
     // Swaps fields for the templated type to the output buffer.
-    template<typename T> inline void SwapFieldsToTargetEndian(T* pOutputBuffer, void *pBaseData, unsigned int objectCount = 1)
+    template<typename T> inline void SwapFieldsToTargetEndian(T* pOutputBuffer, void* pBaseData, unsigned int objectCount = 1)
     {
-        for(unsigned int i = 0; i < objectCount; ++i, ++pOutputBuffer) {
+        for (unsigned int i = 0; i < objectCount; ++i, ++pOutputBuffer) {
             SwapFieldsToTargetEndian((void*)pOutputBuffer, pBaseData, &T::m_DataMap);
             pBaseData = (uint8_t*)pBaseData + sizeof(T);
         }
@@ -67,7 +61,7 @@ public:
         short nIsBigEndian = 1;
 
         // if we are big endian, the first uint8_t will be a 0, if little endian, it will be a one.
-        return (bool)(0 == *(char *)&nIsBigEndian);
+        return (bool)(0 == *(char*)&nIsBigEndian);
     }
 
     //-----------------------------------------------------------------------------
@@ -129,12 +123,12 @@ public:
     template<typename T> inline int SourceIsNativeEndian(T input, T nativeConstant)
     {
         // If it's the same, it isn't byteswapped:
-        if(input == nativeConstant)
+        if (input == nativeConstant)
             return 1;
 
         int output;
         LowLevelByteSwap<T>(&output, &input);
-        if(output == nativeConstant)
+        if (output == nativeConstant)
             return 0;
 
         assert(0);		// if we Get here, input is neither a swapped nor unswapped version of nativeConstant.
@@ -154,16 +148,16 @@ public:
         assert(outputBuffer);
 
         // Fail gracefully in release:
-        if(count <= 0 || !outputBuffer)
+        if (count <= 0 || !outputBuffer)
             return;
 
         // Optimization for the case when we are swapping in place.
-        if(inputBuffer == NULL) {
+        if (inputBuffer == NULL) {
             inputBuffer = outputBuffer;
         }
 
         // Swap everything in the buffer:
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             LowLevelByteSwap<T>(&outputBuffer[i], &inputBuffer[i]);
         }
     }
@@ -181,18 +175,18 @@ public:
         assert(outputBuffer);
 
         // Fail gracefully in release:
-        if(count <= 0 || !outputBuffer)
+        if (count <= 0 || !outputBuffer)
             return;
 
         // Optimization for the case when we are swapping in place.
-        if(inputBuffer == NULL) {
+        if (inputBuffer == NULL) {
             inputBuffer = outputBuffer;
         }
 
         // Are we already the correct endienness? ( or are we swapping 1 uint8_t items? )
-        if(!m_bSwapBytes || (sizeof(T) == 1)) {
+        if (!m_bSwapBytes || (sizeof(T) == 1)) {
             // If we were just going to swap in place then return.
-            if(!inputBuffer)
+            if (!inputBuffer)
                 return;
 
             // Otherwise copy the inputBuffer to the outputBuffer:
@@ -202,7 +196,7 @@ public:
         }
 
         // Swap everything in the buffer:
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             LowLevelByteSwap<T>(&outputBuffer[i], &inputBuffer[i]);
         }
     }
@@ -212,33 +206,33 @@ private:
     // The lowest level uint8_t swapping workhorse of doom.  output always contains the 
     // swapped version of input.  ( Doesn't compare machine to target endianness )
     //-----------------------------------------------------------------------------
-    template<typename T> static void LowLevelByteSwap(T *output, T *input)
+    template<typename T> static void LowLevelByteSwap(T* output, T* input)
     {
         T temp = *output;
 #if defined( _X360 )
         // Intrinsics need the source type to be fixed-point
         DWORD* word = (DWORD*)input;
-        switch(sizeof(T)) {
-            case 8:
-            {
-                __storewordbytereverse(*word, 0, &temp);
-                __storewordbytereverse(*(word + 1), 4, &temp);
-            }
+        switch (sizeof(T)) {
+        case 8:
+        {
+            __storewordbytereverse(*word, 0, &temp);
+            __storewordbytereverse(*(word + 1), 4, &temp);
+        }
+        break;
+
+        case 4:
+            __storewordbytereverse(*word, 0, &temp);
             break;
 
-            case 4:
-                __storewordbytereverse(*word, 0, &temp);
-                break;
+        case 2:
+            __storeshortbytereverse(*input, 0, &temp);
+            break;
 
-            case 2:
-                __storeshortbytereverse(*input, 0, &temp);
-                break;
-
-            default:
-                assert("Invalid size in CByteswap::LowLevelByteSwap" && 0);
+        default:
+            assert("Invalid size in CByteswap::LowLevelByteSwap" && 0);
         }
 #else
-        for(int i = 0; i < sizeof(T); i++) {
+        for (int i = 0; i < sizeof(T); i++) {
             ((unsigned char*)&temp)[i] = ((unsigned char*)input)[sizeof(T) - (i + 1)];
         }
 #endif
@@ -263,30 +257,30 @@ public:
     struct ConversionArray_t
     {
         char m_nActualChar;
-        char *m_pReplacementString;
+        char* m_pReplacementString;
     };
 
-    CUtlCharConversion(char nEscapeChar, const char *pDelimiter, int nCount, ConversionArray_t *pArray);
+    CUtlCharConversion(char nEscapeChar, const char* pDelimiter, int nCount, ConversionArray_t* pArray);
     char GetEscapeChar() const;
-    const char *GetDelimiter() const;
+    const char* GetDelimiter() const;
     int GetDelimiterLength() const;
 
-    const char *GetConversionString(char c) const;
+    const char* GetConversionString(char c) const;
     int GetConversionLength(char c) const;
     int MaxConversionLength() const;
 
     // Finds a conversion for the passed-in string, returns length
-    virtual char FindConversion(const char *pString, int *pLength);
+    virtual char FindConversion(const char* pString, int* pLength);
 
 protected:
     struct ConversionInfo_t
     {
         int m_nLength;
-        char *m_pReplacementString;
+        char* m_pReplacementString;
     };
 
     char m_nEscapeChar;
-    const char *m_pDelimiter;
+    const char* m_pDelimiter;
     int m_nDelimiterLength;
     int m_nCount;
     int m_nMaxConversionLength;
@@ -311,12 +305,12 @@ protected:
 //-----------------------------------------------------------------------------
 // Character conversions for C strings
 //-----------------------------------------------------------------------------
-CUtlCharConversion *GetCStringCharConversion();
+CUtlCharConversion* GetCStringCharConversion();
 
 //-----------------------------------------------------------------------------
 // Character conversions for quoted strings, with no escape sequences
 //-----------------------------------------------------------------------------
-CUtlCharConversion *GetNoEscCharConversion();
+CUtlCharConversion* GetNoEscCharConversion();
 
 
 //-----------------------------------------------------------------------------
@@ -350,13 +344,13 @@ public:
     };
 
     // Overflow functions when a Get or put overflows
-    typedef bool (CUtlBuffer::*UtlBufferOverflowFunc_t)(int nSize);
+    typedef bool (CUtlBuffer::* UtlBufferOverflowFunc_t)(int nSize);
 
     // Constructors for growable + external buffers for serialization/unserialization
     CUtlBuffer(int growSize = 0, int initSize = 0, int nFlags = 0);
     CUtlBuffer(const void* pBuffer, int size, int nFlags = 0);
     // This one isn't actually defined so that we catch contructors that are trying to pass a bool in as the third param.
-    CUtlBuffer(const void *pBuffer, int size, bool crap);
+    CUtlBuffer(const void* pBuffer, int size, bool crap);
 
     unsigned char	GetFlags() const;
 
@@ -370,11 +364,11 @@ public:
     // Attaches the buffer to external memory....
     void			SetExternalBuffer(void* pMemory, int nSize, int nInitialPut, int nFlags = 0);
     bool			IsExternallyAllocated() const;
-    void			AssumeMemory(void *pMemory, int nSize, int nInitialPut, int nFlags = 0);
+    void			AssumeMemory(void* pMemory, int nSize, int nInitialPut, int nFlags = 0);
 
     __forceinline void ActivateByteSwappingIfBigEndian(void)
     {
-        if(IsX360())
+        if (IsX360())
             ActivateByteSwapping(true);
     }
 
@@ -409,16 +403,16 @@ public:
     void			GetLine(char* pLine, int nMaxChars = 0);
 
     // Used for getting objects that have a byteswap datadesc defined
-    template <typename T> void GetObjects(T *dest, int count = 1);
+    template <typename T> void GetObjects(T* dest, int count = 1);
 
     // This will Get at least 1 uint8_t and up to nSize bytes. 
     // It will return the number of bytes actually read.
-    int				GetUpTo(void *pMem, int nSize);
+    int				GetUpTo(void* pMem, int nSize);
 
     // This version of GetString converts \" to \\ and " to \, etc.
     // It also reads a " at the beginning and end of the string
-    void			GetDelimitedString(CUtlCharConversion *pConv, char *pString, int nMaxChars = 0);
-    char			GetDelimitedChar(CUtlCharConversion *pConv);
+    void			GetDelimitedString(CUtlCharConversion* pConv, char* pString, int nMaxChars = 0);
+    char			GetDelimitedChar(CUtlCharConversion* pConv);
 
     // This will return the # of characters of the string about to be read out
     // NOTE: The count will *include* the terminating 0!!
@@ -434,7 +428,7 @@ public:
     // Specifying false for bActualSize will return the pre-translated number of characters
     // including the delimiters and the escape characters. So, \n counts as 2 characters when bActualSize == false
     // and only 1 character when bActualSize == true
-    int				PeekDelimitedStringLength(CUtlCharConversion *pConv, bool bActualSize = true);
+    int				PeekDelimitedStringLength(CUtlCharConversion* pConv, bool bActualSize = true);
 
     // Just like scanf, but doesn't work in binary mode
     int				Scanf(const char* pFmt, ...);
@@ -452,16 +446,16 @@ public:
     // (skipping whitespace that leads + trails both delimiters).
     // If successful, the Get index is advanced and the function returns true,
     // otherwise the index is not advanced and the function returns false.
-    bool			ParseToken(const char *pStartingDelim, const char *pEndingDelim, char* pString, int nMaxLen);
+    bool			ParseToken(const char* pStartingDelim, const char* pEndingDelim, char* pString, int nMaxLen);
 
     // Advance the Get index until after the particular string is found
     // Do not eat whitespace before starting. Return false if it failed
     // String test is case-insensitive.
-    bool			GetToken(const char *pToken);
+    bool			GetToken(const char* pToken);
 
     // Parses the next token, given a Set of character breaks to stop at
     // Returns the length of the token parsed in bytes (-1 if none parsed)
-    int				ParseToken(CharacterSet_t *pBreaks, char *pTokenBuf, int nMaxLen, bool bParseComments = true);
+    int				ParseToken(characterset_t* pBreaks, char* pTokenBuf, int nMaxLen, bool bParseComments = true);
 
     // Write stuff in
     // Binary mode: it'll just write the bits directly in, and strings will be
@@ -480,12 +474,12 @@ public:
     void			Put(const void* pMem, int size);
 
     // Used for putting objects that have a byteswap datadesc defined
-    template <typename T> void PutObjects(T *src, int count = 1);
+    template <typename T> void PutObjects(T* src, int count = 1);
 
     // This version of PutString converts \ to \\ and " to \", etc.
     // It also places " at the beginning and end of the string
-    void			PutDelimitedString(CUtlCharConversion *pConv, const char *pString);
-    void			PutDelimitedChar(CUtlCharConversion *pConv, char c);
+    void			PutDelimitedString(CUtlCharConversion* pConv, const char* pString);
+    void			PutDelimitedChar(CUtlCharConversion* pConv, char c);
 
     // Just like printf, writes a terminating zero in binary mode
     void			Printf(const char* pFmt, ...);
@@ -537,7 +531,7 @@ public:
     // Converts a buffer from a CRLF buffer to a CR buffer (and back)
     // Returns false if no conversion was necessary (and outBuf is left untouched)
     // If the conversion occurs, outBuf will be cleared.
-    bool ConvertCRLF(CUtlBuffer &outBuf);
+    bool ConvertCRLF(CUtlBuffer& outBuf);
 
     // Push/pop pretty-printing tabs
     void PushTab();
@@ -572,15 +566,15 @@ protected:
     void PutTabs();
 
     // Help with delimited stuff
-    char GetDelimitedCharInternal(CUtlCharConversion *pConv);
-    void PutDelimitedCharInternal(CUtlCharConversion *pConv, char c);
+    char GetDelimitedCharInternal(CUtlCharConversion* pConv);
+    void PutDelimitedCharInternal(CUtlCharConversion* pConv, char c);
 
     // Default overflow funcs
     bool PutOverflow(int nSize);
     bool GetOverflow(int nSize);
 
     // Does the next bytes of the buffer match a pattern?
-    bool PeekStringMatch(int nOffset, const char *pString, int nLen);
+    bool PeekStringMatch(int nOffset, const char* pString, int nLen);
 
     // Peek size of line to come, check memory bound
     int	PeekLineLength();
@@ -593,15 +587,15 @@ protected:
 
     // Call this to peek arbitrarily long into memory. It doesn't fail unless
     // it can't read *anything* new
-    bool CheckArbitraryPeekGet(int nOffset, int &nIncrement);
+    bool CheckArbitraryPeekGet(int nOffset, int& nIncrement);
 
-    template <typename T> void GetType(T& dest, const char *pszFmt);
+    template <typename T> void GetType(T& dest, const char* pszFmt);
     template <typename T> void GetTypeBin(T& dest);
-    template <typename T> void GetObject(T *src);
+    template <typename T> void GetObject(T* src);
 
-    template <typename T> void PutType(T src, const char *pszFmt);
+    template <typename T> void PutType(T src, const char* pszFmt);
     template <typename T> void PutTypeBin(T src);
-    template <typename T> void PutObject(T *src);
+    template <typename T> void PutObject(T* src);
 
     CUtlMemory<unsigned char> m_Memory;
     int m_Get;
@@ -626,67 +620,67 @@ protected:
 
 
 // Stream style output operators for CUtlBuffer
-inline CUtlBuffer &operator<<(CUtlBuffer &b, char v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, char v)
 {
     b.PutChar(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, unsigned char v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, unsigned char v)
 {
     b.PutUnsignedChar(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, short v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, short v)
 {
     b.PutShort(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, unsigned short v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, unsigned short v)
 {
     b.PutUnsignedShort(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, int v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, int v)
 {
     b.PutInt(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, unsigned int v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, unsigned int v)
 {
     b.PutUnsignedInt(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, float v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, float v)
 {
     b.PutFloat(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, double v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, double v)
 {
     b.PutDouble(v);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, const char *pv)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, const char* pv)
 {
     b.PutString(pv);
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, const Vector &v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, const Vector& v)
 {
     b << v.x << " " << v.y << " " << v.z;
     return b;
 }
 
-inline CUtlBuffer &operator<<(CUtlBuffer &b, const Vector2D &v)
+inline CUtlBuffer& operator<<(CUtlBuffer& b, const Vector2D& v)
 {
     b << v.x << " " << v.y;
     return b;
@@ -732,7 +726,7 @@ public:
     // @returns	true				if line was successfully read
     //			false				when EOF is reached or error occurs
     //
-    bool InplaceGetLinePtr( /* out */ char **ppszInBufferPtr, /* out */ int *pnLineLength);
+    bool InplaceGetLinePtr( /* out */ char** ppszInBufferPtr, /* out */ int* pnLineLength);
 
     //
     // Determines the line length, advances the "Get" pointer offset by the line length,
@@ -756,7 +750,7 @@ public:
     // @returns	ptr-to-zero-terminated-line		if line was successfully read and buffer modified
     //			NULL							when EOF is reached or error occurs
     //
-    char * InplaceGetLinePtr(void);
+    char* InplaceGetLinePtr(void);
 };
 
 
@@ -792,75 +786,82 @@ inline const void* CUtlBuffer::PeekGet(int offset) const
 //-----------------------------------------------------------------------------
 
 template <typename T>
-inline void CUtlBuffer::GetObject(T *dest)
+inline void CUtlBuffer::GetObject(T* dest)
 {
-    if(CheckGet(sizeof(T))) {
-        if(!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
-            *dest = *(T *)PeekGet();
-        } else {
+    if (CheckGet(sizeof(T))) {
+        if (!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
+            *dest = *(T*)PeekGet();
+        }
+        else {
             m_Byteswap.SwapFieldsToTargetEndian<T>(dest, (T*)PeekGet());
         }
         m_Get += sizeof(T);
-    } else {
+    }
+    else {
         Q_memset(&dest, 0, sizeof(T));
     }
 }
 
 
 template <typename T>
-inline void CUtlBuffer::GetObjects(T *dest, int count)
+inline void CUtlBuffer::GetObjects(T* dest, int count)
 {
-    for(int i = 0; i < count; ++i, ++dest) {
+    for (int i = 0; i < count; ++i, ++dest) {
         GetObject<T>(dest);
     }
 }
 
 
 template <typename T>
-inline void CUtlBuffer::GetTypeBin(T &dest)
+inline void CUtlBuffer::GetTypeBin(T& dest)
 {
-    if(CheckGet(sizeof(T))) {
-        if(!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
-            dest = *(T *)PeekGet();
-        } else {
+    if (CheckGet(sizeof(T))) {
+        if (!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
+            dest = *(T*)PeekGet();
+        }
+        else {
             m_Byteswap.SwapBufferToTargetEndian<T>(&dest, (T*)PeekGet());
         }
         m_Get += sizeof(T);
-    } else {
+    }
+    else {
         dest = 0;
     }
 }
 
 template <>
-inline void CUtlBuffer::GetTypeBin< float >(float &dest)
+inline void CUtlBuffer::GetTypeBin< float >(float& dest)
 {
-    if(CheckGet(sizeof(float))) {
+    if (CheckGet(sizeof(float))) {
         unsigned int pData = (unsigned int)PeekGet();
-        if(IsX360() && (pData & 0x03)) {
+        if (IsX360() && (pData & 0x03)) {
             // handle unaligned read
             ((unsigned char*)&dest)[0] = ((unsigned char*)pData)[0];
             ((unsigned char*)&dest)[1] = ((unsigned char*)pData)[1];
             ((unsigned char*)&dest)[2] = ((unsigned char*)pData)[2];
             ((unsigned char*)&dest)[3] = ((unsigned char*)pData)[3];
-        } else {
-            // aligned read
-            dest = *(float *)pData;
         }
-        if(m_Byteswap.IsSwappingBytes()) {
+        else {
+            // aligned read
+            dest = *(float*)pData;
+        }
+        if (m_Byteswap.IsSwappingBytes()) {
             m_Byteswap.SwapBufferToTargetEndian< float >(&dest, &dest);
         }
         m_Get += sizeof(float);
-    } else {
+    }
+    else {
         dest = 0;
     }
 }
 
 template <typename T>
-inline void CUtlBuffer::GetType(T &dest, const char *pszFmt)
+inline void CUtlBuffer::GetType(T& dest, const char* pszFmt)
 {
-    if(!IsText()) {
+    if (!IsText()) {
         GetTypeBin(dest);
-    } else {
+    }
+    else {
         dest = 0;
         Scanf(pszFmt, &dest);
     }
@@ -980,12 +981,13 @@ inline void* CUtlBuffer::PeekPut(int offset)
 //-----------------------------------------------------------------------------
 
 template <typename T>
-inline void CUtlBuffer::PutObject(T *src)
+inline void CUtlBuffer::PutObject(T* src)
 {
-    if(CheckPut(sizeof(T))) {
-        if(!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
-            *(T *)PeekPut() = *src;
-        } else {
+    if (CheckPut(sizeof(T))) {
+        if (!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
+            *(T*)PeekPut() = *src;
+        }
+        else {
             m_Byteswap.SwapFieldsToTargetEndian<T>((T*)PeekPut(), src);
         }
         m_Put += sizeof(T);
@@ -995,9 +997,9 @@ inline void CUtlBuffer::PutObject(T *src)
 
 
 template <typename T>
-inline void CUtlBuffer::PutObjects(T *src, int count)
+inline void CUtlBuffer::PutObjects(T* src, int count)
 {
-    for(int i = 0; i < count; ++i, ++src) {
+    for (int i = 0; i < count; ++i, ++src) {
         PutObject<T>(src);
     }
 }
@@ -1006,10 +1008,11 @@ inline void CUtlBuffer::PutObjects(T *src, int count)
 template <typename T>
 inline void CUtlBuffer::PutTypeBin(T src)
 {
-    if(CheckPut(sizeof(T))) {
-        if(!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
-            *(T *)PeekPut() = src;
-        } else {
+    if (CheckPut(sizeof(T))) {
+        if (!m_Byteswap.IsSwappingBytes() || (sizeof(T) == 1)) {
+            *(T*)PeekPut() = src;
+        }
+        else {
             m_Byteswap.SwapBufferToTargetEndian<T>((T*)PeekPut(), &src);
         }
         m_Put += sizeof(T);
@@ -1018,11 +1021,12 @@ inline void CUtlBuffer::PutTypeBin(T src)
 }
 
 template <typename T>
-inline void CUtlBuffer::PutType(T src, const char *pszFmt)
+inline void CUtlBuffer::PutType(T src, const char* pszFmt)
 {
-    if(!IsText()) {
+    if (!IsText()) {
         PutTypeBin(src);
-    } else {
+    }
+    else {
         Printf(pszFmt, src);
     }
 }
@@ -1032,15 +1036,15 @@ inline void CUtlBuffer::PutType(T src, const char *pszFmt)
 //-----------------------------------------------------------------------------
 inline bool CUtlBuffer::WasLastCharacterCR()
 {
-    if(!IsText() || (TellPut() == 0))
+    if (!IsText() || (TellPut() == 0))
         return false;
-    return (*(const char *)PeekPut(-1) == '\n');
+    return (*(const char*)PeekPut(-1) == '\n');
 }
 
 inline void CUtlBuffer::PutTabs()
 {
     int nTabCount = (m_Flags & AUTO_TABS_DISABLED) ? 0 : m_nTab;
-    for(int i = nTabCount; --i >= 0; ) {
+    for (int i = nTabCount; --i >= 0; ) {
         PutTypeBin<char>('\t');
     }
 }
@@ -1056,7 +1060,7 @@ inline void CUtlBuffer::PushTab()
 
 inline void CUtlBuffer::PopTab()
 {
-    if(--m_nTab < 0) {
+    if (--m_nTab < 0) {
         m_nTab = 0;
     }
 }
@@ -1067,16 +1071,17 @@ inline void CUtlBuffer::PopTab()
 //-----------------------------------------------------------------------------
 inline void CUtlBuffer::EnableTabs(bool bEnable)
 {
-    if(bEnable) {
+    if (bEnable) {
         m_Flags &= ~AUTO_TABS_DISABLED;
-    } else {
+    }
+    else {
         m_Flags |= AUTO_TABS_DISABLED;
     }
 }
 
 inline void CUtlBuffer::PutChar(char c)
 {
-    if(WasLastCharacterCR()) {
+    if (WasLastCharacterCR()) {
         PutTabs();
     }
 

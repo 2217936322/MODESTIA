@@ -8,6 +8,6 @@ class Misc : public Singleton<Misc>
 	friend class Singleton<Misc>;
 
 public:
-
 	void RankReveal(CUserCmd* cmd);
+	void ClantagChanger();
 };

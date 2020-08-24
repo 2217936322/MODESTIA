@@ -74,12 +74,12 @@ void ModelChanger::PlayerChanger(ClientFrameStage_t stage)
         if (stage == ClientFrameStage_t::FRAME_RENDER_START) 
         {
             originalIndex = g_LocalPlayer->m_nModelIndex();
-            if (const auto modelprecache = g_NetworkStringTableContainer->FindTable("modelprecache")) 
+            if (const auto modelPreCache = g_NetworkStringTableContainer->FindTable("modelprecache")) 
             {
-                modelprecache->AddString(false, model);
+                modelPreCache->AddString(false, model);
                 const auto viewmodelArmConfig = g_Memory.GetPlayerViewmodelArmConfigForPlayerModel(model);
-                modelprecache->AddString(false, viewmodelArmConfig[2]);
-                modelprecache->AddString(false, viewmodelArmConfig[3]);
+                modelPreCache->AddString(false, viewmodelArmConfig[2]);
+                modelPreCache->AddString(false, viewmodelArmConfig[3]);
             }
         }
 
@@ -140,7 +140,7 @@ void ModelChanger::KnifeChanger(ClientFrameStage_t stage)
 
         const auto index = stage == ClientFrameStage_t::FRAME_RENDER_END && originalIndex ? originalIndex : g_MdlInfo->GetModelIndex(model);
 
-        if (viewmodel->m_hWeapon()->IsKnife())
+        if (viewmodel->m_hWeapon()->GetCSWeaponData()->WeaponType == WEAPONTYPE_KNIFE && viewmodel->m_hWeapon()->m_Item().m_iItemDefinitionIndex() != WEAPON_TASER)
         {
             viewmodel->SetModelIndex(index);
         }
@@ -197,7 +197,7 @@ void ModelChanger::AWPChanger(ClientFrameStage_t stage)
 
         const auto index = stage == ClientFrameStage_t::FRAME_RENDER_END && originalIndex ? originalIndex : g_MdlInfo->GetModelIndex(model);
 
-        if (viewmodel->m_hWeapon()->IsAwp())
+        if (viewmodel->m_hWeapon()->m_Item().m_iItemDefinitionIndex() == WEAPON_AWP)
         {
             viewmodel->SetModelIndex(index);
         }

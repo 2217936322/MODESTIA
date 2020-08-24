@@ -129,7 +129,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Helpers\Render.cpp" />
     <ClCompile Include="sdk\CSGOStructs.cpp" />
-    <ClCompile Include="SDK\Math\Vector3D.cpp" />
     <ClCompile Include="sdk\SDK.cpp" />
     <ClCompile Include="SDK\Math\Vector2D.cpp" />
     <ClCompile Include="SDK\Math\Vector4D.cpp" />
@@ -184,7 +183,6 @@
     <ClInclude Include="SDK\Interfaces\IMemAlloc.hpp" />
     <ClInclude Include="SDK\Interfaces\INetworkStringTable.hpp" />
     <ClInclude Include="SDK\Interfaces\IStudioRender.hpp" />
-    <ClInclude Include="sdk\math\Vector3D.hpp" />
     <ClInclude Include="sdk\misc\DataMap.hpp" />
     <ClInclude Include="fonts\Droid.hpp" />
     <ClInclude Include="helpers\InputSys.hpp" />

@@ -12,7 +12,7 @@ class CViewSetup;
 class CEngineSprite;
 class IClientEntity;
 class IMaterial;
-struct model_t;
+struct Model_t;
 class IClientRenderable;
 class ITexture;
 
@@ -179,8 +179,8 @@ class IVRenderView
         VIEW_SETUP_VIS_EX_RETURN_FLAGS_USES_RADIAL_VIS = 0x00000001
     };
 public:
-    virtual void                DrawBrushModel(IClientEntity *baseentity, model_t *model, const Vector& origin, const QAngle& angles, bool sort) = 0;
-    virtual void                DrawIdentityBrushModel(IWorldRenderList *pList, model_t *model) = 0;
+    virtual void                DrawBrushModel(IClientEntity *baseentity, Model_t *model, const Vector& origin, const QAngle& angles, bool sort) = 0;
+    virtual void                DrawIdentityBrushModel(IWorldRenderList *pList, Model_t *model) = 0;
     virtual void                TouchLight(struct dlight_t *light) = 0;
     virtual void                Draw3DDebugOverlays(void) = 0;
     virtual void                SetBlend(float blend) = 0;
@@ -229,8 +229,8 @@ public:
     virtual void                SetMainView(const Vector &vecOrigin, const QAngle &angles) = 0;
     virtual void                ViewSetupVisEx(bool novis, int numorigins, const Vector origin[], unsigned int &returnFlags) = 0;
     virtual void                OverrideViewFrustum(Frustum custom) = 0;
-    virtual void                DrawBrushModelShadowDepth(IClientEntity *baseentity, model_t *model, const Vector& origin, const QAngle& angles, bool bSort) = 0;
-    virtual void                UpdateBrushModelLightmap(model_t *model, IClientRenderable *pRenderable) = 0;
+    virtual void                DrawBrushModelShadowDepth(IClientEntity *baseentity, Model_t *model, const Vector& origin, const QAngle& angles, bool bSort) = 0;
+    virtual void                UpdateBrushModelLightmap(Model_t *model, IClientRenderable *pRenderable) = 0;
     virtual void                BeginUpdateLightmaps(void) = 0;
     virtual void                EndUpdateLightmaps(void) = 0;
     virtual void                OLD_SetOffCenterProjectionMatrix(float fov, float zNear, float zFar, float flAspectRatio, float flBottom, float flTop, float flLeft, float flRight) = 0;

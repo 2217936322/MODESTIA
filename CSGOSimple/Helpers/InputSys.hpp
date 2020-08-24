@@ -12,13 +12,7 @@
 
 #include "Singleton.hpp"
 
-enum class KeyState
-{
-    None = 1,
-    Down,
-    Up,
-    Pressed /*Down and then up*/
-};
+#include "../SDK/Misc/Enums.hpp"
 
 DEFINE_ENUM_FLAG_OPERATORS(KeyState);
 

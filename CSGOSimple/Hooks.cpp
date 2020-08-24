@@ -128,6 +128,7 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 
 	Movement::Get().BunnyHop(cmd);
 	Misc::Get().RankReveal(cmd);
+	Misc::Get().ClantagChanger();
 
 	EnginePrediction::Run(cmd);
 

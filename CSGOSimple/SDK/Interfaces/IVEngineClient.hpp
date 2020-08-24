@@ -15,7 +15,7 @@
 
 typedef struct InputContextHandle_t__* InputContextHandle_t;
 struct client_textmessage_t;
-struct model_t;
+struct Model_t;
 class SurfInfo;
 class IMaterial;
 class CSentence;
@@ -145,7 +145,7 @@ public:
 class IVEngineClient
 {
 public:
-	virtual int                   GetIntersectingSurfaces(const model_t* model, const Vector& vCenter, const float radius, const bool bOnlyVisibleSurfaces, SurfInfo* pInfos, const int nMaxInfos) = 0;
+	virtual int                   GetIntersectingSurfaces(const Model_t* model, const Vector& vCenter, const float radius, const bool bOnlyVisibleSurfaces, SurfInfo* pInfos, const int nMaxInfos) = 0;
 	virtual Vector                GetLightForPoint(const Vector& pos, bool bClamp) = 0;
 	virtual IMaterial* TraceLineMaterialAndLighting(const Vector& start, const Vector& end, Vector& diffuseLightColor, Vector& baseColor) = 0;
 	virtual const char* ParseFile(const char* data, char* token, int maxlen) = 0;
@@ -158,7 +158,7 @@ public:
 	virtual client_textmessage_t* TextMessageGet(const char* pName) = 0; // 10
 	virtual bool                  Con_IsVisible(void) = 0;
 	virtual int                   GetLocalPlayer(void) = 0;
-	virtual const model_t* LoadModel(const char* pName, bool bProp = false) = 0;
+	virtual const Model_t* LoadModel(const char* pName, bool bProp = false) = 0;
 	virtual float                 GetLastTimeStamp(void) = 0;
 	virtual CSentence* GetSentence(CAudioSource* pAudioSource) = 0; // 15
 	virtual float                 GetSentenceLength(CAudioSource* pAudioSource) = 0;
@@ -224,7 +224,7 @@ public:
 	virtual void* SaveAllocMemory(size_t num, size_t size) = 0;
 	virtual void                  SaveFreeMemory(void* pSaveMem) = 0;
 	virtual INetChannelInfo* GetNetChannelInfo(void) = 0;
-	virtual void                  DebugDrawPhysCollide(const CPhysCollide* pCollide, IMaterial* pMaterial, const matrix3x4_t& transform, const uint8_t* color) = 0; //79
+	virtual void                  DebugDrawPhysCollide(const CPhysCollide* pCollide, IMaterial* pMaterial, const Matrix3x4_t& transform, const uint8_t* color) = 0; //79
 	virtual void                  CheckPoint(const char* pName) = 0; // 80
 	virtual void                  DrawPortals() = 0;
 	virtual bool                  IsPlayingDemo(void) = 0;
@@ -334,14 +334,14 @@ public:
 	virtual CSteamAPIContext* GetSteamAPIContext() = 0;
 	virtual void                  SubmitStatRecord(char const* szMapName, unsigned int uiBlobVersion, unsigned int uiBlobSize, const void* pvBlob) = 0;
 	virtual void                  ServerCmdKeyValues(KeyValues* pKeyValues) = 0; // 203
-	virtual void                  SpherePaintSurface(const model_t* model, const Vector& location, unsigned char chr, float fl1, float fl2) = 0;
+	virtual void                  SpherePaintSurface(const Model_t* model, const Vector& location, unsigned char chr, float fl1, float fl2) = 0;
 	virtual bool                  HasPaintmap(void) = 0;
 	virtual void                  EnablePaintmapRender() = 0;
-	//virtual void                TracePaintSurface( const model_t *model, const Vector& position, float radius, CUtlVector<Color>& surfColors ) = 0;
-	virtual void                  SphereTracePaintSurface(const model_t* model, const Vector& position, const Vector& vec2, float radius, /*CUtlVector<unsigned char, CUtlMemory<unsigned char, int>>*/ int& utilVecShit) = 0;
+	//virtual void                TracePaintSurface( const Model_t *model, const Vector& position, float radius, CUtlVector<Color>& surfColors ) = 0;
+	virtual void                  SphereTracePaintSurface(const Model_t* model, const Vector& position, const Vector& vec2, float radius, /*CUtlVector<unsigned char, CUtlMemory<unsigned char, int>>*/ int& utilVecShit) = 0;
 	virtual void                  RemoveAllPaint() = 0;
 	virtual void                  PaintAllSurfaces(unsigned char uchr) = 0;
-	virtual void                  RemovePaint(const model_t* model) = 0;
+	virtual void                  RemovePaint(const Model_t* model) = 0;
 	virtual bool                  IsActiveApp() = 0;
 	virtual bool                  IsClientLocalToActiveServer() = 0;
 	virtual void                  TickProgressBar() = 0;
