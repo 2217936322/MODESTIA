@@ -8,6 +8,5 @@ class Movement : public Singleton<Movement>
 	friend class Singleton<Movement>;
 
 public:
-	void BunnyHop(CUserCmd* cmd);
 	void EdgeJump(CUserCmd* cmd);
 };

@@ -6,6 +6,8 @@
 #include "Utils.hpp"
 #include "../Features/SkinChanger.hpp"
 
+CConfig* Config = new CConfig();
+
 void CConfig::SetupValue(int& value, int def, std::string category, std::string name) { value = def; ints.push_back(new ConfigValue< int >(category, name, &value, def)); }
 void CConfig::SetupValue(float& value, float def, std::string category, std::string name) { value = def; floats.push_back(new ConfigValue< float >(category, name, &value, def)); }
 void CConfig::SetupValue(bool& value, bool def, std::string category, std::string name) { value = def; bools.push_back(new ConfigValue< bool >(category, name, &value, def)); }
@@ -13,7 +15,6 @@ void CConfig::SetupValue(char* value, char* def, std::string category, std::stri
 
 void CConfig::SetupMisc()
 {
-	SetupValue(g_Configs.misc.bunnyHop, false, ("Misc"), ("bunnyHop"));
 	SetupValue(g_Configs.misc.autoAccept, false, ("Misc"), ("autoAccept"));
 	SetupValue(g_Configs.misc.rankReveal, false, ("Misc"), ("rankReveal"));
 	SetupValue(g_Configs.misc.keyBindSelection, 0, ("Misc"), ("keyBindSelection"));
@@ -109,5 +110,3 @@ void CConfig::Load(const std::string& name)
 		GetPrivateProfileStringA(value->category.c_str(), value->name.c_str(), "false", value_l, 32, file.c_str()); *value->value = !strcmp(value_l, "true");
 	}
 }
-
-CConfig* Config = new CConfig();

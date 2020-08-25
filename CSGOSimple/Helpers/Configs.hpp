@@ -27,7 +27,6 @@ class Configs
 public:
 	struct
 	{
-		bool bunnyHop = false;
 		bool autoAccept = false;
 		bool rankReveal = false;
 		bool clantagChanger = false;

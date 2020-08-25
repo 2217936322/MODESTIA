@@ -126,7 +126,6 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 	if (!cmd || !cmd->command_number)
 		return CreateMoveOriginal(inputSampleFrametime, cmd);
 
-	Movement::Get().BunnyHop(cmd);
 	Misc::Get().RankReveal(cmd);
 	Misc::Get().ClantagChanger();
 
@@ -158,7 +157,8 @@ void __stdcall Hooks::EmitSound::Hook(IRecipientFilter& filter, int entIndex, in
 	EmitSoundOriginal(g_EngineSound, filter, entIndex, channel, soundEntry, soundEntryHash, sample, volume, seed, attenuation, flags, pitch, origin, direction, utlVecOrigins, updatePositions, soundTime, speakerEntity, unk);
 }
 
-bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event) {
+bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event) 
+{
 	if (!strcmp(event->GetName(), "player_death") && g_EngineClient->GetPlayerForUserID(event->GetInt("attacker")) == g_EngineClient->GetLocalPlayer())
 	{
 		auto& weapon = g_LocalPlayer->m_hActiveWeapon();
@@ -167,11 +167,11 @@ bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event) {
 
 		if (weapon && weapon->IsWeapon())
 		{
-			auto& skin_data = g_Configs.skinChanger.m_Items[weapon->m_Item().m_iItemDefinitionIndex()];
-			if (skin_data.enabled && skin_data.stattrak)
+			auto& skinData = g_Configs.skinChanger.m_Items[weapon->m_Item().m_iItemDefinitionIndex()];
+			if (skinData.enabled && skinData.stattrak)
 			{
-				skin_data.stattrak++;
-				weapon->m_nFallbackStatTrak() = skin_data.stattrak;
+				skinData.stattrak++;
+				weapon->m_nFallbackStatTrak() = skinData.stattrak;
 				weapon->GetClientNetworkable()->PostDataUpdate(0);
 				weapon->GetClientNetworkable()->OnDataChanged(0);
 			}
@@ -248,7 +248,8 @@ static bool Initialized = false;
 long __stdcall Hooks::EndScene::Hook(IDirect3DDevice9* device)
 {
 	static uintptr_t GameOverlayReturnAddress = 0;
-	if (!GameOverlayReturnAddress) {
+	if (!GameOverlayReturnAddress)
+	{
 		MEMORY_BASIC_INFORMATION info;
 		VirtualQuery(_ReturnAddress(), &info, sizeof(MEMORY_BASIC_INFORMATION));
 

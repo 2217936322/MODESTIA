@@ -1,20 +1,22 @@
 #include "Memory.hpp"
 
+#include "Utils.hpp"
+
 Memory g_Memory;
 
 template <typename T>
-static constexpr auto RelativeToAbsolute(uintptr_t address) noexcept
+static constexpr auto RelativeToAbsolute(uint8_t* address)
 {
     return (T)(address + 4 + *reinterpret_cast<std::int32_t*>(address));
 }
 
 Memory::Memory()
 {
-    auto temp = reinterpret_cast<std::uintptr_t*>(FindPattern(L"client", "\xB9????\xE8????\x8B\x5D\x08") + 1);
+    auto temp = reinterpret_cast<std::uintptr_t*>(Utils::PatternScan(GetModuleHandleA("client.dll"), "B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08") + 1);
     Hud = *temp;
-    FindHudElement = RelativeToAbsolute<decltype(FindHudElement)>(reinterpret_cast<uintptr_t>(temp) + 5);
-    ClearHudWeapon = reinterpret_cast<decltype(ClearHudWeapon)>(FindPattern(L"client", "\x55\x8B\xEC\x51\x53\x56\x8B\x75\x08\x8B\xD9\x57\x6B\xFE\x2C"));
-    EquipWearable = reinterpret_cast<decltype(EquipWearable)>(FindPattern(L"client", "\x55\x8B\xEC\x83\xEC\x10\x53\x8B\x5D\x08\x57\x8B\xF9"));
-    PredictionRandomSeed = *reinterpret_cast<int**>(FindPattern(L"client", "\x8B\x0D????\xBA????\xE8????\x83\xC4\x04") + 2);
-    GetPlayerViewmodelArmConfigForPlayerModel = RelativeToAbsolute<decltype(GetPlayerViewmodelArmConfigForPlayerModel)>(FindPattern(L"client", "\xE8????\x89\x87????\x6A\x00") + 1);
+    FindHudElement = RelativeToAbsolute<decltype(FindHudElement)>(reinterpret_cast<uint8_t*>(temp) + 5);
+    ClearHudWeapon = reinterpret_cast<decltype(ClearHudWeapon)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 51 53 56 8B 75 08 8B D9 57 6B FE 2C"));
+    EquipWearable = reinterpret_cast<decltype(EquipWearable)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 83 EC 10 53 8B 5D 08 57 8B F9"));
+    PredictionRandomSeed = *reinterpret_cast<int**>(Utils::PatternScan(GetModuleHandleA("client.dll"), " 8B 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 83 C4 04") + 2);
+    GetPlayerViewmodelArmConfigForPlayerModel = RelativeToAbsolute<decltype(GetPlayerViewmodelArmConfigForPlayerModel)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "E8 ? ? ? ? 89 87 ? ? ? ? 6A ?") + 1);
 }

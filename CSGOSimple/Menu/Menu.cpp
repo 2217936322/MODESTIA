@@ -23,7 +23,7 @@ bool showPopup = false;
 bool saveConfig = false;
 bool loadConfig = false;
 
-static int weapIndex = 7;
+static int weapIndex = 0;
 static int weapVectorIndex = 0;
 
 namespace ImGui 
@@ -216,57 +216,60 @@ void CMenu::Run()
 					selectedEntry.definitionIndex = k_WeaponNames[weapVectorIndex].definitionIndex;
 					selectedEntry.definitionVectorIndex = weapVectorIndex;
 					ImGui::Checkbox("Enabled", &selectedEntry.enabled);
-					ImGui::InputText("Name tag", selectedEntry.customName, 32);
-					ImGui::InputInt("Pattern", &selectedEntry.seed);
-					ImGui::InputInt("Stattrak\u2122", &selectedEntry.stattrak);
-					ImGui::SliderFloat("Float", &selectedEntry.wear, FLT_MIN, 1.f, "%.10f", 5);
-					if (selectedEntry.definitionIndex != GLOVE_T_SIDE)
+					if (selectedEntry.enabled)
 					{
-						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-						ImGui::Combo("Paint kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
-							{
-								*outText = k_SkinKits[idx].name.c_str();
+						ImGui::InputText("Name tag", selectedEntry.customName, 32);
+						ImGui::InputInt("Pattern", &selectedEntry.seed);
+						ImGui::InputInt("Stattrak\u2122", &selectedEntry.stattrak);
+						ImGui::SliderFloat("Float", &selectedEntry.wear, FLT_MIN, 1.f, "%.10f", 5);
+						if (selectedEntry.definitionIndex != GLOVE_T_SIDE)
+						{
+							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
+							ImGui::Combo("Paint kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
+								{
+									*outText = k_SkinKits[idx].name.c_str();
+									return true;
+								}, nullptr, k_SkinKits.size(), 20);
+							selectedEntry.paintKitIndex = k_SkinKits[selectedEntry.paintKitVectorIndex].id;
+						}
+						else
+						{
+							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
+							ImGui::Combo("Paint kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
+								{
+									*outText = k_GloveKits[idx].name.c_str();
+									return true;
+								}, nullptr, k_GloveKits.size(), 20);
+							selectedEntry.paintKitIndex = k_GloveKits[selectedEntry.paintKitVectorIndex].id;
+						}
+						if (selectedEntry.definitionIndex == WEAPON_KNIFE)
+						{
+							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
+							ImGui::Combo("Knife", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText)
+								{
+									*outText = k_KnifeNames.at(idx).name;
+									return true;
+								}, nullptr, k_KnifeNames.size(), 10);
+							selectedEntry.definitionOverrideIndex = k_KnifeNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
+						}
+						else if (selectedEntry.definitionIndex == GLOVE_T_SIDE)
+						{
+							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
+							ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText) 
+								{
+								*outText = k_GloveNames.at(idx).name;
 								return true;
-							}, nullptr, k_SkinKits.size(), 20);
-						selectedEntry.paintKitIndex = k_SkinKits[selectedEntry.paintKitVectorIndex].id;
-					}
-					else
-					{
-						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-						ImGui::Combo("Paint kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
-							{
-								*outText = k_GloveKits[idx].name.c_str();
-								return true;
-							}, nullptr, k_GloveKits.size(), 20);
-						selectedEntry.paintKitIndex = k_GloveKits[selectedEntry.paintKitVectorIndex].id;
-					}
-					if (selectedEntry.definitionIndex == WEAPON_KNIFE)
-					{
-						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
-						ImGui::Combo("Knife", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText)
-							{
-								*outText = k_KnifeNames.at(idx).name;
-								return true;
-							}, nullptr, k_KnifeNames.size(), 10);
-						selectedEntry.definitionOverrideIndex = k_KnifeNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
-					}
-					else if (selectedEntry.definitionIndex == GLOVE_T_SIDE)
-					{
-						ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
-						ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText) {
-							*outText = k_GloveNames.at(idx).name;
-							return true;
-							}, nullptr, k_GloveNames.size(), 10);
-						selectedEntry.definitionOverrideIndex = k_GloveNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
-					}
-					else
-					{
-						static auto unusedValue = 0;
-						selectedEntry.definitionOverrideVectorIndex = 0;
+								}, nullptr, k_GloveNames.size(), 10);
+							selectedEntry.definitionOverrideIndex = k_GloveNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
+						}
+						else
+						{
+							static auto unusedValue = 0;
+							selectedEntry.definitionOverrideVectorIndex = 0;
+						}
 					}
 				}  
 				ImGui::EndChild(true);
-
 
 				ImGui::BeginChild("Model changer", ImVec2(279, 333), true);
 				{
@@ -286,7 +289,6 @@ void CMenu::Run()
 					ImGui::Combo("AWP Model", &g_Configs.modelChanger.awpModel, awpModels);
 				} 
 				ImGui::EndChild(true);
-
 
 				ImGui::PopStyleVar();
 				ImGui::PopStyleColor();
@@ -392,6 +394,7 @@ void CMenu::Run()
 
 						ImGui::SameLine();
 					}
+
 					if (ImGui::Button("Refresh"))
 						isConfigLoaded = false;
 
@@ -401,7 +404,6 @@ void CMenu::Run()
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 16);
 				ImGui::BeginChild("Miscellaneous", ImVec2(279, 308), true);
 				{
-					ImGui::Checkbox("Bunny hop", &g_Configs.misc.bunnyHop);
 					ImGui::Checkbox("Auto-accept matchmaking", &g_Configs.misc.autoAccept);
 					ImGui::Checkbox("Reveal competitive ranks", &g_Configs.misc.rankReveal);
 					ImGui::Checkbox("MODE$TIA clantag", &g_Configs.misc.clantagChanger);
