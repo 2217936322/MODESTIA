@@ -38,7 +38,7 @@ bool Hooks::Initialize()
 	auto EndSceneTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 42));
 	auto ResetTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 16));
 	auto LooseFileAllowedTarget = reinterpret_cast<void*>(GetVirtual(g_FileSystem, 128));
-	auto CheckFileCRCsWithServerTarget = reinterpret_cast<void*>(Utils::PatternScan(GetModuleHandleA("engine.dll"), "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
+	auto CheckFileCRCsWithServerTarget = reinterpret_cast<void*>(GetVirtual(g_EngineClient, 23));
 
 	if (MH_Initialize() != MH_OK)
 	{
@@ -123,7 +123,7 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 {
 	CreateMoveOriginal(inputSampleFrametime, cmd);
 
-	if (!cmd || !cmd->command_number)
+	if (!cmd || !cmd->m_iCommandNumber)
 		return CreateMoveOriginal(inputSampleFrametime, cmd);
 
 	Misc::Get().RankReveal(cmd);

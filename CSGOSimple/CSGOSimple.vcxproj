@@ -182,7 +182,6 @@
     <ClInclude Include="SDK\Interfaces\ILocalize.hpp" />
     <ClInclude Include="SDK\Interfaces\IMemAlloc.hpp" />
     <ClInclude Include="SDK\Interfaces\INetworkStringTable.hpp" />
-    <ClInclude Include="SDK\Interfaces\IStudioRender.hpp" />
     <ClInclude Include="sdk\misc\DataMap.hpp" />
     <ClInclude Include="fonts\Droid.hpp" />
     <ClInclude Include="helpers\InputSys.hpp" />
@@ -200,7 +199,6 @@
     <ClInclude Include="sdk\CSGOStructs.hpp" />
     <ClInclude Include="sdk\SDK.hpp" />
     <ClInclude Include="SDK\Interfaces\CClientState.hpp" />
-    <ClInclude Include="SDK\Interfaces\CInput.hpp" />
     <ClInclude Include="SDK\Interfaces\IAppSystem.hpp" />
     <ClInclude Include="SDK\Interfaces\IBaseClientDll.hpp" />
     <ClInclude Include="SDK\Interfaces\IClientEntity.hpp" />

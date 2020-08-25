@@ -19,7 +19,7 @@ void EnginePrediction::Run(CUserCmd* cmd)
     const auto curtimeBackup = g_GlobalVars->curtime;
     const auto frametimeBackup = g_GlobalVars->frametime;
 
-    if (!prevCmd || prevCmd->hasbeenpredicted)
+    if (!prevCmd || prevCmd->m_bHasBeenPredicted)
     {
         fixedTick = g_LocalPlayer->m_nTickBase();
     }

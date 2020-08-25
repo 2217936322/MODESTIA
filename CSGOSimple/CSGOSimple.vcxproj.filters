@@ -199,9 +199,6 @@
     <ClInclude Include="SDK\Interfaces\CClientState.hpp">
       <Filter>Header Files\SDK</Filter>
     </ClInclude>
-    <ClInclude Include="SDK\Interfaces\CInput.hpp">
-      <Filter>Header Files\SDK</Filter>
-    </ClInclude>
     <ClInclude Include="SDK\Interfaces\IAppSystem.hpp">
       <Filter>Header Files\SDK</Filter>
     </ClInclude>
@@ -279,9 +276,6 @@
     </ClInclude>
     <ClInclude Include="SDK\Interfaces\IRenderView.hpp">
       <Filter>Header Files\SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\Interfaces\IStudioRender.hpp">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SDK\Interfaces\ISurface.hpp">
       <Filter>Header Files\SDK</Filter>

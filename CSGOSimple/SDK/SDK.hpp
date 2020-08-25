@@ -23,7 +23,6 @@
 #include "Interfaces/IVEngineClient.hpp"
 #include "Interfaces/IVDebugOverlay.hpp"
 #include "Interfaces/ISurface.hpp"
-#include "Interfaces/CInput.hpp"
 #include "Interfaces/IVModelInfoClient.hpp"
 #include "Interfaces/IVModelRender.hpp"
 #include "Interfaces/IRenderView.hpp"
@@ -41,7 +40,6 @@
 #include "interfaces/IRefCounted.hpp"
 #include "interfaces/IMemAlloc.hpp"
 #include "Interfaces/ILocalize.hpp"
-#include "Interfaces/IStudioRender.hpp"
 #include "Interfaces/IFileSystem.hpp"
 #include "Interfaces/INetworkStringTable.hpp"
 
@@ -70,7 +68,6 @@ extern IPanel*               g_VGuiPanel;
 extern IClientMode*          g_ClientMode;
 extern IVDebugOverlay*       g_DebugOverlay;
 extern ISurface*             g_VGuiSurface;
-extern CInput*               g_Input;
 extern IVModelInfoClient*    g_MdlInfo;
 extern IVModelRender*        g_MdlRender;
 extern IVRenderView*         g_RenderView;
@@ -89,7 +86,6 @@ extern ILocalize*			 g_Localize;
 extern IInputSystem*         g_InputSystem;
 extern IMemAlloc*			 g_MemAlloc;
 extern uintptr_t*			 g_SpatialPartition;
-extern IStudioRender*		 g_StudioRender;
 extern IFileSystem*			 g_FileSystem;
 extern INetworkStringTableContainer* g_NetworkStringTableContainer;
 

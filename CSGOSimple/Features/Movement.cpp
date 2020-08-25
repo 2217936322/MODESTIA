@@ -18,8 +18,8 @@ void Movement::EdgeJump(CUserCmd* cmd)
 		return;
 
 	if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey) && (EnginePrediction::GetFlags() & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
-		cmd->buttons |= IN_JUMP;
+		cmd->m_iButtons |= IN_JUMP;
 
-	if (InputSys::Get().WasKeyPressed(g_Configs.misc.edgeJumpKey) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
-		cmd->buttons |= IN_DUCK;
+	if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
+		cmd->m_iButtons |= IN_DUCK;
 }
