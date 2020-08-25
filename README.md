@@ -2,5 +2,5 @@
 Free open-source software / cheat for **Counter-Strike: Global Offensive** game. Designed as internal cheat
 
 ## Features
-* **Misc** - Edge Jump, Auto-Accept, Rank Revealer
+* **Misc** - Edge Jump, Auto-Accept, Rank Revealer, MODE$TIA Clantag
 * **Changers** - Model Changer, Skin Changer
