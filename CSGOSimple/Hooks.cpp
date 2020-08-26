@@ -38,7 +38,7 @@ bool Hooks::Initialize()
 	auto EndSceneTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 42));
 	auto ResetTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 16));
 	auto LooseFileAllowedTarget = reinterpret_cast<void*>(GetVirtual(g_FileSystem, 128));
-	auto CheckFileCRCsWithServerTarget = reinterpret_cast<void*>(GetVirtual(g_EngineClient, 23));
+	auto CheckFileCRCsWithServerTarget = reinterpret_cast<void*>(Utils::PatternScan(GetModuleHandleA("engine.dll"), "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
 
 	if (MH_Initialize() != MH_OK)
 	{
@@ -140,18 +140,18 @@ void __stdcall Hooks::EmitSound::Hook(IRecipientFilter& filter, int entIndex, in
 {
 	if (!strcmp(soundEntry, "UIPanorama.popup_accept_match_beep") && g_Configs.misc.autoAccept)
 	{
-		static auto AcceptFn = reinterpret_cast<bool(__stdcall*)(const char*)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
-		HWND Hwnd;
-		if ((Hwnd = FindWindowA(NULL, "Counter-Strike: Global Offensive")) && GetForegroundWindow() == Hwnd)
+		static auto acceptFn = reinterpret_cast<bool(__stdcall*)(const char*)>(Utils::PatternScan(GetModuleHandleA("client.dll"), "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
+		HWND hwnd;
+		if ((hwnd = FindWindowA(NULL, "Counter-Strike: Global Offensive")) && GetForegroundWindow() == hwnd)
 		{
-			RECT lprect;
-			GetClientRect(Hwnd, &lprect);
-			SendMessage(Hwnd, WM_MOUSEMOVE, 0, MAKELPARAM(lprect.right / 2, lprect.bottom / 2)); 
+			RECT rect;
+			GetClientRect(hwnd, &rect);
+			SendMessage(hwnd, WM_MOUSEMOVE, 0, MAKELPARAM(rect.right / 2, rect.bottom / 2));
 			mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 		}
 
-		if (AcceptFn)
-			AcceptFn("");
+		if (acceptFn)
+			acceptFn("");
 	}
 
 	EmitSoundOriginal(g_EngineSound, filter, entIndex, channel, soundEntry, soundEntryHash, sample, volume, seed, attenuation, flags, pitch, origin, direction, utlVecOrigins, updatePositions, soundTime, speakerEntity, unk);
@@ -165,23 +165,18 @@ bool __stdcall Hooks::FireEvent::Hook(IGameEvent* event)
 		if (!weapon)
 			return false;
 
-		if (weapon && weapon->IsWeapon())
+		auto& skinData = g_Configs.skinChanger.m_Items[weapon->m_Item().m_iItemDefinitionIndex()];
+		if (skinData.enabled && skinData.stattrak)
 		{
-			auto& skinData = g_Configs.skinChanger.m_Items[weapon->m_Item().m_iItemDefinitionIndex()];
-			if (skinData.enabled && skinData.stattrak)
-			{
-				skinData.stattrak++;
-				weapon->m_nFallbackStatTrak() = skinData.stattrak;
-				weapon->GetClientNetworkable()->PostDataUpdate(0);
-				weapon->GetClientNetworkable()->OnDataChanged(0);
-			}
+			skinData.stattrak++;
+			weapon->m_nFallbackStatTrak() = skinData.stattrak;
+			weapon->GetClientNetworkable()->PostDataUpdate(0);
+			weapon->GetClientNetworkable()->OnDataChanged(0);
 		}
 
 		const auto iconOverride = g_Configs.skinChanger.GetIconOverride(event->GetString("weapon"));
 		if (iconOverride)
-		{
 			event->SetString("weapon", iconOverride);
-		}
 	}
 
 	return FireEventOriginal(g_GameEvents, event);
@@ -192,8 +187,6 @@ void __stdcall Hooks::FrameStageNotify::Hook(ClientFrameStage_t stage)
 	if (g_EngineClient->IsInGame()) 
 	{
 		ModelChanger::Get().PlayerChanger(stage);
-		ModelChanger::Get().KnifeChanger(stage);
-		ModelChanger::Get().AWPChanger(stage);
 		SkinChanger::Get().Run(stage);
 	}
 

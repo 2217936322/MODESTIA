@@ -279,14 +279,6 @@ void CMenu::Run()
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
 					ImGui::Combo("CT Model", &g_Configs.modelChanger.playerModelCT, playerModels);
-
-					constexpr auto knifeModels = "Default\0Minecraft Pickaxe\0Fidget Spinner\0";
-					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("Knife Model", &g_Configs.modelChanger.knifeModel, knifeModels);
-
-					constexpr auto awpModels = "Default\0DSR-50\0";
-					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("AWP Model", &g_Configs.modelChanger.awpModel, awpModels);
 				} 
 				ImGui::EndChild(true);
 

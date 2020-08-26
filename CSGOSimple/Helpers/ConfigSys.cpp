@@ -26,8 +26,6 @@ void CConfig::SetupModelChanger()
 {
 	SetupValue(g_Configs.modelChanger.playerModelT, 0, ("ModelChanger"), ("playerModelT"));
 	SetupValue(g_Configs.modelChanger.playerModelCT, 0, ("ModelChanger"), ("playerModelCT"));
-	SetupValue(g_Configs.modelChanger.knifeModel, 0, ("ModelChanger"), ("knifeModel"));
-	SetupValue(g_Configs.modelChanger.awpModel, 0, ("ModelChanger"), ("awpModel"));
 }
 
 void CConfig::SetupSkinChanger()

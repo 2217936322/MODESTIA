@@ -40,8 +40,6 @@ public:
 	{
 		int playerModelT = 0;
 		int playerModelCT = 0;
-		int knifeModel = 0;
-		int awpModel = 0;
 	} modelChanger;
 
 	struct

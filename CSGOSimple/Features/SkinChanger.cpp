@@ -8,19 +8,18 @@ static void EraseOverrideIfExistsByIndex(const int definitionIndex)
 {
 	if (k_WeaponInfo.count(definitionIndex))
 	{
-		auto& IconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
-		const auto& OriginalItem = k_WeaponInfo.at(definitionIndex);
-		if (OriginalItem.icon && IconOverrideMap.count(OriginalItem.icon))
-			IconOverrideMap.erase(IconOverrideMap.at(OriginalItem.icon));
+		auto& iconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
+		const auto& originalItem = k_WeaponInfo.at(definitionIndex);
+
+		if (originalItem.icon && iconOverrideMap.count(originalItem.icon))
+			iconOverrideMap.erase(iconOverrideMap.at(originalItem.icon));
 	}
 }
 
 static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const CItemSettings* config, const unsigned xuidLow)
 {
 	if (!config->enabled)
-	{
 		return;
-	}
 
 	item->m_Item().m_iItemIDHigh() = -1;
 
@@ -49,21 +48,23 @@ static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const CIt
 
 	auto& definitionIndex = item->m_Item().m_iItemDefinitionIndex();
 
-	auto& IconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
+	auto& iconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
 	if (config->definitionOverrideIndex && config->definitionOverrideIndex != definitionIndex && k_WeaponInfo.count(config->definitionOverrideIndex))
 	{
 		const auto oldDefinitionIndex = definitionIndex;
 		definitionIndex = config->definitionOverrideIndex;
 		const auto& replacementItem = k_WeaponInfo.at(config->definitionOverrideIndex);
+
 		item->m_nModelIndex() = g_MdlInfo->GetModelIndex(replacementItem.model);
 		item->SetModelIndex(g_MdlInfo->GetModelIndex(replacementItem.model));
 		item->GetClientNetworkable()->PreDataUpdate(0);
+
 		if (oldDefinitionIndex && k_WeaponInfo.count(oldDefinitionIndex))
 		{
-			const auto& OriginalItem = k_WeaponInfo.at(oldDefinitionIndex);
-			if (OriginalItem.icon && replacementItem.icon)
+			const auto& originalItem = k_WeaponInfo.at(oldDefinitionIndex);
+			if (originalItem.icon && replacementItem.icon)
 			{
-				IconOverrideMap[OriginalItem.icon] = replacementItem.icon;
+				iconOverrideMap[originalItem.icon] = replacementItem.icon;
 			}
 		}
 	}
@@ -77,8 +78,10 @@ static CBaseEntity* MakeGlove(int entry, int serial)
 {
 	static std::add_pointer_t<CBaseEntity* __cdecl(int, int)> createWearable = nullptr;
 
-	if (!createWearable) {
-		createWearable = []() -> decltype(createWearable) {
+	if (!createWearable)
+	{
+		createWearable = []() -> decltype(createWearable) 
+		{
 			for (auto clientClass = g_CHLClient->GetAllClasses(); clientClass; clientClass = clientClass->m_pNext)
 				if (clientClass->m_ClassID == C_EconWearable)
 					return clientClass->createFunction;
@@ -108,7 +111,7 @@ void Initialize(int localHandle)
 		const auto wearables = local->m_hMyWearables();
 		const auto gloveConfig = &g_Configs.skinChanger.m_Items[GLOVE_T_SIDE];
 
-		static auto gloveHandle = CBaseHandle(0);
+		static int gloveHandle;
 		auto glove = reinterpret_cast<CBaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(wearables[0]));
 
 		if (!glove)
@@ -137,10 +140,12 @@ void Initialize(int localHandle)
 			{
 				auto entry = g_EntityList->GetHighestEntityIndex() + 1;
 
-				for (int i = 65; i <= g_EntityList->GetHighestEntityIndex(); i++) {
+				for (int i = 65; i <= g_EntityList->GetHighestEntityIndex(); i++)
+				{
 					auto entity = g_EntityList->GetClientEntity(i);
 
-					if (entity && entity->GetClientClass()->m_ClassID == ClassID(70)) {
+					if (entity && entity->GetClientClass()->m_ClassID == 70)
+					{
 						entry = i;
 						break;
 					}

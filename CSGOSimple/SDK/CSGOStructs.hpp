@@ -164,7 +164,7 @@ public:
 	NETVAR(CHandle<CBaseCombatWeapon>, m_hActiveWeapon, "DT_BaseCombatCharacter", "m_hActiveWeapon");
 	NETVAR(CHandle<CBaseCombatWeapon>, m_hWeapon, "DT_BaseViewModel", "m_hWeapon");
 	PNETVAR(CHandle<CBaseCombatWeapon>, m_hMyWeapons, "DT_BaseCombatCharacter", "m_hMyWeapons");
-	PNETVAR(CHandle<CBaseAttributableItem>, m_hMyWearables, "DT_BaseCombatCharacter", "m_hMyWearables");
+	PNETVAR(int32_t, m_hMyWearables, "DT_BaseCombatCharacter", "m_hMyWearables");
 	PNETVAR(char, m_szLastPlaceName, "DT_BasePlayer", "m_szLastPlaceName");
 	NETVAR(bool, m_bHasDefuser, "DT_CSPlayer", "m_bHasDefuser");
 	NETVAR(bool, m_bIsDefusing, "DT_CSPlayer", "m_bIsDefusing");
