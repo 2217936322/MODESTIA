@@ -55,7 +55,7 @@ struct CPaintKit
 auto GetExport(const char* module_name, const char* export_name) -> void*
 {
 	HMODULE mod;
-	while (!((mod = GetModuleHandleA(module_name))))
+	while (!((mod = GetModuleHandle(module_name))))
 		Sleep(100);
 	return reinterpret_cast<void*>(GetProcAddress(mod, export_name));
 }
@@ -63,7 +63,7 @@ auto GetExport(const char* module_name, const char* export_name) -> void*
 void InitializeKits()
 {
 	const auto V_UCS2ToUTF8 = static_cast<int(*)(const wchar_t* ucs2, char* utf8, int len)>(GetExport("vstdlib.dll", "V_UCS2ToUTF8"));
-	const auto patternAddres = Utils::PatternScan(GetModuleHandleA("client.dll"), "E8 ? ? ? ? FF 76 0C 8D 48 04 E8");
+	const auto patternAddres = Utils::PatternScan(GetModuleHandle("client.dll"), "E8 ? ? ? ? FF 76 0C 8D 48 04 E8");
 	const auto itemSystemOffset = *reinterpret_cast<std::int32_t*>(patternAddres + 1);
 	const auto itemSystemFn = reinterpret_cast<CCStrike15ItemSystem*(*)()>(patternAddres + 5 + itemSystemOffset);
 	const auto itemSchema = reinterpret_cast<CCStrike15ItemSchema*>(std::uintptr_t(itemSystemFn()) + sizeof(void*));

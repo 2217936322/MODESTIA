@@ -57,21 +57,21 @@ namespace Interfaces
 
     void Initialize()
     {
-	    auto client            = GetModuleHandleA("client.dll");
-		auto engine            = GetModuleHandleA("engine.dll");
-		auto dx9api            = GetModuleHandleA("shaderapidx9.dll");
-		auto stdlib            = GetModuleHandleA("vstdlib.dll");
-        auto filesystemFactory = GetModuleFactory(GetModuleHandleA("filesystem_stdio.dll"));
-        auto engineFactory     = GetModuleFactory(GetModuleHandleA("engine.dll"));
-        auto clientFactory     = GetModuleFactory(GetModuleHandleA("client.dll"));
-        auto vguiFactory       = GetModuleFactory(GetModuleHandleA("vguimatsurface.dll"));
-        auto vgui2Factory      = GetModuleFactory(GetModuleHandleA("vgui2.dll"));
-        auto matSysFactory     = GetModuleFactory(GetModuleHandleA("materialsystem.dll"));
-        auto dataCacheFactory  = GetModuleFactory(GetModuleHandleA("datacache.dll"));
-        auto vphysicsFactory   = GetModuleFactory(GetModuleHandleA("vphysics.dll"));
-        auto inputSysFactory   = GetModuleFactory(GetModuleHandleA("inputsystem.dll"));
-		auto localizeFactory   = GetModuleFactory(GetModuleHandleA("localize.dll"));
-		auto studioFactory     = GetModuleFactory(GetModuleHandleA("studiorender.dll"));
+	    auto client            = GetModuleHandle("client.dll");
+		auto engine            = GetModuleHandle("engine.dll");
+		auto dx9api            = GetModuleHandle("shaderapidx9.dll");
+		auto stdlib            = GetModuleHandle("vstdlib.dll");
+        auto filesystemFactory = GetModuleFactory(GetModuleHandle("filesystem_stdio.dll"));
+        auto engineFactory     = GetModuleFactory(GetModuleHandle("engine.dll"));
+        auto clientFactory     = GetModuleFactory(GetModuleHandle("client.dll"));
+        auto vguiFactory       = GetModuleFactory(GetModuleHandle("vguimatsurface.dll"));
+        auto vgui2Factory      = GetModuleFactory(GetModuleHandle("vgui2.dll"));
+        auto matSysFactory     = GetModuleFactory(GetModuleHandle("materialsystem.dll"));
+        auto dataCacheFactory  = GetModuleFactory(GetModuleHandle("datacache.dll"));
+        auto vphysicsFactory   = GetModuleFactory(GetModuleHandle("vphysics.dll"));
+        auto inputSysFactory   = GetModuleFactory(GetModuleHandle("inputsystem.dll"));
+		auto localizeFactory   = GetModuleFactory(GetModuleHandle("localize.dll"));
+		auto studioFactory     = GetModuleFactory(GetModuleHandle("studiorender.dll"));
         auto valveStdFactory   = GetModuleFactory(stdlib);
 
         g_CHLClient = GetInterface<IBaseClientDLL>(clientFactory, "VClient018");
@@ -98,7 +98,7 @@ namespace Interfaces
 		g_SpatialPartition = GetInterface<uintptr_t>(engineFactory, "SpatialPartition001" );
 		g_Localize = GetInterface<ILocalize>(localizeFactory, "Localize_001");
         g_FileSystem = GetInterface<IFileSystem>(filesystemFactory, "VFileSystem017");
-		g_MemAlloc = *(IMemAlloc**)GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc");
+		g_MemAlloc = *(IMemAlloc**)GetProcAddress(GetModuleHandle("tier0.dll"), "g_pMemAlloc");
         g_GlobalVars = **(CGlobalVarsBase***)(Utils::PatternScan(client, "A1 ? ? ? ? 5E 8B 40 10") + 1);
 		g_ClientMode = *(IClientMode**)(Utils::PatternScan(client, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 0F 85 ? ? ? ? 53") + 1);
         g_MoveHelper = **(IMoveHelper***)(Utils::PatternScan(client, "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 2);

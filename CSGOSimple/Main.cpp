@@ -13,7 +13,7 @@
 
 DWORD WINAPI Initialize(void* instance) 
 {
-	while (!GetModuleHandleA("serverbrowser.dll"))
+	while (!GetModuleHandle("serverbrowser.dll"))
 		Sleep(200);
 
 #ifdef _DEBUG
