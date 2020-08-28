@@ -83,7 +83,7 @@ extern IDirect3DDevice9*     g_D3DDevice9;
 extern CClientState*         g_ClientState;
 extern IPhysicsSurfaceProps* g_PhysSurface;
 extern ILocalize*			 g_Localize;
-extern IInputSystem*         g_InputSystem;
+extern IInputSystemtem*         g_InputSystemtem;
 extern IMemAlloc*			 g_MemAlloc;
 extern uintptr_t*			 g_SpatialPartition;
 extern IFileSystem*			 g_FileSystem;

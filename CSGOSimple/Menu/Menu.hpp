@@ -4,8 +4,8 @@
 #include <string>
 
 #include "../SDK/SDK.hpp"
-#include "../Helpers/Configs.hpp"
-#include "../Helpers/InputSys.hpp"
+#include "../Helpers/InputSystem.hpp"
+#include "../Helpers/Configs/Configs.hpp"
 
 #include "ImGui/imgui.h"
 #include "ImGui/dx9/imgui_impl_dx9.h"
@@ -20,7 +20,7 @@ public:
 
 	void __stdcall CreateObjects(IDirect3DDevice9* device)
 	{
-		if (InputSys::Get().m_hTargetWindow)
+		if (InputSystem::Get().m_hTargetWindow)
 			ImGui_ImplDX9_CreateDeviceObjects();
 	}
 
@@ -31,7 +31,7 @@ public:
 
 	void __stdcall SetupEndScene(IDirect3DDevice9* device)
 	{
-		ImGui_ImplDX9_Init(InputSys::Get().m_hTargetWindow, device);
+		ImGui_ImplDX9_Init(InputSystem::Get().m_hTargetWindow, device);
 
 		ImGuiStyle& Style = ImGui::GetStyle();
 		Style.Alpha = 1.0f;

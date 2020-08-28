@@ -1,6 +1,6 @@
 #include "Misc.hpp"
 
-#include "../Helpers/Configs.hpp"
+#include "../Helpers/Configs/Configs.hpp"
 
 void Misc::RankReveal(CUserCmd* cmd)
 {

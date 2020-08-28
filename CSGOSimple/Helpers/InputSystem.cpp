@@ -1,37 +1,37 @@
-#include "InputSys.hpp"
+#include "InputSystem.hpp"
 
+#include "Configs/Configs.hpp"
 #include "../SDK/SDK.hpp"
 #include "../Menu/Menu.hpp"
-#include "Configs.hpp"
 
-InputSys::InputSys()
+InputSystem::InputSystem()
 	: m_hTargetWindow(nullptr), m_ulOldWndProc(0)
 {
 }
 
-InputSys::~InputSys()
+InputSystem::~InputSystem()
 {
 	if (m_ulOldWndProc)
 		SetWindowLongPtr(m_hTargetWindow, GWLP_WNDPROC, m_ulOldWndProc);
 	m_ulOldWndProc = 0;
 }
 
-void InputSys::Initialize()
+void InputSystem::Initialize()
 {
 	D3DDEVICE_CREATION_PARAMETERS params;
 
 	if (FAILED(g_D3DDevice9->GetCreationParameters(&params)))
-		throw std::runtime_error("[InputSys] GetCreationParameters failed.");
+		throw std::runtime_error("[InputSystem] GetCreationParameters failed.");
 
 	m_hTargetWindow = params.hFocusWindow;
 	m_ulOldWndProc = SetWindowLongPtr(m_hTargetWindow, GWLP_WNDPROC, (LONG_PTR)WndProc);
 
 	if (!m_ulOldWndProc)
-		throw std::runtime_error("[InputSys] SetWindowLongPtr failed.");
+		throw std::runtime_error("[InputSystem] SetWindowLongPtr failed.");
 }
 
 extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-LRESULT __stdcall InputSys::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT __stdcall InputSystem::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	Get().ProcessMessage(msg, wParam, lParam);
 
@@ -42,12 +42,12 @@ LRESULT __stdcall InputSys::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 
 	if (Menu.Opened) 
 	{
-		g_InputSystem->EnableInput(false);
+		g_InputSystemtem->EnableInput(false);
 
 	}
 	else if (!Menu.Opened) 
 	{
-		g_InputSystem->EnableInput(true);
+		g_InputSystemtem->EnableInput(true);
 	}
 
 	if (Menu.Opened && ImGui_ImplDX9_WndProcHandler(hwnd, msg, wParam, lParam))
@@ -56,7 +56,7 @@ LRESULT __stdcall InputSys::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 	return CallWindowProcA((WNDPROC)Get().m_ulOldWndProc, hwnd, msg, wParam, lParam);
 }
 
-bool InputSys::ProcessMessage(UINT msg, WPARAM wParam, LPARAM lParam)
+bool InputSystem::ProcessMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
 	case WM_MBUTTONDBLCLK:
@@ -82,7 +82,7 @@ bool InputSys::ProcessMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-bool InputSys::ProcessMouseMessage(UINT msg, WPARAM wParam, LPARAM lParam)
+bool InputSystem::ProcessMouseMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto key = VK_LBUTTON;
 	auto state = KeyState::NONE;
@@ -121,7 +121,7 @@ bool InputSys::ProcessMouseMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
-bool InputSys::ProcessKeybdMessage(UINT msg, WPARAM wParam, LPARAM lParam)
+bool InputSystem::ProcessKeybdMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	auto key = wParam;
 	auto state = KeyState::NONE;
@@ -157,17 +157,17 @@ bool InputSys::ProcessKeybdMessage(UINT msg, WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
-KeyState InputSys::GetKeyState(std::uint32_t vk)
+KeyState InputSystem::GetKeyState(std::uint32_t vk)
 {
 	return m_iKeyMap[vk];
 }
 
-bool InputSys::IsKeyDown(std::uint32_t vk)
+bool InputSystem::IsKeyDown(std::uint32_t vk)
 {
 	return m_iKeyMap[vk] == KeyState::DOWN;
 }
 
-bool InputSys::WasKeyPressed(std::uint32_t vk)
+bool InputSystem::WasKeyPressed(std::uint32_t vk)
 {
 	if (m_iKeyMap[vk] == KeyState::PRESSED) 
 	{
@@ -177,12 +177,12 @@ bool InputSys::WasKeyPressed(std::uint32_t vk)
 	return false;
 }
 
-void InputSys::RegisterHotkey(std::uint32_t vk, std::function<void(void)> f)
+void InputSystem::RegisterHotkey(std::uint32_t vk, std::function<void(void)> f)
 {
 	m_Hotkeys[vk] = f;
 }
 
-void InputSys::RemoveHotkey(std::uint32_t vk)
+void InputSystem::RemoveHotkey(std::uint32_t vk)
 {
 	m_Hotkeys[vk] = nullptr;
 }

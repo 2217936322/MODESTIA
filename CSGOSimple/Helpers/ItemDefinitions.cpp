@@ -1,4 +1,4 @@
-#include "ItemsDefs.hpp"
+#include "ItemDefinitions.hpp"
 
 const std::map<size_t, CWeaponInfo> k_WeaponInfo =
 {

@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-#include "../SDK/CSGOStructs.hpp"
+#include "../../SDK/CSGOStructs.hpp"
 
 #undef min
 

@@ -7,9 +7,8 @@
 #include "SDK/SDK.hpp"
 #include "Menu/Menu.hpp"
 #include "Helpers/Utils.hpp"
-#include "Helpers/Render.hpp"
-#include "Helpers/InputSys.hpp"
-#include "Helpers/ConfigSys.hpp"
+#include "Helpers/InputSystem.hpp"
+#include "Helpers/Configs/ConfigSys.hpp"
 
 DWORD WINAPI Initialize(void* instance) 
 {
@@ -26,8 +25,7 @@ DWORD WINAPI Initialize(void* instance)
 		Interfaces::Initialize();
 		Interfaces::Dump();
 		NetvarSys::Get().Initialize();
-		Render::Get().Initialize();
-		InputSys::Get().Initialize();
+		InputSystem::Get().Initialize();
 		Hooks::Initialize();
 	}
 

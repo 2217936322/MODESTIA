@@ -1,10 +1,11 @@
 #include "ConfigSys.hpp"
 
 #include "Configs.hpp"
-#include "KitParser.hpp"
-#include "ItemsDefs.hpp"
-#include "Utils.hpp"
-#include "../Features/SkinChanger.hpp"
+
+#include "../Utils.hpp"
+#include "../KitParser.hpp"
+#include "../ItemDefinitions.hpp"
+#include "../../Features/SkinChanger.hpp"
 
 CConfig* Config = new CConfig();
 

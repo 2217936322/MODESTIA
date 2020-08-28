@@ -5,11 +5,11 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 
-#include "../Helpers/Configs.hpp"
-#include "../Helpers/ConfigSys.hpp"
-#include "../Helpers/KitParser.hpp"
-#include "../Helpers/ItemsDefs.hpp"
 #include "../Features/SkinChanger.hpp"
+#include "../Helpers/KitParser.hpp"
+#include "../Helpers/ItemDefinitions.hpp"
+#include "../Helpers/Configs/Configs.hpp"
+#include "../Helpers/Configs/ConfigSys.hpp"
 
 #define UNLEN 256
 
@@ -157,7 +157,7 @@ void CMenu::Run()
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 45);
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 222);
 
-			if (k_SkinKits.size() == 0)
+			if (SkinKits.size() == 0)
 			{
 				InitializeKits();
 			}
@@ -227,20 +227,20 @@ void CMenu::Run()
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
 							ImGui::Combo("Paint kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
 								{
-									*outText = k_SkinKits[idx].name.c_str();
+									*outText = SkinKits[idx].name.c_str();
 									return true;
-								}, nullptr, k_SkinKits.size(), 20);
-							selectedEntry.paintKitIndex = k_SkinKits[selectedEntry.paintKitVectorIndex].id;
+								}, nullptr, SkinKits.size(), 20);
+							selectedEntry.paintKitIndex = SkinKits[selectedEntry.paintKitVectorIndex].id;
 						}
 						else
 						{
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
 							ImGui::Combo("Paint kit", &selectedEntry.paintKitVectorIndex, [](void* data, int idx, const char** outText)
 								{
-									*outText = k_GloveKits[idx].name.c_str();
+									*outText = GloveKits[idx].name.c_str();
 									return true;
-								}, nullptr, k_GloveKits.size(), 20);
-							selectedEntry.paintKitIndex = k_GloveKits[selectedEntry.paintKitVectorIndex].id;
+								}, nullptr, GloveKits.size(), 20);
+							selectedEntry.paintKitIndex = GloveKits[selectedEntry.paintKitVectorIndex].id;
 						}
 						if (selectedEntry.definitionIndex == WEAPON_KNIFE)
 						{

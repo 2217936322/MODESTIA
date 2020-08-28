@@ -16,12 +16,12 @@
 
 DEFINE_ENUM_FLAG_OPERATORS(KeyState);
 
-class InputSys : public Singleton<InputSys>
+class InputSystem : public Singleton<InputSystem>
 {
-    friend class Singleton<InputSys>;
+    friend class Singleton<InputSystem>;
 
-    InputSys();
-    ~InputSys();
+    InputSystem();
+    ~InputSystem();
 
 public:
     void Initialize();

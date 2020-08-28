@@ -1,6 +1,7 @@
 #include "ModelChanger.hpp"
-#include "../Helpers/Configs.hpp"
+
 #include "../Helpers/Memory.hpp"
+#include "../Helpers/Configs/Configs.hpp"
 
 void ModelChanger::PlayerChanger(ClientFrameStage_t stage)
 {

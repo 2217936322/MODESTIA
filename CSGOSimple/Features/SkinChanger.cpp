@@ -1,8 +1,9 @@
 #include "SkinChanger.hpp"
-#include "../Helpers/ItemsDefs.hpp"
+
+#include "../Helpers/ItemDefinitions.hpp"
 #include "../Helpers/KitParser.hpp"
-#include "../Helpers/Configs.hpp"
 #include "../Helpers/Memory.hpp"
+#include "../Helpers/Configs/Configs.hpp"
 
 static void EraseOverrideIfExistsByIndex(const int definitionIndex)
 {

@@ -28,7 +28,7 @@ IViewRender*          g_ViewRender       = nullptr;
 IDirect3DDevice9*     g_D3DDevice9       = nullptr;
 CClientState*         g_ClientState      = nullptr;
 IPhysicsSurfaceProps* g_PhysSurface      = nullptr;
-IInputSystem*         g_InputSystem      = nullptr;
+IInputSystemtem*         g_InputSystemtem      = nullptr;
 IMemAlloc*			  g_MemAlloc		 = nullptr;
 uintptr_t*			  g_SpatialPartition = nullptr;
 C_LocalPlayer         g_LocalPlayer;
@@ -69,7 +69,7 @@ namespace Interfaces
         auto matSysFactory     = GetModuleFactory(GetModuleHandle("materialsystem.dll"));
         auto dataCacheFactory  = GetModuleFactory(GetModuleHandle("datacache.dll"));
         auto vphysicsFactory   = GetModuleFactory(GetModuleHandle("vphysics.dll"));
-        auto inputSysFactory   = GetModuleFactory(GetModuleHandle("inputsystem.dll"));
+        auto InputSystemFactory   = GetModuleFactory(GetModuleHandle("InputSystemtem.dll"));
 		auto localizeFactory   = GetModuleFactory(GetModuleHandle("localize.dll"));
 		auto studioFactory     = GetModuleFactory(GetModuleHandle("studiorender.dll"));
         auto valveStdFactory   = GetModuleFactory(stdlib);
@@ -94,7 +94,7 @@ namespace Interfaces
         g_VGuiPanel = GetInterface<IPanel>(vgui2Factory, "VGUI_Panel009");
         g_VGuiSurface = GetInterface<ISurface>(vguiFactory, "VGUI_Surface031");
         g_PhysSurface = GetInterface<IPhysicsSurfaceProps>(vphysicsFactory, "VPhysicsSurfaceProps001");
-        g_InputSystem = GetInterface<IInputSystem>(inputSysFactory, "InputSystemVersion001");
+        g_InputSystemtem = GetInterface<IInputSystemtem>(InputSystemFactory, "InputSystemtemVersion001");
 		g_SpatialPartition = GetInterface<uintptr_t>(engineFactory, "SpatialPartition001" );
 		g_Localize = GetInterface<ILocalize>(localizeFactory, "Localize_001");
         g_FileSystem = GetInterface<IFileSystem>(filesystemFactory, "VFileSystem017");
@@ -133,7 +133,7 @@ namespace Interfaces
         PRINT_INTERFACE(g_VGuiPanel);
         PRINT_INTERFACE(g_VGuiSurface);
         PRINT_INTERFACE(g_PhysSurface);
-        PRINT_INTERFACE(g_InputSystem);
+        PRINT_INTERFACE(g_InputSystemtem);
         PRINT_INTERFACE(g_ClientLeafSystem);
         PRINT_INTERFACE(g_FileSystem);
         PRINT_INTERFACE(g_NetworkStringTableContainer);

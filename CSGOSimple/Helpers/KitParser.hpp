@@ -13,7 +13,7 @@ struct C_PaintKit
 	}
 };
 
-extern std::vector<C_PaintKit> k_SkinKits;
-extern std::vector<C_PaintKit> k_GloveKits;
+extern std::vector<C_PaintKit> SkinKits;
+extern std::vector<C_PaintKit> GloveKits;
 
 void InitializeKits();

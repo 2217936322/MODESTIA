@@ -3,17 +3,17 @@
 #include "Hooks.hpp"
 
 #include "Helpers/Fnv.hpp"
-#include "Helpers/Configs.hpp"
-#include "Helpers/InputSys.hpp"
+#include "Helpers/InputSystem.hpp"
 #include "Helpers/FixAnimations.hpp"
 #include "Helpers/MinHook/minhook.h"
+#include "Helpers/Configs/Configs.hpp"
 
 #include "Features/Misc.hpp"
 #include "Features/Movement.hpp"
 #include "Features/SkinChanger.hpp"
 #include "Features/ModelChanger.hpp"
 #include "Features/EnginePrediction.hpp"
-#include "Helpers/ItemsDefs.hpp"
+#include "Helpers/ItemDefinitions.hpp"
 #include "Menu/Menu.hpp"
 
 RecvPropHook* SequenceHook;

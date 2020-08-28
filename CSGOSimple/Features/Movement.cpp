@@ -2,8 +2,8 @@
 
 #include "EnginePrediction.hpp"
 
-#include "../Helpers/Configs.hpp"
-#include "../Helpers/InputSys.hpp"
+#include "../Helpers/InputSystem.hpp"
+#include "../Helpers/Configs/Configs.hpp"
 
 void Movement::EdgeJump(CUserCmd* cmd)
 {
@@ -17,9 +17,9 @@ void Movement::EdgeJump(CUserCmd* cmd)
 	if (moveType == MOVETYPE_LADDER || moveType == MOVETYPE_NOCLIP)
 		return;
 
-	if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey) && (EnginePrediction::GetFlags() & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
+	if (InputSystem::Get().IsKeyDown(g_Configs.misc.edgeJumpKey) && (EnginePrediction::GetFlags() & FL_ONGROUND) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
 		cmd->m_iButtons |= IN_JUMP;
 
-	if (InputSys::Get().IsKeyDown(g_Configs.misc.edgeJumpKey) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
+	if (InputSystem::Get().IsKeyDown(g_Configs.misc.edgeJumpKey) && !(g_LocalPlayer->m_fFlags() & FL_ONGROUND))
 		cmd->m_iButtons |= IN_DUCK;
 }

@@ -107,11 +107,11 @@
     <ClCompile Include="Features\ModelChanger.cpp" />
     <ClCompile Include="Features\Movement.cpp" />
     <ClCompile Include="Features\SkinChanger.cpp" />
-    <ClCompile Include="Helpers\Configs.cpp" />
-    <ClCompile Include="Helpers\ConfigSys.cpp" />
+    <ClCompile Include="Helpers\Configs\Configs.cpp" />
+    <ClCompile Include="Helpers\Configs\ConfigSys.cpp" />
     <ClCompile Include="Helpers\FixAnimations.cpp" />
-    <ClCompile Include="helpers\InputSys.cpp" />
-    <ClCompile Include="Helpers\ItemsDefs.cpp" />
+    <ClCompile Include="helpers\InputSystem.cpp" />
+    <ClCompile Include="Helpers\ItemDefinitions.cpp" />
     <ClCompile Include="Helpers\KitParser.cpp" />
     <ClCompile Include="Helpers\Memory.cpp" />
     <ClCompile Include="Helpers\MinHook\buffer.c" />
@@ -127,7 +127,6 @@
     <ClCompile Include="SDK\Math\Math.cpp" />
     <ClCompile Include="helpers\Utils.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Helpers\Render.cpp" />
     <ClCompile Include="sdk\CSGOStructs.cpp" />
     <ClCompile Include="sdk\SDK.cpp" />
     <ClCompile Include="SDK\Math\Vector2D.cpp" />
@@ -150,11 +149,11 @@
     <ClInclude Include="Features\SkinChanger.hpp" />
     <ClInclude Include="fonts\AstriumWep.hpp" />
     <ClInclude Include="fonts\Fonts.hpp" />
-    <ClInclude Include="Helpers\Configs.hpp" />
-    <ClInclude Include="Helpers\ConfigSys.hpp" />
+    <ClInclude Include="Helpers\Configs\Configs.hpp" />
+    <ClInclude Include="Helpers\Configs\ConfigSys.hpp" />
     <ClInclude Include="Helpers\FixAnimations.hpp" />
     <ClInclude Include="Helpers\Fnv.hpp" />
-    <ClInclude Include="Helpers\ItemsDefs.hpp" />
+    <ClInclude Include="Helpers\ItemDefinitions.hpp" />
     <ClInclude Include="Helpers\KitParser.hpp" />
     <ClInclude Include="Helpers\Memory.hpp" />
     <ClInclude Include="Helpers\MinHook\buffer.h" />
@@ -184,7 +183,7 @@
     <ClInclude Include="SDK\Interfaces\INetworkStringTable.hpp" />
     <ClInclude Include="sdk\misc\DataMap.hpp" />
     <ClInclude Include="fonts\Droid.hpp" />
-    <ClInclude Include="helpers\InputSys.hpp" />
+    <ClInclude Include="helpers\InputSystem.hpp" />
     <ClInclude Include="SDK\Math\Math.hpp" />
     <ClInclude Include="helpers\Utils.hpp" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -194,7 +193,6 @@
     <ClInclude Include="imgui\stb_textedit.h" />
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="SDK\Interfaces\IRefCounted.hpp" />
-    <ClInclude Include="Helpers\Render.hpp" />
     <ClInclude Include="helpers\Singleton.hpp" />
     <ClInclude Include="sdk\CSGOStructs.hpp" />
     <ClInclude Include="sdk\SDK.hpp" />

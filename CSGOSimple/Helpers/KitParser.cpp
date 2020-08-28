@@ -4,8 +4,8 @@
 
 #include "../Helpers/Utils.hpp"
 
-std::vector<C_PaintKit> k_SkinKits;
-std::vector<C_PaintKit> k_GloveKits;
+std::vector<C_PaintKit> SkinKits;
+std::vector<C_PaintKit> GloveKits;
 
 class CCStrike15ItemSchema;
 class CCStrike15ItemSystem;
@@ -41,7 +41,7 @@ struct String_t
 	int length;
 };
 
-struct CPaintKit
+struct PaintKit
 {
 	int id;
 	String_t name;
@@ -70,12 +70,11 @@ void InitializeKits()
 
 	//Dump paint kits
 	{
-
 		const auto getPaintKitDefinitionOffset = *reinterpret_cast<std::int32_t*>(patternAddres + 11 + 1);
-		const auto getPaintKitDefinitionFn = reinterpret_cast<CPaintKit * (__thiscall*)(CCStrike15ItemSchema*, int)>(patternAddres + 11 + 5 + getPaintKitDefinitionOffset);
+		const auto getPaintKitDefinitionFn = reinterpret_cast<PaintKit * (__thiscall*)(CCStrike15ItemSchema*, int)>(patternAddres + 11 + 5 + getPaintKitDefinitionOffset);
 		const auto startElementOffset = *reinterpret_cast<std::intptr_t*>(std::uintptr_t(getPaintKitDefinitionFn) + 8 + 2);
 		const auto headOffset = startElementOffset - 12;
-		const auto mapHead = reinterpret_cast<Head_t<int, CPaintKit*>*>(std::uintptr_t(itemSchema) + headOffset);
+		const auto mapHead = reinterpret_cast<Head_t<int, PaintKit*>*>(std::uintptr_t(itemSchema) + headOffset);
 
 		for (auto i = 0; i <= mapHead->lastElement; ++i)
 		{
@@ -89,11 +88,12 @@ void InitializeKits()
 			V_UCS2ToUTF8(wideName, name, sizeof(name));
 
 			if (paintKit->id < 10000)
-				k_SkinKits.push_back({ paintKit->id, name });
+				SkinKits.push_back({ paintKit->id, name });
 			else
-				k_GloveKits.push_back({ paintKit->id, name });
+				GloveKits.push_back({ paintKit->id, name });
 		}
-		std::sort(k_SkinKits.begin(), k_SkinKits.end());
-		std::sort(k_GloveKits.begin(), k_GloveKits.end());
+
+		std::sort(SkinKits.begin(), SkinKits.end());
+		std::sort(GloveKits.begin(), GloveKits.end());
 	}
 }
