@@ -218,10 +218,13 @@ void CMenu::Run()
 					ImGui::Checkbox("Enabled", &selectedEntry.enabled);
 					if (selectedEntry.enabled)
 					{
-						ImGui::InputText("Name tag", selectedEntry.customName, 32);
+						if (selectedEntry.definitionIndex != GLOVE_T_SIDE)
+						{
+							ImGui::InputText("Name tag", selectedEntry.customName, 32);
+							ImGui::InputInt("Stattrak", &selectedEntry.stattrak);
+						}
 						ImGui::InputInt("Pattern", &selectedEntry.seed);
-						ImGui::InputInt("Stattrak", &selectedEntry.stattrak);
-						ImGui::SliderFloat("Float", &selectedEntry.wear, FLT_MIN, 1.f, "%.10f", 5);
+						ImGui::SliderFloat("Float", &selectedEntry.wear, 0.001, 1.f, "%.3f", 0.8);
 						if (selectedEntry.definitionIndex != GLOVE_T_SIDE)
 						{
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
@@ -255,10 +258,10 @@ void CMenu::Run()
 						else if (selectedEntry.definitionIndex == GLOVE_T_SIDE)
 						{
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
-							ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText) 
+							ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText)
 								{
-								*outText = GloveNames.at(idx).name;
-								return true;
+									*outText = GloveNames.at(idx).name;
+									return true;
 								}, nullptr, GloveNames.size(), 10);
 							selectedEntry.definitionOverrideIndex = GloveNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
 						}
@@ -268,7 +271,7 @@ void CMenu::Run()
 							selectedEntry.definitionOverrideVectorIndex = 0;
 						}
 					}
-				}  
+				}
 				ImGui::EndChild(true);
 
 				ImGui::BeginChild("Model changer", ImVec2(279, 333), true);
@@ -427,13 +430,13 @@ void CMenu::Run()
 
 				ImGui::NextColumn();
 
-				ImGui::BeginChild("Informations", ImVec2(279, 543), true); 
+				ImGui::BeginChild("Informations", ImVec2(279, 67), true); 
 				{
 					char buffer[UNLEN + 1];
 					DWORD size;
 					size = sizeof(buffer);
 
-					GetUserNameA(buffer, &size);
+					GetUserName(buffer, &size);
 					char title[UNLEN];
 
 					char ch1[25] = "Welcome, ";
@@ -441,10 +444,12 @@ void CMenu::Run()
 
 					ImGui::Text(ch);
 					ImGui::Text("Build in: " __DATE__ " / " __TIME__);
-					if (std::strstr(GetCommandLineA(), "-insecure")) 
-					{
-						ImGui::Text("Insecure mode!");
-					}
+				}
+				ImGui::EndChild(true);
+
+				ImGui::BeginChild("Visuals", ImVec2(279, 468), true);
+				{
+
 				}
 				ImGui::EndChild(true);
 
