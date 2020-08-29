@@ -34,6 +34,7 @@ public:
 		int keyBindSelection = 0;
 		int edgeJumpKey = 0;
 		int menuKey = 45;
+		int unloadKey = 46;
 	} misc;
 
 	struct
@@ -54,3 +55,4 @@ public:
 };
 
 extern Configs g_Configs;
+extern bool Unload;

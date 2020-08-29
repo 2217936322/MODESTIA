@@ -1,4 +1,5 @@
 #include "CSGOStructs.hpp"
+
 #include "Math/Math.hpp"
 #include "../Helpers/Utils.hpp"
 

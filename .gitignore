@@ -163,3 +163,7 @@ Build/InputSystem.obj
 Build/ItemDefinitions.obj
 .vs/MODESTIA/v16/ipch/AutoPCH/7cbeb04101f1c9e2/INPUTSYSTEM.ipch
 .vs/MODESTIA/v16/ipch/AutoPCH/e2b30b982e99d2d4/SDK.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/b53cb2ef17c04b55/MENU.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/53d429eedff986dc/MENU.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/3988ffec1c5a823f/CONFIGS.ipch
+.vs/MODESTIA/v16/ipch/AutoPCH/1a06f81f04fb91bd/OPTIONS.ipch

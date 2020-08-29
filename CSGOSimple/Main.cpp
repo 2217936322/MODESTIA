@@ -10,10 +10,12 @@
 #include "Helpers/InputSystem.hpp"
 #include "Helpers/Configs/ConfigSys.hpp"
 
-DWORD WINAPI Initialize(void* instance) 
+DWORD WINAPI Initialize(LPVOID base) 
 {
-	while (!GetModuleHandle("serverbrowser.dll"))
-		Sleep(200);
+	if (Utils::WaitForModules(10000, { L"client.dll", L"engine.dll", L"shaderapidx9.dll", L"serverbrowser.dll" }) == WAIT_TIMEOUT)
+	{
+		return FALSE;
+	}
 
 #ifdef _DEBUG
 	Utils::AttachConsole();
@@ -22,47 +24,62 @@ DWORD WINAPI Initialize(void* instance)
 	try 
 	{
 		Config->Setup();
+		Utils::ConsolePrint("Initializing...\n");
+
 		Interfaces::Initialize();
 		Interfaces::Dump();
 		NetvarSys::Get().Initialize();
 		InputSystem::Get().Initialize();
 		Hooks::Initialize();
-	}
 
-	catch (const std::runtime_error & error) 
+		InputSystem::Get().RegisterHotkey(g_Configs.misc.unloadKey, [base](){ Unload = true; });
+
+		Utils::ConsolePrint("Finished.\n");
+
+		while (!Unload)
+			Sleep(1000);
+
+		FreeLibraryAndExitThread(static_cast<HMODULE>(base), 1);
+
+	}
+	catch (const std::exception& ex) 
 	{
-		MessageBoxA(NULL, error.what(), "MODE$TIA Error!", MB_OK | MB_ICONERROR);
-		FreeLibraryAndExitThread(static_cast<HMODULE>(instance), 0);
-	}
+		Utils::ConsolePrint("An error occured during initialization:\n");
+		Utils::ConsolePrint("%s\n", ex.what());
+		Utils::ConsolePrint("Press any key to exit.\n");
+		Utils::ConsoleReadKey();
+		Utils::DetachConsole();
 
+		FreeLibraryAndExitThread(static_cast<HMODULE>(base), 1);
+	}
 }
 
 BOOL WINAPI Release()
 {
-	Hooks::Release();
-
 #ifdef _DEBUG
 	Utils::DetachConsole();
 #endif
 
+	Hooks::Release();
+
 	return TRUE;
 }
 
-BOOL APIENTRY DllMain(void* instance, uintptr_t reason, void* reserved) 
+BOOL WINAPI DllMain(_In_ HINSTANCE instance, _In_ DWORD reason, _In_opt_ LPVOID reserved)
 {
-	DisableThreadLibraryCalls(static_cast<HMODULE>(instance));
-
-	switch (reason) 
+	switch (reason)
 	{
 	case DLL_PROCESS_ATTACH:
-		if (auto handle = CreateThread(NULL, NULL, Initialize, instance, NULL, NULL))
-			CloseHandle(handle);
-		break;
+		DisableThreadLibraryCalls(instance);
+		CreateThread(nullptr, 0, Initialize, instance, 0, nullptr);
+		return TRUE;
 
 	case DLL_PROCESS_DETACH:
-		Release();
-		break;
-	}
+		if (reserved == nullptr)
+			return Release();
+		return TRUE;
 
-	return true;
+	default:
+		return TRUE;
+	}
 }

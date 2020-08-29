@@ -401,7 +401,7 @@ void CMenu::Run()
 					ImGui::Checkbox("MODE$TIA clantag", &g_Configs.misc.clantagChanger);
 
 					ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 14);
-					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu\0");
+					ImGui::Combo("Keybinds", &g_Configs.misc.keyBindSelection, "Edge jump\0Menu\0Unload\0");
 					if (g_Configs.misc.keyBindSelection == 0)
 					{
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
@@ -411,6 +411,11 @@ void CMenu::Run()
 					{
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
 						ImGui::Hotkey("##menuKey", &g_Configs.misc.menuKey, ImVec2(100, 20));
+					}
+					else if (g_Configs.misc.keyBindSelection == 2)
+					{
+						ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 12);
+						ImGui::Hotkey("##unloadKey", &g_Configs.misc.unloadKey, ImVec2(100, 20));
 					}
 				}
 				ImGui::EndChild(true);

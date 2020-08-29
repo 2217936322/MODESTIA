@@ -40,6 +40,11 @@ LRESULT __stdcall InputSystem::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 		Menu.Opened = !Menu.Opened;
 	}
 
+	if (Unload)
+	{
+		Menu.Opened = false;
+	}
+
 	if (Menu.Opened) 
 	{
 		g_InputSystem->EnableInput(false);
