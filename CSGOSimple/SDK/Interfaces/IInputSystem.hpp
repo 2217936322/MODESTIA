@@ -213,7 +213,7 @@ enum ButtonCode_t
 	KEY_XSTICK2_UP,								
 };
 
-class IInputSystemtem : IAppSystem
+class IInputSystem : IAppSystem
 {
 public:
 	void EnableInput(bool bEnable)

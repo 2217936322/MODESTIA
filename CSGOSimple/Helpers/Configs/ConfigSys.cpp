@@ -31,7 +31,7 @@ void CConfig::SetupModelChanger()
 
 void CConfig::SetupSkinChanger()
 {
-	for (auto& key : k_WeaponNames)
+	for (auto& key : WeaponNames)
 	{
 		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].enabled, false, (key.name), ("enabled"));
 		SetupValue(g_Configs.skinChanger.m_Items[key.definitionIndex].definitionVectorIndex, 0, (key.name), ("definitionVectorIndex"));

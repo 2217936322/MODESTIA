@@ -105,7 +105,6 @@ public:
 	{
 		ImGui::CreateContext();
 
-		FontMain = ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Tahoma.ttf", 18);
 		FontMenu = ImGui::GetIO().Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Verdana.ttf", 12);
 	}
 
@@ -168,7 +167,6 @@ public:
 		ImGui_ImplDX9_NewFrame();
 	}
 
-	ImFont* FontMain;
 	ImFont* FontMenu;
 	bool Opened = true;
 };

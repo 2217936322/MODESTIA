@@ -32,7 +32,7 @@ struct CWeaponName
 	const char* name = nullptr;
 };
 
-extern const std::map<size_t, CWeaponInfo> k_WeaponInfo;
-extern const std::vector<CWeaponName> k_KnifeNames;
-extern const std::vector<CWeaponName> k_GloveNames;
-extern const std::vector<CWeaponName> k_WeaponNames;
+extern const std::map<size_t, CWeaponInfo> WeaponInformations;
+extern const std::vector<CWeaponName> KnifeNames;
+extern const std::vector<CWeaponName> GloveNames;
+extern const std::vector<CWeaponName> WeaponNames;

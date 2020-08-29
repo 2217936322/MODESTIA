@@ -211,10 +211,10 @@ void Hooks::RecvProxy::Hook(const CRecvProxyData* data, void* entity, void* outp
 					const auto viewModelWeapon = static_cast<CBaseAttributableItem*>(g_EntityList->GetClientEntityFromHandle(viewModelWeaponHandle));
 					if (viewModelWeapon)
 					{
-						if (k_WeaponInfo.count(viewModelWeapon->m_Item().m_iItemDefinitionIndex()))
+						if (WeaponInformations.count(viewModelWeapon->m_Item().m_iItemDefinitionIndex()))
 						{
 							auto originalSequence = proxyData->m_Value.m_Int;
-							const auto overrideModel = k_WeaponInfo.at(viewModelWeapon->m_Item().m_iItemDefinitionIndex()).model;
+							const auto overrideModel = WeaponInformations.at(viewModelWeapon->m_Item().m_iItemDefinitionIndex()).model;
 							proxyData->m_Value.m_Int = FixAnimations(FNV::HashRuntime(overrideModel), proxyData->m_Value.m_Int);
 						}
 					}

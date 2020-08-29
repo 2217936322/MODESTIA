@@ -4,22 +4,10 @@
 
 CGameRules* g_GameRules = nullptr;
 
-bool CBaseEntity::IsWeapon()
-{
-	using Fn = CBaseEntity * (__thiscall*)(CBaseEntity*);
-	return CallVirtualFunction<Fn>(this, 169)(this);
-}
-
 void CBaseEntity::SetModelIndex(const int modelIndex)
 {
 	using Fn = void(__thiscall*)(CBaseEntity*, const int);
 	return CallVirtualFunction<Fn>(this, 75)(this, modelIndex);
-}
-
-CCSWeaponInfo* CBaseCombatWeapon::GetCSWeaponData() 
-{
-	using Fn = CCSWeaponInfo * (__thiscall*)(CBaseCombatWeapon*);
-	return CallVirtualFunction<Fn>(this, 460)(this);
 }
 
 bool CBasePlayer::IsAlive()

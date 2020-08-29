@@ -42,12 +42,12 @@ LRESULT __stdcall InputSystem::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 
 	if (Menu.Opened) 
 	{
-		g_InputSystemtem->EnableInput(false);
+		g_InputSystem->EnableInput(false);
 
 	}
 	else if (!Menu.Opened) 
 	{
-		g_InputSystemtem->EnableInput(true);
+		g_InputSystem->EnableInput(true);
 	}
 
 	if (Menu.Opened && ImGui_ImplDX9_WndProcHandler(hwnd, msg, wParam, lParam))

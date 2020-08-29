@@ -67,7 +67,6 @@ public:
 	NETVAR(bool, m_bBombTicking, "DT_PlantedC4", "m_bBombTicking");
 	NETVAR(bool, m_bBombDefused, "DT_PlantedC4", "m_bBombDefused");
 
-	bool IsWeapon();
 	void SetModelIndex(int modelIndex);
 };
 
@@ -122,8 +121,6 @@ public:
 	NETVAR(float_t, m_flPostponeFireReadyTime, "DT_BaseCombatWeapon", "m_flPostponeFireReadyTime");
 	NETVAR(CHandle<CBaseWeaponWorldModel>, m_hWeaponWorldModel, "DT_BaseCombatWeapon", "m_hWeaponWorldModel");
 	NETVAR(bool, m_bPinPulled, "DT_BaseCSGrenade", "m_bPinPulled");
-
-	CCSWeaponInfo* GetCSWeaponData();
 };
 
 class CBasePlayer : public CBaseEntity

@@ -99,7 +99,7 @@ namespace ImGui
 		}
 
 		auto weapon = g_LocalPlayer->m_hActiveWeapon();
-		if (!weapon || !weapon->IsWeapon())
+		if (!weapon)
 		{
 			ImGui::Button("Current");
 			return;
@@ -108,15 +108,15 @@ namespace ImGui
 		if (ImGui::Button("Current"))
 		{
 			int weaponIndex = weapon->m_Item().m_iItemDefinitionIndex();
-			auto weaponIt = std::find_if(k_WeaponNames.begin(), k_WeaponNames.end(), [weaponIndex](const CWeaponName& a)
+			auto weaponIt = std::find_if(WeaponNames.begin(), WeaponNames.end(), [weaponIndex](const CWeaponName& a)
 				{
 					return a.definitionIndex == weaponIndex;
 				});
 
-			if (weaponIt != k_WeaponNames.end())
+			if (weaponIt != WeaponNames.end())
 			{
 				weapIndex = weaponIndex;
-				weapVectorIndex = std::abs(std::distance(k_WeaponNames.begin(), weaponIt));
+				weapVectorIndex = std::abs(std::distance(WeaponNames.begin(), weaponIt));
 			}
 		}
 	}
@@ -182,9 +182,9 @@ void CMenu::Run()
 					ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 18);
 					ImGui::ListBoxHeader("##weapons", ImVec2(0, 496));
 					{
-						for (size_t w = 0; w < k_WeaponNames.size(); w++)
+						for (size_t w = 0; w < WeaponNames.size(); w++)
 						{
-							if (ImGui::Selectable(k_WeaponNames[w].name, weapVectorIndex == w))
+							if (ImGui::Selectable(WeaponNames[w].name, weapVectorIndex == w))
 							{
 								weapVectorIndex = w;
 							}
@@ -212,15 +212,15 @@ void CMenu::Run()
 
 				ImGui::BeginChild("Skin changer", ImVec2(279, 202), true);
 				{
-					auto& selectedEntry = entries[k_WeaponNames[weapVectorIndex].definitionIndex];
-					selectedEntry.definitionIndex = k_WeaponNames[weapVectorIndex].definitionIndex;
+					auto& selectedEntry = entries[WeaponNames[weapVectorIndex].definitionIndex];
+					selectedEntry.definitionIndex = WeaponNames[weapVectorIndex].definitionIndex;
 					selectedEntry.definitionVectorIndex = weapVectorIndex;
 					ImGui::Checkbox("Enabled", &selectedEntry.enabled);
 					if (selectedEntry.enabled)
 					{
 						ImGui::InputText("Name tag", selectedEntry.customName, 32);
 						ImGui::InputInt("Pattern", &selectedEntry.seed);
-						ImGui::InputInt("Stattrak\u2122", &selectedEntry.stattrak);
+						ImGui::InputInt("Stattrak", &selectedEntry.stattrak);
 						ImGui::SliderFloat("Float", &selectedEntry.wear, FLT_MIN, 1.f, "%.10f", 5);
 						if (selectedEntry.definitionIndex != GLOVE_T_SIDE)
 						{
@@ -247,20 +247,20 @@ void CMenu::Run()
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
 							ImGui::Combo("Knife", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText)
 								{
-									*outText = k_KnifeNames.at(idx).name;
+									*outText = KnifeNames.at(idx).name;
 									return true;
-								}, nullptr, k_KnifeNames.size(), 10);
-							selectedEntry.definitionOverrideIndex = k_KnifeNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
+								}, nullptr, KnifeNames.size(), 10);
+							selectedEntry.definitionOverrideIndex = KnifeNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
 						}
 						else if (selectedEntry.definitionIndex == GLOVE_T_SIDE)
 						{
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
 							ImGui::Combo("Glove", &selectedEntry.definitionOverrideVectorIndex, [](void* data, int idx, const char** outText) 
 								{
-								*outText = k_GloveNames.at(idx).name;
+								*outText = GloveNames.at(idx).name;
 								return true;
-								}, nullptr, k_GloveNames.size(), 10);
-							selectedEntry.definitionOverrideIndex = k_GloveNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
+								}, nullptr, GloveNames.size(), 10);
+							selectedEntry.definitionOverrideIndex = GloveNames.at(selectedEntry.definitionOverrideVectorIndex).definitionIndex;
 						}
 						else
 						{

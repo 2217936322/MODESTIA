@@ -7,10 +7,10 @@
 
 static void EraseOverrideIfExistsByIndex(const int definitionIndex)
 {
-	if (k_WeaponInfo.count(definitionIndex))
+	if (WeaponInformations.count(definitionIndex))
 	{
 		auto& iconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
-		const auto& originalItem = k_WeaponInfo.at(definitionIndex);
+		const auto& originalItem = WeaponInformations.at(definitionIndex);
 
 		if (originalItem.icon && iconOverrideMap.count(originalItem.icon))
 			iconOverrideMap.erase(iconOverrideMap.at(originalItem.icon));
@@ -50,19 +50,19 @@ static void ApplyConfigOnAttributableItem(CBaseAttributableItem* item, const CIt
 	auto& definitionIndex = item->m_Item().m_iItemDefinitionIndex();
 
 	auto& iconOverrideMap = g_Configs.skinChanger.m_IconOverrides;
-	if (config->definitionOverrideIndex && config->definitionOverrideIndex != definitionIndex && k_WeaponInfo.count(config->definitionOverrideIndex))
+	if (config->definitionOverrideIndex && config->definitionOverrideIndex != definitionIndex && WeaponInformations.count(config->definitionOverrideIndex))
 	{
 		const auto oldDefinitionIndex = definitionIndex;
 		definitionIndex = config->definitionOverrideIndex;
-		const auto& replacementItem = k_WeaponInfo.at(config->definitionOverrideIndex);
+		const auto& replacementItem = WeaponInformations.at(config->definitionOverrideIndex);
 
 		item->m_nModelIndex() = g_MdlInfo->GetModelIndex(replacementItem.model);
 		item->SetModelIndex(g_MdlInfo->GetModelIndex(replacementItem.model));
 		item->GetClientNetworkable()->PreDataUpdate(0);
 
-		if (oldDefinitionIndex && k_WeaponInfo.count(oldDefinitionIndex))
+		if (oldDefinitionIndex && WeaponInformations.count(oldDefinitionIndex))
 		{
-			const auto& originalItem = k_WeaponInfo.at(oldDefinitionIndex);
+			const auto& originalItem = WeaponInformations.at(oldDefinitionIndex);
 			if (originalItem.icon && replacementItem.icon)
 			{
 				iconOverrideMap[originalItem.icon] = replacementItem.icon;
@@ -207,9 +207,9 @@ void Initialize(int localHandle)
 		if (!viewmodelWeapon)
 			return;
 
-		if (k_WeaponInfo.count(viewmodelWeapon->m_Item().m_iItemDefinitionIndex()))
+		if (WeaponInformations.count(viewmodelWeapon->m_Item().m_iItemDefinitionIndex()))
 		{
-			const auto overrideModel = k_WeaponInfo.at(viewmodelWeapon->m_Item().m_iItemDefinitionIndex()).model;
+			const auto overrideModel = WeaponInformations.at(viewmodelWeapon->m_Item().m_iItemDefinitionIndex()).model;
 			auto overrideModelIndex = g_MdlInfo->GetModelIndex(overrideModel);
 
 			viewmodel->m_nModelIndex() = overrideModelIndex;
