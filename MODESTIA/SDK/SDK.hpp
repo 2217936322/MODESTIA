@@ -42,6 +42,7 @@
 #include "Interfaces/ILocalize.hpp"
 #include "Interfaces/IFileSystem.hpp"
 #include "Interfaces/INetworkStringTable.hpp"
+#include "Interfaces/IStudioRender.hpp"
 
 #include "Misc/Convar.hpp"
 #include "Misc/CUserCmd.hpp"
@@ -88,6 +89,7 @@ extern IMemAlloc*			 g_MemAlloc;
 extern uintptr_t*			 g_SpatialPartition;
 extern IFileSystem*			 g_FileSystem;
 extern INetworkStringTableContainer* g_NetworkStringTableContainer;
+extern IStudioRender*		 g_StudioRender;
 
 template<typename... Args>
 void ConMsg(const char* pMsg, Args... args) {

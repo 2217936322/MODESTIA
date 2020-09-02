@@ -28,13 +28,14 @@ IViewRender*          g_ViewRender       = nullptr;
 IDirect3DDevice9*     g_D3DDevice9       = nullptr;
 CClientState*         g_ClientState      = nullptr;
 IPhysicsSurfaceProps* g_PhysSurface      = nullptr;
-IInputSystem*         g_InputSystem     = nullptr;
+IInputSystem*         g_InputSystem      = nullptr;
 IMemAlloc*			  g_MemAlloc		 = nullptr;
 uintptr_t*			  g_SpatialPartition = nullptr;
 C_LocalPlayer         g_LocalPlayer;
 ILocalize*			  g_Localize		 = nullptr;
 IFileSystem*          g_FileSystem       = nullptr;
 INetworkStringTableContainer* g_NetworkStringTableContainer = nullptr;
+IStudioRender*        g_StudioRender;
 
 namespace Interfaces
 {
@@ -57,10 +58,10 @@ namespace Interfaces
 
     void Initialize()
     {
-	    auto client = GetModuleHandle("client.dll");
-		auto engine = GetModuleHandle("engine.dll");
-		auto dx9api= GetModuleHandle("shaderapidx9.dll");
-		auto stdlib = GetModuleHandle("vstdlib.dll");
+        auto client = GetModuleHandle("client.dll");
+        auto engine = GetModuleHandle("engine.dll");
+        auto dx9api = GetModuleHandle("shaderapidx9.dll");
+        auto stdlib = GetModuleHandle("vstdlib.dll");
         auto filesystemFactory = GetModuleFactory(GetModuleHandle("filesystem_stdio.dll"));
         auto engineFactory = GetModuleFactory(GetModuleHandle("engine.dll"));
         auto clientFactory = GetModuleFactory(GetModuleHandle("client.dll"));
@@ -70,8 +71,8 @@ namespace Interfaces
         auto dataCacheFactory = GetModuleFactory(GetModuleHandle("datacache.dll"));
         auto vphysicsFactory = GetModuleFactory(GetModuleHandle("vphysics.dll"));
         auto InputSystemFactory = GetModuleFactory(GetModuleHandle("inputsystem.dll"));
-		auto localizeFactory = GetModuleFactory(GetModuleHandle("localize.dll"));
-		auto studioFactory = GetModuleFactory(GetModuleHandle("studiorender.dll"));
+        auto localizeFactory = GetModuleFactory(GetModuleHandle("localize.dll"));
+        auto studioFactory = GetModuleFactory(GetModuleHandle("studiorender.dll"));
         auto valveStdFactory = GetModuleFactory(stdlib);
 
         g_CHLClient = GetInterface<IBaseClientDLL>(clientFactory, "VClient018");
@@ -95,17 +96,18 @@ namespace Interfaces
         g_VGuiSurface = GetInterface<ISurface>(vguiFactory, "VGUI_Surface031");
         g_PhysSurface = GetInterface<IPhysicsSurfaceProps>(vphysicsFactory, "VPhysicsSurfaceProps001");
         g_InputSystem = GetInterface<IInputSystem>(InputSystemFactory, "InputSystemVersion001");
-		g_SpatialPartition = GetInterface<uintptr_t>(engineFactory, "SpatialPartition001" );
-		g_Localize = GetInterface<ILocalize>(localizeFactory, "Localize_001");
+        g_SpatialPartition = GetInterface<uintptr_t>(engineFactory, "SpatialPartition001");
+        g_Localize = GetInterface<ILocalize>(localizeFactory, "Localize_001");
+        g_StudioRender = GetInterface<IStudioRender>(studioFactory, "VStudioRender026");
         g_FileSystem = GetInterface<IFileSystem>(filesystemFactory, "VFileSystem017");
-		g_MemAlloc = *(IMemAlloc**)GetProcAddress(GetModuleHandle("tier0.dll"), "g_pMemAlloc");
+        g_MemAlloc = *(IMemAlloc**)GetProcAddress(GetModuleHandle("tier0.dll"), "g_pMemAlloc");
         g_GlobalVars = **(CGlobalVarsBase***)(Utils::PatternScan(client, "A1 ? ? ? ? 5E 8B 40 10") + 1);
-		g_ClientMode = *(IClientMode**)(Utils::PatternScan(client, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 0F 85 ? ? ? ? 53") + 1);
+        g_ClientMode = *(IClientMode**)(Utils::PatternScan(client, "B9 ? ? ? ? E8 ? ? ? ? 84 C0 0F 85 ? ? ? ? 53") + 1);
         g_MoveHelper = **(IMoveHelper***)(Utils::PatternScan(client, "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 2);
         g_ViewRender = *(IViewRender**)(Utils::PatternScan(client, "A1 ? ? ? ? B9 ? ? ? ? C7 05 ? ? ? ? ? ? ? ? FF 10") + 1);
         g_D3DDevice9 = **(IDirect3DDevice9***)(Utils::PatternScan(dx9api, "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1);
         g_ClientState = **(CClientState***)(Utils::PatternScan(engine, "A1 ? ? ? ? 8B 80 ? ? ? ? C3") + 1);
-		g_GameRules = *(CGameRules**)( Utils::PatternScan(client, "8B 0D ?? ?? ?? ?? 85 C0 74 0A 8B 01 FF 50 78 83 C0 54") + 2);
+        g_GameRules = *(CGameRules**)(Utils::PatternScan(client, "8B 0D ?? ?? ?? ?? 85 C0 74 0A 8B 01 FF 50 78 83 C0 54") + 2);
         g_LocalPlayer = *(C_LocalPlayer*)(Utils::PatternScan(client, "8B 0D ? ? ? ? 83 FF FF 74 07") + 2);
     }
 

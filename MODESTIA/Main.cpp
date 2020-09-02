@@ -32,7 +32,7 @@ DWORD WINAPI Initialize(LPVOID base)
 		InputSystem::Get().Initialize();
 		Hooks::Initialize();
 
-		InputSystem::Get().RegisterHotkey(g_Configs.misc.unloadKey, [base]() { Unload = true; });
+		InputSystem::Get().RegisterHotkey(VK_DELETE, [base]() { Unload = true; });
 
 		Utils::ConsolePrint("Finished.\n");
 

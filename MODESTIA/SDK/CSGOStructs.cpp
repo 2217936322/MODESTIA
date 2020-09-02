@@ -11,6 +11,12 @@ void CBaseEntity::SetModelIndex(const int modelIndex)
 	return CallVirtualFunction<Fn>(this, 75)(this, modelIndex);
 }
 
+bool CBasePlayer::IsPlayer()
+{
+	using Fn = bool(__thiscall*)(CBasePlayer*);
+	return CallVirtualFunction<Fn>(this, 159)(this);
+}
+
 bool CBasePlayer::IsAlive()
 {
 	return m_lifeState() == LIFE_ALIVE;

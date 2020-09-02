@@ -170,6 +170,7 @@ public:
 	NETVAR(bool, m_bHasHelmet, "DT_CSPlayer", "m_bHasHelmet");
 	NETVAR(bool, m_bIsScoped, "DT_CSPlayer", "m_bIsScoped");
 
+	bool IsPlayer();
 	bool IsAlive();
 	int Handle();
 	int m_nMoveType();
