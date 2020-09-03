@@ -170,7 +170,7 @@ void Initialize(int localHandle)
 				g_Memory.EquipWearable(glove, local);
 				local->m_nBody() = 1;
 
-				ApplyConfigOnAttributableItem(glove, gloveConfig, playerInfo.xuidlow);
+				ApplyConfigOnAttributableItem(glove, gloveConfig, playerInfo.m_iXUIDLow);
 			}
 		}
 	}
@@ -186,7 +186,7 @@ void Initialize(int localHandle)
 			auto& definitionIndex = weapon->m_Item().m_iItemDefinitionIndex();
 
 			if (const auto activeConf = &g_Configs.skinChanger.m_Items[IsKnife(definitionIndex) ? WEAPON_KNIFE : definitionIndex])
-				ApplyConfigOnAttributableItem(weapon, activeConf, playerInfo.xuidlow);
+				ApplyConfigOnAttributableItem(weapon, activeConf, playerInfo.m_iXUIDLow);
 			else
 				EraseOverrideIfExistsByIndex(definitionIndex);
 		}

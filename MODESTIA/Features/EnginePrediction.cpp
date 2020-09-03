@@ -16,8 +16,8 @@ void EnginePrediction::Run(CUserCmd* cmd)
 
     *g_Memory.PredictionRandomSeed = 0;
 
-    const auto curtimeBackup = g_GlobalVars->curtime;
-    const auto frametimeBackup = g_GlobalVars->frametime;
+    const auto curtimeBackup = g_GlobalVars->m_fCurtime;
+    const auto frametimeBackup = g_GlobalVars->m_fFrametime;
 
     if (!prevCmd || prevCmd->m_bHasBeenPredicted)
     {
@@ -28,8 +28,8 @@ void EnginePrediction::Run(CUserCmd* cmd)
         fixedTick++;
     }
 
-    g_GlobalVars->curtime = static_cast<float>(fixedTick) * g_GlobalVars->interval_per_tick;
-    g_GlobalVars->frametime = g_GlobalVars->interval_per_tick;
+    g_GlobalVars->m_fCurtime = static_cast<float>(fixedTick) * g_GlobalVars->m_fIntervalPerTick;
+    g_GlobalVars->m_fFrametime = g_GlobalVars->m_fIntervalPerTick;
 
     g_MoveHelper->SetHost(g_LocalPlayer);
     g_Prediction->SetupMove(g_LocalPlayer, cmd, g_MoveHelper, &moveData);
@@ -39,8 +39,8 @@ void EnginePrediction::Run(CUserCmd* cmd)
 
     *g_Memory.PredictionRandomSeed = -1;
 
-    g_GlobalVars->curtime = curtimeBackup;
-    g_GlobalVars->frametime = frametimeBackup;
+    g_GlobalVars->m_fCurtime = curtimeBackup;
+    g_GlobalVars->m_fFrametime = frametimeBackup;
 }
 
 int EnginePrediction::GetFlags()

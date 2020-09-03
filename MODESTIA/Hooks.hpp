@@ -56,14 +56,9 @@ namespace Hooks
 		long __stdcall Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentationParameters);
 	};
 
-	namespace LooseFileAllowed
+	namespace SendNetMessage
 	{
-		bool __fastcall Hook(void*, void*);
-	};
-
-	namespace CheckFileCRCsWithServer
-	{
-		using Fn = void(__thiscall*)(void*, void*);
-		void __fastcall Hook(void*, void*);
+		using Fn = bool(__thiscall*)(void*, INetworkMessage&, bool, bool);
+		bool __fastcall Hook(void* networkChannel, void* edx, INetworkMessage& message, bool forceReliable, bool voice);
 	};
 }

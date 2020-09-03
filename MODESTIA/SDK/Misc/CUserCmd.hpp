@@ -66,7 +66,7 @@ public:
 
     int     m_iCommandNumber;    
     int     m_iTickCount;         
-    QAngle  m_angViewangles;         
+    Vector  m_angViewangles;         
     Vector  m_vecAimDirection;       
     float   m_fForwardMove;        
     float   m_fSideMove;          

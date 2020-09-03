@@ -2,6 +2,7 @@
 
 #include "Math/Math.hpp"
 #include "../Helpers/Utils.hpp"
+#include "../Helpers/Memory.hpp"
 
 CGameRules* g_GameRules = nullptr;
 

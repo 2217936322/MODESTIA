@@ -444,7 +444,7 @@ void CMenu::Run()
 
 				ImGui::BeginChild("Visuals", ImVec2(279, 468), true);
 				{
-
+			
 				}
 				ImGui::EndChild(true);
 

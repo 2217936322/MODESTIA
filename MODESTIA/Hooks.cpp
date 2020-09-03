@@ -1,6 +1,6 @@
-#include <intrin.h>
-
 #include "Hooks.hpp"
+
+#include <intrin.h>
 
 #include "Helpers/Fnv.hpp"
 #include "Helpers/InputSystem.hpp"
@@ -24,7 +24,7 @@ Hooks::FrameStageNotify::Fn FrameStageNotifyOriginal = nullptr;
 Hooks::LockCursor::Fn LockCursorOriginal = nullptr;
 Hooks::EndScene::Fn EndSceneOriginal = nullptr;
 Hooks::Reset::Fn ResetOriginal = nullptr;
-Hooks::CheckFileCRCsWithServer::Fn CheckFileCRCsWithServerOriginal = nullptr;
+Hooks::SendNetMessage::Fn SendNetMessageOriginal = nullptr;
 
 unsigned int GetVirtual(void* class_, unsigned int index) { return (unsigned int)(*(int**)class_)[index]; }
 
@@ -37,76 +37,19 @@ bool Hooks::Initialize()
 	auto LockCursorTarget = reinterpret_cast<void*>(GetVirtual(g_VGuiSurface, 67));
 	auto EndSceneTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 42));
 	auto ResetTarget = reinterpret_cast<void*>(GetVirtual(g_D3DDevice9, 16));
-	auto LooseFileAllowedTarget = reinterpret_cast<void*>(GetVirtual(g_FileSystem, 128));
-	auto CheckFileCRCsWithServerTarget = reinterpret_cast<void*>(Utils::PatternScan(GetModuleHandle("engine.dll"), "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
 
-	if (MH_Initialize() != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize MH_Initialize.");
-		return false;
-	}
+	if (MH_Initialize() != MH_OK) { throw std::runtime_error("Failed to initialize MH_Initialize."); return false; }
 
-	if (MH_CreateHook(CreateMoveTarget, &CreateMove::Hook, reinterpret_cast<void**>(&CreateMoveOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize CreateMove. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(EmitSoundTarget, &EmitSound::Hook, reinterpret_cast<void**>(&EmitSoundOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize EmitSound. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(FireEventTarget, &FireEvent::Hook, reinterpret_cast<void**>(&FireEventOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize FireEvent. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(FrameStageNotifyTarget, &FrameStageNotify::Hook, reinterpret_cast<void**>(&FrameStageNotifyOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize FrameStageNotify. (Outdated index?)");
-		return false;
-	}
-
+	if (MH_CreateHook(CreateMoveTarget, &CreateMove::Hook, reinterpret_cast<void**>(&CreateMoveOriginal)) != MH_OK) { throw std::runtime_error("Failed to create CreateMoveHook. (Wrong index?)"); return false; }
+	if (MH_CreateHook(EmitSoundTarget, &EmitSound::Hook, reinterpret_cast<void**>(&EmitSoundOriginal)) != MH_OK) { throw std::runtime_error("Failed to create EmitSoundHook. (Wrong index?)"); return false; }
+	if (MH_CreateHook(FireEventTarget, &FireEvent::Hook, reinterpret_cast<void**>(&FireEventOriginal)) != MH_OK) { throw std::runtime_error("Failed to create FireEventHook. (Wrong index?)"); return false; }
+	if (MH_CreateHook(FrameStageNotifyTarget, &FrameStageNotify::Hook, reinterpret_cast<void**>(&FrameStageNotifyOriginal)) != MH_OK) { throw std::runtime_error("Failed to create FrameStageNotifyHook. (Wrong index?)"); return false; }
+	if (MH_CreateHook(LockCursorTarget, &LockCursor::Hook, reinterpret_cast<void**>(&LockCursorOriginal)) != MH_OK) { throw std::runtime_error("Failed to create LockCursorHook. (Wrong index?)"); return false; }
+	if (MH_CreateHook(EndSceneTarget, &EndScene::Hook, reinterpret_cast<void**>(&EndSceneOriginal)) != MH_OK) { throw std::runtime_error("Failed to create EndSceneHook. (Wrong index?)"); return false; }
+	if (MH_CreateHook(ResetTarget, &Reset::Hook, reinterpret_cast<void**>(&ResetOriginal)) != MH_OK) { throw std::runtime_error("Failed to create ResetHook. (Wrong index?)");return false; }
 	SequenceHook = new RecvPropHook(CBaseViewModel::m_nSequence(), Hooks::RecvProxy::Hook);
 
-	if (MH_CreateHook(LockCursorTarget, &LockCursor::Hook, reinterpret_cast<void**>(&LockCursorOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize LockCursor. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(EndSceneTarget, &EndScene::Hook, reinterpret_cast<void**>(&EndSceneOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize EndScene. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(ResetTarget, &Reset::Hook, reinterpret_cast<void**>(&ResetOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize Reset. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(LooseFileAllowedTarget, &LooseFileAllowed::Hook, nullptr) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize LooseFileAllowed. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_CreateHook(CheckFileCRCsWithServerTarget, &CheckFileCRCsWithServer::Hook, reinterpret_cast<void**>(&CheckFileCRCsWithServerOriginal)) != MH_OK)
-	{
-		throw std::runtime_error("Failed to initialize CheckFileCRCsWithServer. (Outdated index?)");
-		return false;
-	}
-
-	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
-	{
-		throw std::runtime_error("Failed to enable hooks.");
-		return false;
-	}
+	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK) { throw std::runtime_error("Failed to enable hooks."); return false; }
 
 	return true;
 }
@@ -128,6 +71,20 @@ bool __stdcall Hooks::CreateMove::Hook(float inputSampleFrametime, CUserCmd* cmd
 
 	Misc::Get().RankReveal(cmd);
 	Misc::Get().ClantagChanger();
+
+	static void* netChannelOld = nullptr;
+	auto netChannel = g_ClientState->m_NetChannel;
+
+	if (netChannelOld != netChannel && netChannel)
+	{
+		netChannelOld = netChannel;
+
+		auto SendNetMessageTarget = reinterpret_cast<void*>(GetVirtual(netChannel, 40));
+
+		if (MH_CreateHook(SendNetMessageTarget, &SendNetMessage::Hook, reinterpret_cast<void**>(&SendNetMessageOriginal)) != MH_OK) { throw std::runtime_error("Failed to create SendNetMessageHook. (Wrong index?)");return false; }
+
+		if (MH_EnableHook(SendNetMessageTarget) != MH_OK) { throw std::runtime_error("Failed to enable SendNetMessageHook."); return false; }
+	}
 
 	EnginePrediction::Run(cmd);
 
@@ -288,12 +245,13 @@ long __stdcall Hooks::Reset::Hook(IDirect3DDevice9* device, D3DPRESENT_PARAMETER
 	return hr;
 }
 
-bool __fastcall Hooks::LooseFileAllowed::Hook(void* ecx, void* edx)
+bool __fastcall Hooks::SendNetMessage::Hook(void* networkChannel, void* edx, INetworkMessage& message, bool forceReliable, bool voice)
 {
-	return true;
-}
+	if (message.GetType() == 14) // sv_pure bypass
+		return false;
 
-void __fastcall Hooks::CheckFileCRCsWithServer::Hook(void* ecx, void* edx)
-{
-	return;
+	if (message.GetGroup() == 9) // fix lag when transmitting voice
+		voice = true;
+
+	return SendNetMessageOriginal(networkChannel, message, forceReliable, voice);
 }

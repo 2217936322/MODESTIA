@@ -1,9 +1,13 @@
 #pragma once
 
+#define M_PI       3.14159265358979323846 
+
 #include <sstream>
 
 #define CHECK_VALID(_v) 0
 #define Assert(_exp) ((void)0)
+
+constexpr auto rad2deg = [](float radians) constexpr noexcept { return radians * 180.0f / static_cast<float>(M_PI); };
 
 inline float sqrt2(float sqr)
 {
@@ -160,37 +164,12 @@ public:
         return *this;
     }
 
-    void NormalizeInPlace()
+    constexpr Vector& Normalize() noexcept
     {
-        *this = Normalized();
-    }
-
-    Vector Normalized() const
-    {
-        Vector res = *this;
-        float l = res.Length();
-        if (l != 0.0f) {
-            res /= l;
-        }
-        else {
-            res.x = res.y = res.z = 0.0f;
-        }
-        return res;
-    }
-
-    float Normalize() const
-    {
-        Vector res = *this;
-        float l = res.Length();
-        if (l != 0.0f)
-        {
-            res /= l;
-        }
-        else
-        {
-            res.x = res.y = res.z = 0.0f;
-        }
-        return l;
+        x = std::isfinite(x) ? std::remainder(x, 360.0f) : 0.0f;
+        y = std::isfinite(y) ? std::remainder(y, 360.0f) : 0.0f;
+        z = 0.0f;
+        return *this;
     }
 
     float DistTo(const Vector& vOther) const
@@ -247,6 +226,13 @@ public:
     float Length2D() const
     {
         return sqrt(x * x + y * y);
+    }
+
+    auto toAngle() const noexcept
+    {
+        return Vector{ rad2deg(std::atan2(-z, std::hypot(x, y))),
+                       rad2deg(std::atan2(y, x)),
+                       0.0f };
     }
 
     Vector Angle(Vector* up = 0)

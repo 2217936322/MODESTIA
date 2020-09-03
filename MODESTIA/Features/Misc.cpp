@@ -21,11 +21,11 @@ void Misc::ClantagChanger()
 
 	if (g_Configs.misc.clantagChanger && g_LocalPlayer) 
 	{
-		if (g_GlobalVars->realtime - lastChangeTime >= 0.5f)
+		if (g_GlobalVars->m_fRealtime - lastChangeTime >= 0.5f)
 		{
 			static std::string text = "MODE$TIA ";
 
-			lastChangeTime = g_GlobalVars->realtime;
+			lastChangeTime = g_GlobalVars->m_fRealtime;
 
 			std::string temp = text;
 			text.erase(0, 1);
